@@ -6,7 +6,7 @@
 
 namespace LKEngine
 {
-	namespace Core
+	namespace Utility
 	{
 		//std::shared_ptr wrapper class
 		template <typename Object_T>

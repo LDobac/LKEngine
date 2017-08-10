@@ -124,9 +124,12 @@
   <ItemGroup>
     <ClInclude Include="Macro.h" />
     <ClInclude Include="ManagedObject.h" />
+    <ClInclude Include="VulkanDevice.h" />
+    <ClInclude Include="WindowsApplication.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="WindowsApplication.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

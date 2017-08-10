@@ -7,19 +7,34 @@
     <Filter Include="Core\Header">
       <UniqueIdentifier>{df80b866-0b8f-4a6f-aea0-c52e69ac7f30}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Source">
-      <UniqueIdentifier>{bb73fa3d-be66-423e-ad30-2a7849d2288d}</UniqueIdentifier>
+    <Filter Include="Core\Header\Utility">
+      <UniqueIdentifier>{cc3a8b22-4231-43a8-8b9e-c6a62a6d7b07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Header\Vulkan">
+      <UniqueIdentifier>{45a99c24-13f1-410b-b7ff-1d7720c08071}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Header\Window">
+      <UniqueIdentifier>{57a6b3dd-e666-41f9-bf21-86379b7032f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Macro.h">
-      <Filter>Core\Header</Filter>
-    </ClInclude>
     <ClInclude Include="ManagedObject.h">
-      <Filter>Core\Header</Filter>
+      <Filter>Core\Header\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Macro.h">
+      <Filter>Core\Header\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDevice.h">
+      <Filter>Core\Header\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsApplication.h">
+      <Filter>Core\Header\Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="WindowsApplication.cpp">
+      <Filter>Core\Header\Window</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

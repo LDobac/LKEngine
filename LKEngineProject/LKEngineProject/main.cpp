@@ -1,9 +1,15 @@
-#include "ManagedObject.h"
-#include <iostream>
-#include <cstdlib>
+#include "WindowsApplication.h"
 
 int main()
 {
-	system("pause");
+	LKEngine::Window::WindowsApplication app;
+
+	app.Init();
+	app.CreateWindow(800,600);
+
+	app.MainLoop();
+
+	app.CleanUp();
+
 	return 0;
 }
