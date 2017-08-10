@@ -1,0 +1,9 @@
+#include "ManagedObject.h"
+#include <iostream>
+#include <cstdlib>
+
+int main()
+{
+	system("pause");
+	return 0;
+}
