@@ -77,6 +77,12 @@
     <IncludePath>D:\Projects\Vulkan\LkEngine\GLFW\include;D:\Projects\Vulkan\LkEngine\GLM;D:\Projects\Vulkan\LkEngine\VulkanSDK\Include;$(IncludePath)</IncludePath>
     <LibraryPath>D:\Projects\Vulkan\LkEngine\VulkanSDK\Lib32;D:\Projects\Vulkan\LkEngine\GLFW\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ExecutablePath>D:\Projects\Vulkan\LkEngine\VulkanSDK\Include;D:\Projects\Vulkan\LkEngine\GLFW\include;$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ExecutablePath>D:\Projects\Vulkan\LkEngine\VulkanSDK\Include;D:\Projects\Vulkan\LkEngine\GLFW\include;$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -124,11 +130,18 @@
   <ItemGroup>
     <ClInclude Include="Macro.h" />
     <ClInclude Include="ManagedObject.h" />
+    <ClInclude Include="VulkanDebug.h" />
     <ClInclude Include="VulkanDevice.h" />
+    <ClInclude Include="VulkanExtension.h" />
+    <ClInclude Include="VulkanInstance.h" />
     <ClInclude Include="WindowsApplication.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="VulkanDebug.cpp" />
+    <ClCompile Include="VulkanDevice.cpp" />
+    <ClCompile Include="VulkanExtension.cpp" />
+    <ClCompile Include="VulkanInstance.cpp" />
     <ClCompile Include="WindowsApplication.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

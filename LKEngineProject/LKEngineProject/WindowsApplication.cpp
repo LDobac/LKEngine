@@ -6,9 +6,10 @@ using namespace LKEngine;
 
 void Window::WindowsApplication::Init()
 {
-	glfwInit();
-	
+	glfwInit();	
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+	vkDevice.Init();
 }
 
 void Window::WindowsApplication::CreateWindow(const int width, const int height)
@@ -28,4 +29,6 @@ void Window::WindowsApplication::CleanUp()
 {
 	glfwDestroyWindow(window);
 	glfwTerminate();
+
+	vkDevice.CleanUp();
 }

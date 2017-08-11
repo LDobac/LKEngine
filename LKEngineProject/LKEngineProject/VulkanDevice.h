@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vulkan/vulkan.hpp>
+#include "VulkanInstance.h"
 
 namespace LKEngine
 {
@@ -9,7 +9,15 @@ namespace LKEngine
 		class VulkanDevice
 		{
 		private:
+			VulkanInstance* vkInstance;
+
 			VkDevice vkDevice;
+			VkPhysicalDevice gpu;
+
+		public:
+			void Init();
+
+			void CleanUp();
 		};
 	}
 }
