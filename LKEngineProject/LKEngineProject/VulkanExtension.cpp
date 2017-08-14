@@ -6,7 +6,7 @@
 
 using namespace LKEngine;
 
-void Vulkan::VulkanExtension::Init(bool isDebug)
+Vulkan::VulkanExtension::VulkanExtension(bool isDebug)
 {
 	uint32_t glfwExtensionCount = 0;
 	const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);

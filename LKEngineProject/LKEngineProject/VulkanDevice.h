@@ -9,15 +9,20 @@ namespace LKEngine
 		class VulkanDevice
 		{
 		private:
-			VulkanInstance* vkInstance;
+			VulkanInstance* instance;
 
 			VkDevice vkDevice;
 			VkPhysicalDevice gpu;
 
 		public:
-			void Init();
+			explicit VulkanDevice();
 
-			void CleanUp();
+			~VulkanDevice();
+
+		private:
+			void GetPhysicalDevice();
+
+			bool CheckDeviceFeatures(VkPhysicalDevice device);
 		};
 	}
 }

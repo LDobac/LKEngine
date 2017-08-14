@@ -2,7 +2,7 @@
 
 #include "VulkanInstance.h"
 
-void LKEngine::Vulkan::VulkanDebug::Init(VulkanInstance* vkInstance)
+LKEngine::Vulkan::VulkanDebug::VulkanDebug(VulkanInstance* vkInstance)
 {
 	instance = vkInstance;
 
@@ -14,7 +14,7 @@ void LKEngine::Vulkan::VulkanDebug::Init(VulkanInstance* vkInstance)
 	Check_Throw(CreateDebugCallback(instance->GetRawInstance(),&callbackInfo,nullptr,&callbackInstance) != VK_SUCCESS, "Vulkan Debug 셋팅 실패!");
 }
 
-void LKEngine::Vulkan::VulkanDebug::CleanUp()
+LKEngine::Vulkan::VulkanDebug::~VulkanDebug()
 {
 	DestroyDebugCallback(instance->GetRawInstance(), callbackInstance, nullptr);
 }
@@ -36,7 +36,7 @@ VkResult LKEngine::Vulkan::VulkanDebug::CreateDebugCallback(VkInstance instance,
 void LKEngine::Vulkan::VulkanDebug::DestroyDebugCallback(VkInstance instance, VkDebugReportCallbackEXT callback, const VkAllocationCallbacks * pAllocator)
 {
 	auto destoryDebug = (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugReportCallbackEXT");
-	Check_Warning(destoryDebug, "DestroyDebugReportCallback 호출 실패!");
+	Check_Warning(destoryDebug == nullptr, "DestroyDebugReportCallback 호출 실패!");
 	if (destoryDebug != nullptr) 
 	{
 		destoryDebug(instance, callback, pAllocator);

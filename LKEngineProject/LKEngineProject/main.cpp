@@ -1,5 +1,7 @@
 #include "WindowsApplication.h"
 
+#include <stdlib.h>
+
 int main()
 {
 	LKEngine::Window::WindowsApplication app;
@@ -10,6 +12,8 @@ int main()
 	app.MainLoop();
 
 	app.CleanUp();
+
+	system("pause");
 
 	return 0;
 }

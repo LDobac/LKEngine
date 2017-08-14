@@ -134,6 +134,7 @@
     <ClInclude Include="VulkanDevice.h" />
     <ClInclude Include="VulkanExtension.h" />
     <ClInclude Include="VulkanInstance.h" />
+    <ClInclude Include="VulkanQueue.h" />
     <ClInclude Include="WindowsApplication.h" />
   </ItemGroup>
   <ItemGroup>

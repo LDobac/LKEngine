@@ -6,10 +6,9 @@
 #include "Macro.h"
 #include "VulkanDebug.h"
 
-void LKEngine::Vulkan::VulkanInstance::Init(bool vaildationLayerOn)
+LKEngine::Vulkan::VulkanInstance::VulkanInstance(bool vaildationLayerOn)
 {
-	extension = new VulkanExtension();
-	extension->Init(vaildationLayerOn);
+	extension = new VulkanExtension(vaildationLayerOn);
 
 	VkApplicationInfo appInfo = {};
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -41,16 +40,14 @@ void LKEngine::Vulkan::VulkanInstance::Init(bool vaildationLayerOn)
 
 	if (vaildationLayerOn)
 	{
-		debug = new VulkanDebug();
-		debug->Init(this);
+		debug = new VulkanDebug(this);
 	}
 }
 
-void LKEngine::Vulkan::VulkanInstance::CleanUp()
+LKEngine::Vulkan::VulkanInstance::~VulkanInstance()
 {
 	delete extension;
 
-	debug->CleanUp();
 	delete debug;
 	debug = nullptr;
 

@@ -16,7 +16,7 @@ namespace LKEngine
 			std::vector<const char*> vaildExtensions;
 
 		public:
-			void Init(bool isDebug);
+			explicit VulkanExtension(bool isDebug);
 
 			std::vector<const char*> GetExtensions() const;
 		};

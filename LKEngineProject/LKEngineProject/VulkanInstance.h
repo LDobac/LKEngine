@@ -17,9 +17,9 @@ namespace LKEngine
 			VulkanExtension* extension;
 			VulkanDebug* debug;
 		public :
-			void Init(bool vaildationLayerOn);
+			explicit VulkanInstance(bool vaildationLayerOn);
 
-			void CleanUp();
+			~VulkanInstance();
 
 			VkInstance GetRawInstance() const;
 		};
