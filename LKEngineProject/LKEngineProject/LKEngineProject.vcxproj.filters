@@ -60,5 +60,8 @@
     <ClCompile Include="VulkanInstance.cpp">
       <Filter>Core\Header\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="VulkanQueue.cpp">
+      <Filter>Core\Header\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -5,6 +5,9 @@
 #include "Macro.h"
 
 LKEngine::Vulkan::VulkanDevice::VulkanDevice()
+	:instance(nullptr),
+	vkDevice(VK_NULL_HANDLE),
+	gpu(VK_NULL_HANDLE)
 {
 	instance = new VulkanInstance(true);
 }
@@ -15,7 +18,12 @@ LKEngine::Vulkan::VulkanDevice::~VulkanDevice()
 	instance = nullptr;
 }
 
-void LKEngine::Vulkan::VulkanDevice::GetPhysicalDevice()
+VkDevice LKEngine::Vulkan::VulkanDevice::GetRawDevice() const
+{
+	return vkDevice;
+}
+
+void LKEngine::Vulkan::VulkanDevice::RequirePhysicalDevice()
 {
 	gpu = VK_NULL_HANDLE;
 

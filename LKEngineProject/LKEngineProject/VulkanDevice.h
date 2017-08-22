@@ -19,8 +19,9 @@ namespace LKEngine
 
 			~VulkanDevice();
 
+			VkDevice GetRawDevice() const;
 		private:
-			void GetPhysicalDevice();
+			void RequirePhysicalDevice();
 
 			bool CheckDeviceFeatures(VkPhysicalDevice device);
 		};

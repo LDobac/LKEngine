@@ -7,6 +7,9 @@
 #include "VulkanDebug.h"
 
 LKEngine::Vulkan::VulkanInstance::VulkanInstance(bool vaildationLayerOn)
+	:vkInstance(VK_NULL_HANDLE),
+	debug(nullptr),
+	extension(nullptr)
 {
 	extension = new VulkanExtension(vaildationLayerOn);
 

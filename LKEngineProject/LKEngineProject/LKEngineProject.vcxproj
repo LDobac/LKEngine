@@ -143,6 +143,7 @@
     <ClCompile Include="VulkanDevice.cpp" />
     <ClCompile Include="VulkanExtension.cpp" />
     <ClCompile Include="VulkanInstance.cpp" />
+    <ClCompile Include="VulkanQueue.cpp" />
     <ClCompile Include="WindowsApplication.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
