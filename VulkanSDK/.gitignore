@@ -4,4 +4,12 @@ Templates/
 Tools/
 Tools32/
 Demos/
+RunTimeInstaller
 
+Bin/
+Lib/
+Tools/
+
+lunarg.bmp
+Uninstall.exe
+Vulkan.ico
