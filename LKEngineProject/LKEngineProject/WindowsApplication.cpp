@@ -4,14 +4,19 @@
 
 using namespace LKEngine;
 
-void Window::WindowsApplication::Init()
+LKEngine::Window::WindowsApplication::WindowsApplication()
 {
-	glfwInit();	
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	vkDevice = new Vulkan::VulkanDevice();
+}
+
+LKEngine::Window::WindowsApplication::~WindowsApplication()
+{
+	delete vkDevice;
 }
 
 void Window::WindowsApplication::CreateWindow(const int width, const int height)
 {
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	window = glfwCreateWindow(width, height, WINDOW_TITLE, nullptr, nullptr);
 }
 

@@ -12,9 +12,11 @@ namespace LKEngine
 		private:
 			GLFWwindow* window;
 
-			Vulkan::VulkanDevice vkDevice;
+			Vulkan::VulkanDevice* vkDevice;
 		public:
-			void Init();
+			explicit WindowsApplication();
+			~WindowsApplication();
+
 			void CreateWindow(const int width,const int height);
 
 			void MainLoop();

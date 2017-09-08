@@ -12,6 +12,8 @@ LKEngine::Vulkan::VulkanDebug::VulkanDebug(VulkanInstance* vkInstance)
 	callbackInfo.pfnCallback = VulkanDebug::DebugCallback;
 	callbackInfo.pUserData = nullptr;
 	Check_Throw(CreateDebugCallback(instance->GetRawInstance(),&callbackInfo,nullptr,&callbackInstance) != VK_SUCCESS, "Vulkan Debug 셋팅 실패!");
+
+	Console_Log("Vaildation Layer 생성 완료");
 }
 
 LKEngine::Vulkan::VulkanDebug::~VulkanDebug()

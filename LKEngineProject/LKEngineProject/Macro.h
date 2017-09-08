@@ -10,6 +10,9 @@
 #define DEFAULT_WIDTH 800
 #define DEFAULT_HEIGHT 600
 
+#define Console_Log(msg) do{ std::cout << msg << std::endl; } while(0);
+#define Console_Log_If(expreesion, msg) do {if(expreesion){std::cout << msg << std::endl;}}while(0);
+
 #define Check_Throw(expression,msg) if(expression) {throw std::runtime_error(msg);}
 #define Check_Warning(expression,msg) if(expression) {std::cerr << msg << std::endl;} 
 

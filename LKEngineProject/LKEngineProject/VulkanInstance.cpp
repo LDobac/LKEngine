@@ -1,6 +1,7 @@
 #include "VulkanInstance.h"
 
 #include <iostream>
+#include <GLFW/glfw3.h>
 
 #include "VulkanExtension.h"
 #include "Macro.h"
@@ -11,6 +12,10 @@ LKEngine::Vulkan::VulkanInstance::VulkanInstance(bool vaildationLayerOn)
 	debug(nullptr),
 	extension(nullptr)
 {
+	Console_Log_If(vaildationLayerOn, "디버그 활성화");
+
+	glfwInit();
+
 	extension = new VulkanExtension(vaildationLayerOn);
 
 	VkApplicationInfo appInfo = {};
@@ -45,6 +50,8 @@ LKEngine::Vulkan::VulkanInstance::VulkanInstance(bool vaildationLayerOn)
 	{
 		debug = new VulkanDebug(this);
 	}
+
+	Console_Log("Vulkan Instance 생성 완료");
 }
 
 LKEngine::Vulkan::VulkanInstance::~VulkanInstance()
