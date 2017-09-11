@@ -1,18 +1,14 @@
-#include "WindowsApplication.h"
-
 #include <stdlib.h>
+
+#include "Application.h"
 
 int main()
 {
-	LKEngine::Window::WindowsApplication app;
+	using namespace LKEngine::Application;
 
-	app.CreateWindow(800,600);
+	Application app(800,600);
 
-	app.MainLoop();
-
-	app.CleanUp();
-
-	system("pause");
+	app.Loop();
 
 	return 0;
 }

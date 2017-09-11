@@ -14,8 +14,6 @@ LKEngine::Vulkan::VulkanInstance::VulkanInstance(bool vaildationLayerOn)
 {
 	Console_Log_If(vaildationLayerOn, "디버그 활성화");
 
-	glfwInit();
-
 	extension = new VulkanExtension(vaildationLayerOn);
 
 	VkApplicationInfo appInfo = {};

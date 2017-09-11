@@ -13,7 +13,6 @@ namespace LKEngine
 
 			VkDevice vkDevice;
 			VkPhysicalDevice gpu;
-
 		public:
 			explicit VulkanDevice();
 

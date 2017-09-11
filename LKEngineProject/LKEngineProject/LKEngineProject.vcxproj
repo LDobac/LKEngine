@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Application.h" />
     <ClInclude Include="Macro.h" />
     <ClInclude Include="ManagedObject.h" />
     <ClInclude Include="VulkanDebug.h" />
@@ -135,16 +136,17 @@
     <ClInclude Include="VulkanExtension.h" />
     <ClInclude Include="VulkanInstance.h" />
     <ClInclude Include="VulkanQueue.h" />
-    <ClInclude Include="WindowsApplication.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="VulkanDebug.cpp" />
     <ClCompile Include="VulkanDevice.cpp" />
     <ClCompile Include="VulkanExtension.cpp" />
     <ClCompile Include="VulkanInstance.cpp" />
     <ClCompile Include="VulkanQueue.cpp" />
-    <ClCompile Include="WindowsApplication.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
