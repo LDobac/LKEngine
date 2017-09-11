@@ -7,14 +7,24 @@
 #include "Macro.h"
 #include "VulkanDebug.h"
 
-LKEngine::Vulkan::VulkanInstance::VulkanInstance(bool vaildationLayerOn)
-	:vkInstance(VK_NULL_HANDLE),
-	debug(nullptr),
-	extension(nullptr)
-{
-	Console_Log_If(vaildationLayerOn, "디버그 활성화");
+using namespace LKEngine::Vulkan;
 
-	extension = new VulkanExtension(vaildationLayerOn);
+VulkanInstance::VulkanInstance()
+	:vkInstance(VK_NULL_HANDLE),
+	debug(nullptr)
+{ }
+
+VulkanInstance::~VulkanInstance()
+{
+	SAFE_DELETE(debug);
+}
+
+void VulkanInstance::Init(bool vaildationLayerOn)
+{
+	Console_Log("VulkanInstance 생성 시작");
+	Console_Log_If(vaildationLayerOn, "디버그 모드 활성화");
+
+	VulkanExtension extension(vaildationLayerOn);
 
 	VkApplicationInfo appInfo = {};
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -28,8 +38,8 @@ LKEngine::Vulkan::VulkanInstance::VulkanInstance(bool vaildationLayerOn)
 	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	createInfo.pApplicationInfo = &appInfo;
 
-	createInfo.enabledExtensionCount = static_cast<uint32_t>(extension->GetExtensions().size());
-	std::vector<const char*> extensions = extension->GetExtensions();
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(extension.GetExtensions().size());
+	std::vector<const char*> extensions = extension.GetExtensions();
 	createInfo.ppEnabledExtensionNames = extensions.data();
 
 	if (vaildationLayerOn)
@@ -47,22 +57,20 @@ LKEngine::Vulkan::VulkanInstance::VulkanInstance(bool vaildationLayerOn)
 	if (vaildationLayerOn)
 	{
 		debug = new VulkanDebug(this);
+		debug->Init();
 	}
 
 	Console_Log("Vulkan Instance 생성 완료");
 }
 
-LKEngine::Vulkan::VulkanInstance::~VulkanInstance()
+void VulkanInstance::Shutdown()
 {
-	delete extension;
-
-	delete debug;
-	debug = nullptr;
+	debug->Shutdown();
 
 	vkDestroyInstance(vkInstance, nullptr);
 }
 
-VkInstance LKEngine::Vulkan::VulkanInstance::GetRawInstance() const
+VkInstance VulkanInstance::GetRawInstance() const
 {
 	return vkInstance;
 }

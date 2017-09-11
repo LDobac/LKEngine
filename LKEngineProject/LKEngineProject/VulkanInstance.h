@@ -2,6 +2,8 @@
 
 #include <vulkan/vulkan.h>
 
+#include "VulkanBaseInterface.h"
+
 namespace LKEngine
 {
 	namespace Vulkan
@@ -10,16 +12,18 @@ namespace LKEngine
 		class VulkanDebug;
 
 		class VulkanInstance
+			: public BaseInterface
 		{
 		private:
 			VkInstance vkInstance;
 
-			VulkanExtension* extension;
 			VulkanDebug* debug;
 		public :
-			explicit VulkanInstance(bool vaildationLayerOn);
-
+			explicit VulkanInstance();
 			~VulkanInstance();
+
+			void Init(bool vaildationLayerOn);
+			virtual void Shutdown() override;
 
 			VkInstance GetRawInstance() const;
 		};

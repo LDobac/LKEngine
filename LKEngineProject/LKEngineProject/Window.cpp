@@ -10,6 +10,8 @@ LKEngine::Window::Window::Window(const int width,const int height)
 	width(width),
 	height(height)
 {
+	Console_Log("창 생성 시작");
+
 	glfwInit();
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);

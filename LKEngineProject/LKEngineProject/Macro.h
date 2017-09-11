@@ -18,7 +18,7 @@
 #define Check_Throw(expression,msg) if(expression) {throw std::runtime_error(msg);}
 #define Check_Warning(expression,msg) if(expression) {std::cerr << msg << std::endl;} 
 
-#define SAFE_DELETE(x) do{ if(x) delete x; }while(0);
-#define SAFE_ARR_DELETE(x) do {if(x) delete[] x;}while(0);
+#define SAFE_DELETE(x) do{ delete x; x=nullptr; }while(0);
+#define SAFE_ARR_DELETE(x) do { delete[] x; x=nullptr;}while(0);
 
 #define CALLBACK __stdcall

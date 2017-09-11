@@ -19,6 +19,12 @@
     <Filter Include="Core\Header\Application">
       <UniqueIdentifier>{5fd71d51-5b62-4710-b6c6-5891307ac7e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Header\Vulkan\Header">
+      <UniqueIdentifier>{ef94bc46-9b96-42ef-b2ee-d807716696a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Header\Vulkan\Source">
+      <UniqueIdentifier>{647d4aca-50d3-4ff0-899b-99c526a8f9b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ManagedObject.h">
@@ -27,46 +33,52 @@
     <ClInclude Include="Macro.h">
       <Filter>Core\Header\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanDevice.h">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanInstance.h">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanDebug.h">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanExtension.h">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanQueue.h">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Core\Header\Window</Filter>
     </ClInclude>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="VulkanQueue.h">
+      <Filter>Core\Header\Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDevice.h">
+      <Filter>Core\Header\Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanExtension.h">
+      <Filter>Core\Header\Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanInstance.h">
+      <Filter>Core\Header\Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDebug.h">
+      <Filter>Core\Header\Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanBaseInterface.h">
+      <Filter>Core\Header\Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDeviceChild.h">
+      <Filter>Core\Header\Vulkan\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="VulkanExtension.cpp">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanDevice.cpp">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanDebug.cpp">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanInstance.cpp">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanQueue.cpp">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Core\Header\Window</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="VulkanDebug.cpp">
+      <Filter>Core\Header\Vulkan\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDevice.cpp">
+      <Filter>Core\Header\Vulkan\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanExtension.cpp">
+      <Filter>Core\Header\Vulkan\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanInstance.cpp">
+      <Filter>Core\Header\Vulkan\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanQueue.cpp">
+      <Filter>Core\Header\Vulkan\Source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

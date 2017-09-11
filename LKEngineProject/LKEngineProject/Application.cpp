@@ -11,11 +11,15 @@ Application::Application(const int windowWidth, const int windowHeight)
 {
 	window = new Window::Window(windowWidth,windowHeight);
 	device = new Vulkan::VulkanDevice();
+
+	device->Init(true);
 }
 
 
 Application::~Application()
 {
+	device->Shutdown();
+
 	SAFE_DELETE(window);
 	SAFE_DELETE(device);
 }

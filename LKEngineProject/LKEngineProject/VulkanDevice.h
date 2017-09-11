@@ -1,12 +1,13 @@
 #pragma once
 
+#include "VulkanBaseInterface.h"
 #include "VulkanInstance.h"
 
 namespace LKEngine
 {
 	namespace Vulkan
 	{
-		class VulkanDevice
+		class VulkanDevice : public BaseInterface
 		{
 		private:
 			VulkanInstance* instance;
@@ -15,8 +16,10 @@ namespace LKEngine
 			VkPhysicalDevice gpu;
 		public:
 			explicit VulkanDevice();
+			virtual ~VulkanDevice();
 
-			~VulkanDevice();
+			void Init(bool debug);
+			virtual void Shutdown() override;
 
 			VkDevice GetRawDevice() const;
 		private:

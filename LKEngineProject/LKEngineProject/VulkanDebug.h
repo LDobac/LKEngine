@@ -5,13 +5,19 @@
 
 #include "Macro.h"
 
+#include "VulkanBaseInterface.h"
+
 namespace LKEngine
 {
+	//전방 선언
 	namespace Vulkan
 	{
 		class VulkanInstance;
+	}
 
-		class VulkanDebug
+	namespace Vulkan
+	{
+		class VulkanDebug : public BaseInterface
 		{
 		private:
 			VulkanInstance* instance;
@@ -19,8 +25,11 @@ namespace LKEngine
 			VkDebugReportCallbackEXT callbackInstance;
 		public:
 			explicit VulkanDebug(VulkanInstance* vkInstance);
-			
-			~VulkanDebug();
+			virtual ~VulkanDebug();
+
+			virtual void Init() override;
+
+			virtual void Shutdown() override;
 
 			static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objType, uint64_t obj, size_t location, int32_t code, const char* layerPrefix, const char* msg, void* userData) 
 			{
@@ -28,7 +37,6 @@ namespace LKEngine
 
 				return VK_FALSE;
 			}
-
 		private:
 			VkResult CreateDebugCallback(VkInstance instance, const VkDebugReportCallbackCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugReportCallbackEXT* pCallback);
 			void DestroyDebugCallback(VkInstance instance, VkDebugReportCallbackEXT callback, const VkAllocationCallbacks* pAllocator);

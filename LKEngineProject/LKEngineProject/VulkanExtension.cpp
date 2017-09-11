@@ -4,9 +4,9 @@
 #include <GLFW/glfw3.h>
 #include "Macro.h"
 
-using namespace LKEngine;
+using namespace LKEngine::Vulkan;
 
-Vulkan::VulkanExtension::VulkanExtension(bool isDebug)
+VulkanExtension::VulkanExtension(bool isDebug)
 {
 	uint32_t glfwExtensionCount = 0;
 	const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -24,7 +24,7 @@ Vulkan::VulkanExtension::VulkanExtension(bool isDebug)
 	}
 }
 
-std::vector<const char*> Vulkan::VulkanExtension::GetExtensions() const
+std::vector<const char*> VulkanExtension::GetExtensions() const
 {
 	return vaildExtensions;
 }

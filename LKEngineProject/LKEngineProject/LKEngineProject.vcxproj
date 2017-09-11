@@ -129,10 +129,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="VulkanBaseInterface.h" />
     <ClInclude Include="Macro.h" />
     <ClInclude Include="ManagedObject.h" />
     <ClInclude Include="VulkanDebug.h" />
     <ClInclude Include="VulkanDevice.h" />
+    <ClInclude Include="VulkanDeviceChild.h" />
     <ClInclude Include="VulkanExtension.h" />
     <ClInclude Include="VulkanInstance.h" />
     <ClInclude Include="VulkanQueue.h" />

@@ -4,26 +4,37 @@
 
 #include "Macro.h"
 
-LKEngine::Vulkan::VulkanDevice::VulkanDevice()
+using namespace LKEngine::Vulkan;
+
+VulkanDevice::VulkanDevice()
 	:instance(nullptr),
 	vkDevice(VK_NULL_HANDLE),
 	gpu(VK_NULL_HANDLE)
 {
-	instance = new VulkanInstance(true);
+	instance = new VulkanInstance();
 }
 
-LKEngine::Vulkan::VulkanDevice::~VulkanDevice()
+VulkanDevice::~VulkanDevice()
 {
-	delete instance;
-	instance = nullptr;
+	SAFE_DELETE(instance);
 }
 
-VkDevice LKEngine::Vulkan::VulkanDevice::GetRawDevice() const
+void VulkanDevice::Init(bool debug)
+{
+	instance->Init(debug);
+}
+
+void VulkanDevice::Shutdown()
+{
+	instance->Shutdown();
+}
+
+VkDevice VulkanDevice::GetRawDevice() const
 {
 	return vkDevice;
 }
 
-void LKEngine::Vulkan::VulkanDevice::RequirePhysicalDevice()
+void VulkanDevice::RequirePhysicalDevice()
 {
 	gpu = VK_NULL_HANDLE;
 
@@ -42,10 +53,11 @@ void LKEngine::Vulkan::VulkanDevice::RequirePhysicalDevice()
 			break;
 		}
 	}
+
 	Check_Throw(gpu == VK_NULL_HANDLE, "사용 가능한 그래픽 카드가 없습니다!");
 }
 
-bool LKEngine::Vulkan::VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
+bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
 {
 	return false;
 }
