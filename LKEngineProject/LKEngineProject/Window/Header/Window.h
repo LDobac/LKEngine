@@ -1,7 +1,6 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
-#include "VulkanDevice.h"
 
 namespace LKEngine
 {
@@ -16,11 +15,13 @@ namespace LKEngine
 			int height;
 		public:
 			explicit Window(const int width, const int height);
-			~Window();
+			~Window(); 
 
 			bool WindowShouldClose();
 
 			void PollEvents();
+
+			GLFWwindow* GetWindowHandle() const;
 		};
 	}
 }

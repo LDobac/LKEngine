@@ -128,27 +128,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="VulkanBaseInterface.h" />
-    <ClInclude Include="Macro.h" />
-    <ClInclude Include="ManagedObject.h" />
-    <ClInclude Include="VulkanDebug.h" />
-    <ClInclude Include="VulkanDevice.h" />
-    <ClInclude Include="VulkanDeviceChild.h" />
-    <ClInclude Include="VulkanExtension.h" />
-    <ClInclude Include="VulkanInstance.h" />
-    <ClInclude Include="VulkanQueue.h" />
-    <ClInclude Include="Window.h" />
+    <ClCompile Include="Application\Source\Application.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanDebug.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanDevice.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanExtension.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanInstance.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanQueue.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanQueueFamilyIndices.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanSwapchain.cpp" />
+    <ClCompile Include="Window\Source\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="VulkanDebug.cpp" />
-    <ClCompile Include="VulkanDevice.cpp" />
-    <ClCompile Include="VulkanExtension.cpp" />
-    <ClCompile Include="VulkanInstance.cpp" />
-    <ClCompile Include="VulkanQueue.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClInclude Include="Application\Header\Application.h" />
+    <ClInclude Include="Utility\Header\Macro.h" />
+    <ClInclude Include="Utility\Header\ManagedObject.h" />
+    <ClInclude Include="Vulkan\Header\VulkanBaseInterface.h" />
+    <ClInclude Include="Vulkan\Header\VulkanDebug.h" />
+    <ClInclude Include="Vulkan\Header\VulkanDevice.h" />
+    <ClInclude Include="Vulkan\Header\VulkanDeviceChild.h" />
+    <ClInclude Include="Vulkan\Header\VulkanExtension.h" />
+    <ClInclude Include="Vulkan\Header\VulkanInstance.h" />
+    <ClInclude Include="Vulkan\Header\VulkanQueue.h" />
+    <ClInclude Include="Vulkan\Header\VulkanQueueFamilyIndices.h" />
+    <ClInclude Include="Vulkan\Header\VulkanSwapchain.h" />
+    <ClInclude Include="Window\Header\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

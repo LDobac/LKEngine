@@ -1,11 +1,11 @@
-#include "VulkanInstance.h"
+#include "../Header/VulkanInstance.h"
 
 #include <iostream>
 #include <GLFW/glfw3.h>
 
-#include "VulkanExtension.h"
-#include "Macro.h"
-#include "VulkanDebug.h"
+#include "../Header/VulkanExtension.h"
+#include "../../Utility/Header/Macro.h"
+#include "../Header/VulkanDebug.h"
 
 using namespace LKEngine::Vulkan;
 
@@ -24,7 +24,7 @@ void VulkanInstance::Init(bool vaildationLayerOn)
 	Console_Log("VulkanInstance 생성 시작");
 	Console_Log_If(vaildationLayerOn, "디버그 모드 활성화");
 
-	VulkanExtension extension(vaildationLayerOn);
+	VulkanExtension extension;
 
 	VkApplicationInfo appInfo = {};
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -38,8 +38,8 @@ void VulkanInstance::Init(bool vaildationLayerOn)
 	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	createInfo.pApplicationInfo = &appInfo;
 
-	createInfo.enabledExtensionCount = static_cast<uint32_t>(extension.GetExtensions().size());
-	std::vector<const char*> extensions = extension.GetExtensions();
+	std::vector<const char*> extensions = extension.GetInstanceExtensions(vaildationLayerOn);
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 	createInfo.ppEnabledExtensionNames = extensions.data();
 
 	if (vaildationLayerOn)

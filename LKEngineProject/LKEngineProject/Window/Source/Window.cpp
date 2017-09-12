@@ -1,10 +1,10 @@
-#include "Window.h"
+#include "../Header/Window.h"
 
-#include "Macro.h"
+#include "../../Utility/Header/Macro.h"
 
-using namespace LKEngine;
+using namespace LKEngine::Window;
 
-LKEngine::Window::Window::Window(const int width,const int height)
+Window::Window(const int width,const int height)
 	:
 	window(nullptr),
 	width(width),
@@ -21,18 +21,23 @@ LKEngine::Window::Window::Window(const int width,const int height)
 	Console_Log_If(window, "창 생성 성공");
 }
 
-LKEngine::Window::Window::~Window()
+Window::~Window()
 {
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
 
-bool LKEngine::Window::Window::WindowShouldClose()
+bool Window::WindowShouldClose()
 {
 	return glfwWindowShouldClose(window);
 }
 
-void LKEngine::Window::Window::PollEvents()
+void Window::PollEvents()
 {
 	glfwPollEvents();
+}
+
+GLFWwindow * LKEngine::Window::Window::GetWindowHandle() const
+{
+	return window;
 }

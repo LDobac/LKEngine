@@ -1,9 +1,9 @@
-#include "Application.h"
+#include "../Header/Application.h"
 
-#include "Macro.h"
+#include "../../Utility/Header/Macro.h"
 
-#include "Window.h"
-#include "VulkanDevice.h"
+#include "../../Window/Header/Window.h"
+#include "../../Vulkan/Header/VulkanDevice.h"
 
 using namespace LKEngine::Application;
 
@@ -12,7 +12,7 @@ Application::Application(const int windowWidth, const int windowHeight)
 	window = new Window::Window(windowWidth,windowHeight);
 	device = new Vulkan::VulkanDevice();
 
-	device->Init(true);
+	device->Init(window,true);
 }
 
 
