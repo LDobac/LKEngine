@@ -1,4 +1,5 @@
 #include <vector>
+#include <set>
 #include <vulkan/vulkan.hpp>
 
 namespace LKEngine
@@ -13,6 +14,9 @@ namespace LKEngine
 
 		public:
 			QueueFamilyIndices() : graphicsFamily(-1), presentFamily(-1) { }
+
+			inline int GetGraphicsFamily() const { return graphicsFamily; }
+			inline int GetPresentFamily() const { return presentFamily; }
 
 			inline bool FindQueueFamily(VkPhysicalDevice gpu,VkSurfaceKHR surface)
 			{

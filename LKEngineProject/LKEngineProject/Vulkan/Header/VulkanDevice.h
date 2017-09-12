@@ -12,6 +12,8 @@ namespace LKEngine
 
 	namespace Vulkan
 	{
+		class VulkanQueue;
+
 		class VulkanDevice : public BaseInterface
 		{
 		private:
@@ -23,6 +25,9 @@ namespace LKEngine
 			VkPhysicalDeviceProperties gpuProp;
 
 			VkSurfaceKHR surface;
+
+			VulkanQueue* graphicsQueue;
+			VulkanQueue* presentQueue;
 		public:
 			explicit VulkanDevice();
 			virtual ~VulkanDevice();
@@ -35,7 +40,7 @@ namespace LKEngine
 		private:
 			void CreateSurface(Window::Window* window);
 			void RequirePhysicalDevice();
-			void QueryGPU();
+			void CreateDevice(bool vaildationLayerOn);
 
 			bool CheckDeviceFeatures(VkPhysicalDevice device);
 		};

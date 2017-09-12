@@ -9,3 +9,8 @@ VulkanQueue::VulkanQueue(VulkanDevice * device, uint32_t familyIndex, uint32_t q
 {
 	vkGetDeviceQueue(device->GetRawDevice(), familyIndex, queueIndex, &vkQueue);
 }
+
+VkQueue VulkanQueue::GetRawHandle() const
+{
+	return vkQueue;
+}
