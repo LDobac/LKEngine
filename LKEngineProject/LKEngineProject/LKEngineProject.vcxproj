@@ -133,9 +133,11 @@
     <ClCompile Include="Vulkan\Source\VulkanDebug.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanDevice.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanExtension.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanImage.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanInstance.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanQueue.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanQueueFamilyIndices.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanRenderPass.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanSwapchain.cpp" />
     <ClCompile Include="Window\Source\Window.cpp" />
   </ItemGroup>
@@ -148,9 +150,11 @@
     <ClInclude Include="Vulkan\Header\VulkanDevice.h" />
     <ClInclude Include="Vulkan\Header\VulkanDeviceChild.h" />
     <ClInclude Include="Vulkan\Header\VulkanExtension.h" />
+    <ClInclude Include="Vulkan\Header\VulkanImage.h" />
     <ClInclude Include="Vulkan\Header\VulkanInstance.h" />
     <ClInclude Include="Vulkan\Header\VulkanQueue.h" />
     <ClInclude Include="Vulkan\Header\VulkanQueueFamilyIndices.h" />
+    <ClInclude Include="Vulkan\Header\VulkanRenderPass.h" />
     <ClInclude Include="Vulkan\Header\VulkanSwapchain.h" />
     <ClInclude Include="Window\Header\Window.h" />
   </ItemGroup>

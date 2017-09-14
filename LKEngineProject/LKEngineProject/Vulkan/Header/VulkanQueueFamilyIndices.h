@@ -6,17 +6,13 @@ namespace LKEngine
 {
 	namespace Vulkan
 	{
-		class QueueFamilyIndices
+		struct QueueFamilyIndices
 		{
-		private:
 			int graphicsFamily;
 			int presentFamily;
 
 		public:
 			QueueFamilyIndices() : graphicsFamily(-1), presentFamily(-1) { }
-
-			inline int GetGraphicsFamily() const { return graphicsFamily; }
-			inline int GetPresentFamily() const { return presentFamily; }
 
 			inline bool FindQueueFamily(VkPhysicalDevice gpu,VkSurfaceKHR surface)
 			{

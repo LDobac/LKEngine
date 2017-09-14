@@ -1,17 +1,14 @@
 #pragma once
 
-#include "VulkanBaseInterface.h"
+#include "VulkanDevice.h"
 
 namespace LKEngine
 {
 	namespace Vulkan
 	{
-		class VulkanDevice;
-
-		class VulkanDeviceChild :
-			public BaseInterface
+		class VulkanDeviceChild
 		{
-		private:
+		protected:
 			VulkanDevice* device;
 		public:
 			explicit VulkanDeviceChild(VulkanDevice* device) :device(device) {}

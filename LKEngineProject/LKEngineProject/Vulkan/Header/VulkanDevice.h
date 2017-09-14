@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "VulkanBaseInterface.h"
 #include "VulkanInstance.h"
 
@@ -13,8 +15,11 @@ namespace LKEngine
 	namespace Vulkan
 	{
 		class VulkanQueue;
+		class VulkanSwapchain;
+		class VulkanRenderPass;
 
-		class VulkanDevice : public BaseInterface
+		class VulkanDevice 
+			: public BaseInterface
 		{
 		private:
 			VulkanInstance* instance;
@@ -26,8 +31,12 @@ namespace LKEngine
 
 			VkSurfaceKHR surface;
 
+			VulkanSwapchain* swapchain;
+
 			VulkanQueue* graphicsQueue;
 			VulkanQueue* presentQueue;
+
+			VulkanRenderPass* renderPass;
 		public:
 			explicit VulkanDevice();
 			virtual ~VulkanDevice();
@@ -35,12 +44,14 @@ namespace LKEngine
 			void Init(Window::Window* window, bool debug);
 			virtual void Shutdown() override;
 
-			VkDevice GetRawDevice() const;
+			VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
+			VkDevice GetRawDevice() const;
 		private:
 			void CreateSurface(Window::Window* window);
 			void RequirePhysicalDevice();
 			void CreateDevice(bool vaildationLayerOn);
+			void CreateSwapchain(Window::Window* window);
 
 			bool CheckDeviceFeatures(VkPhysicalDevice device);
 		};

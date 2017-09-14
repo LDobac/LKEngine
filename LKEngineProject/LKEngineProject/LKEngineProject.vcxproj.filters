@@ -29,6 +29,12 @@
     <ClCompile Include="Vulkan\Source\VulkanSwapchain.cpp">
       <Filter>Vulkan\Source</Filter>
     </ClCompile>
+    <ClCompile Include="Vulkan\Source\VulkanImage.cpp">
+      <Filter>Vulkan\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\Source\VulkanRenderPass.cpp">
+      <Filter>Vulkan\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Vulkan">
@@ -103,6 +109,12 @@
       <Filter>Application\Header</Filter>
     </ClInclude>
     <ClInclude Include="Vulkan\Header\VulkanSwapchain.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanImage.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanRenderPass.h">
       <Filter>Vulkan\Header</Filter>
     </ClInclude>
   </ItemGroup>
