@@ -35,6 +35,9 @@
     <ClCompile Include="Vulkan\Source\VulkanRenderPass.cpp">
       <Filter>Vulkan\Source</Filter>
     </ClCompile>
+    <ClCompile Include="Vulkan\Source\VulkanShaderModule.cpp">
+      <Filter>Vulkan\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Vulkan">
@@ -115,6 +118,15 @@
       <Filter>Vulkan\Header</Filter>
     </ClInclude>
     <ClInclude Include="Vulkan\Header\VulkanRenderPass.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanShaderModule.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanDescriptorSet.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanPipeline.h">
       <Filter>Vulkan\Header</Filter>
     </ClInclude>
   </ItemGroup>

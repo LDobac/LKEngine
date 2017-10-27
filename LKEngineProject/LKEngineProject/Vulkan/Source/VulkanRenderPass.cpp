@@ -127,4 +127,5 @@ void VulkanRenderPass::Init(VulkanSwapchain * swapchain)
 
 void VulkanRenderPass::Shutdown()
 {
+	vkDestroyRenderPass(device->GetRawDevice(), renderPass, nullptr);
 }
