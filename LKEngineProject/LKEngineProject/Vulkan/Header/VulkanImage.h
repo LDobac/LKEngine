@@ -7,7 +7,7 @@
 namespace LKEngine::Vulkan
 {
 	class VulkanImage
-		: public BaseInterface, VulkanDeviceChild
+		: public VulkanBaseInterface, VulkanDeviceChild
 	{
 	private:
 		VkImage image;

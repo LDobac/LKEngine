@@ -10,7 +10,7 @@ namespace LKEngine::Vulkan
 	class VulkanDebug;
 
 	class VulkanInstance
-		: public BaseInterface
+		: public VulkanBaseInterface
 	{
 	private:
 		VkInstance vkInstance;

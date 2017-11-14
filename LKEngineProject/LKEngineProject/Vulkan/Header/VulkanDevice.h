@@ -18,7 +18,7 @@ namespace LKEngine::Vulkan
 	class VulkanRenderPass;
 
 	class VulkanDevice 
-		: public BaseInterface
+		: public VulkanBaseInterface
 	{
 	private:
 		VulkanInstance* instance;

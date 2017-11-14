@@ -28,7 +28,7 @@ namespace LKEngine::Vulkan
 	};
 
 	class VulkanSwapchain
-		: public BaseInterface, VulkanDeviceChild
+		: public VulkanBaseInterface, VulkanDeviceChild
 	{
 	private:
 		VkSwapchainKHR swapchain;

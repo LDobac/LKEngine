@@ -15,6 +15,7 @@ VulkanShaderModule::~VulkanShaderModule()
 void VulkanShaderModule::Init(const std::string & shaderPath)
 {
 	std::string compilerPath = "../../ThirdParty/glslangValidator.exe";
+	system((compilerPath + " " + shaderPath).c_str());
 }
 
 void VulkanShaderModule::Init(const std::vector<char> compileCode)

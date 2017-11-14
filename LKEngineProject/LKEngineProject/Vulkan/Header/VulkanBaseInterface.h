@@ -2,11 +2,11 @@
 
 namespace LKEngine::Vulkan
 {
-	class BaseInterface
+	class VulkanBaseInterface
 	{
 	public:
-		BaseInterface() {}
-		virtual ~BaseInterface() {}
+		VulkanBaseInterface() {}
+		virtual ~VulkanBaseInterface() {}
 
 		virtual void Init() {}
 		virtual void Shutdown() {}

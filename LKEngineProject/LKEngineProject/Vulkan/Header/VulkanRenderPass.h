@@ -10,7 +10,7 @@ namespace LKEngine::Vulkan
 	class VulkanSwapchain;
 
 	class VulkanRenderPass
-		: public BaseInterface, VulkanDeviceChild
+		: public VulkanBaseInterface, VulkanDeviceChild
 	{
 	private:
 		VkRenderPass renderPass;

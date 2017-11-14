@@ -6,7 +6,7 @@
 namespace LKEngine::Vulkan
 {
 	class VulkanShaderModule
-		: public VulkanDeviceChild, BaseInterface
+		: public VulkanDeviceChild, VulkanBaseInterface
 	{
 	private:
 		VkShaderModule shaderModule;
