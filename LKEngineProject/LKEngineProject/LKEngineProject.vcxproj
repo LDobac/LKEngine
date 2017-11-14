@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{88ABB220-714F-4359-AA46-CC2CEBE8CEAB}</ProjectGuid>
     <RootNamespace>LKEngineProject</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,7 +42,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -70,15 +70,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\Projects\Vulkan\Library\GLFW\include;D:\Projects\Vulkan\Library\GLM;D:\Projects\Vulkan\Library\1.0.57.0\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Projects\Vulkan\Library\1.0.57.0\Lib32;D:\Projects\Vulkan\Library\GLFW\lib-vc2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Projects\VulkanLibs\glfw\glfw_x86\include;D:\Projects\VulkanLibs\glm;D:\Projects\VulkanLibs\1.0.65.0\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Projects\VulkanLibs\1.0.65.0\Lib32;D:\Projects\VulkanLibs\glfw\glfw_x86\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>D:\Projects\Vulkan\Library\1.0.57.0\Include;D:\Projects\Vulkan\Library\GLM;D:\Projects\Vulkan\Library\GLFW\include;$(IncludePath)</IncludePath>
     <LibraryPath>D:\Projects\Vulkan\Library\GLFW\lib-vc2015;D:\Projects\Vulkan\Library\1.0.57.0\Lib32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExecutablePath>D:\Projects\Vulkan\LkEngine\VulkanSDK\Include;D:\Projects\Vulkan\LkEngine\GLFW\include;$(ExecutablePath)</ExecutablePath>
+    <ExecutablePath>D:\Projects\VulkanLibs\glm;D:\Projects\VulkanLibs\1.0.65.0\Include;D:\Projects\VulkanLibs\glfw\glfw_x64\include;$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>D:\Projects\VulkanLibs\glfw\glfw_x64\lib-vc2015;D:\Projects\VulkanLibs\1.0.65.0\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExecutablePath>D:\Projects\Vulkan\LkEngine\VulkanSDK\Include;D:\Projects\Vulkan\LkEngine\GLFW\include;$(ExecutablePath)</ExecutablePath>
