@@ -3,25 +3,22 @@
 #include "VulkanBaseInterface.h"
 #include "VulkanDeviceChild.h"
 
-namespace LKEngine
+namespace LKEngine::Vulkan
 {
-	namespace Vulkan
+	class VulkanShaderModule
+		: public VulkanDeviceChild, BaseInterface
 	{
-		class VulkanShaderModule
-			: public VulkanDeviceChild, BaseInterface
-		{
-		private:
-			VkShaderModule shaderModule;
-		public:
-			VulkanShaderModule(VulkanDevice* device);
-			~VulkanShaderModule();
+	private:
+		VkShaderModule shaderModule;
+	public:
+		VulkanShaderModule(VulkanDevice* device);
+		~VulkanShaderModule();
 
-			void Init(const std::string& shaderPath);
-			void Init(const std::vector<char> compileCode);
+		void Init(const std::string& shaderPath);
+		void Init(const std::vector<char> compileCode);
 
-			virtual void Shutdown() override;
+		virtual void Shutdown() override;
 
-			VkShaderModule GetHandle() const;
-		};
-	}
+		VkShaderModule GetHandle() const;
+	};
 }

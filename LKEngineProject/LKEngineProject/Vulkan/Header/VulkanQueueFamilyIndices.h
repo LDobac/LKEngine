@@ -2,51 +2,48 @@
 #include <set>
 #include <vulkan/vulkan.hpp>
 
-namespace LKEngine
+namespace LKEngine::Vulkan
 {
-	namespace Vulkan
+	struct QueueFamilyIndices
 	{
-		struct QueueFamilyIndices
+		int graphicsFamily;
+		int presentFamily;
+
+	public:
+		QueueFamilyIndices() : graphicsFamily(-1), presentFamily(-1) { }
+
+		inline bool FindQueueFamily(VkPhysicalDevice gpu,VkSurfaceKHR surface)
 		{
-			int graphicsFamily;
-			int presentFamily;
+			uint32_t queueFamilyCount = 0;
+			vkGetPhysicalDeviceQueueFamilyProperties(gpu, &queueFamilyCount, nullptr);
 
-		public:
-			QueueFamilyIndices() : graphicsFamily(-1), presentFamily(-1) { }
+			std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+			vkGetPhysicalDeviceQueueFamilyProperties(gpu, &queueFamilyCount, queueFamilies.data());
 
-			inline bool FindQueueFamily(VkPhysicalDevice gpu,VkSurfaceKHR surface)
+			for (size_t i = 0; i < queueFamilies.size(); i++)
 			{
-				uint32_t queueFamilyCount = 0;
-				vkGetPhysicalDeviceQueueFamilyProperties(gpu, &queueFamilyCount, nullptr);
-
-				std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-				vkGetPhysicalDeviceQueueFamilyProperties(gpu, &queueFamilyCount, queueFamilies.data());
-
-				for (size_t i = 0; i < queueFamilies.size(); i++)
+				if ((queueFamilies[i].queueCount > 0) && (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)) 
 				{
-					if ((queueFamilies[i].queueCount > 0) && (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)) 
-					{
-						graphicsFamily = i;
-					}
-
-					VkBool32 presentSupport = false;
-					vkGetPhysicalDeviceSurfaceSupportKHR(gpu, i, surface, &presentSupport);
-
-					if (queueFamilies[i].queueCount > 0 && presentSupport) 
-					{
-						presentFamily = i;
-					}
-
-					if (IsComplete()) return true;
+					graphicsFamily = i;
 				}
 
-				return false;
+				VkBool32 presentSupport = false;
+				vkGetPhysicalDeviceSurfaceSupportKHR(gpu, i, surface, &presentSupport);
+
+				if (queueFamilies[i].queueCount > 0 && presentSupport) 
+				{
+					presentFamily = i;
+				}
+
+				if (IsComplete()) return true;
 			}
 
-			inline bool IsComplete() 
-			{
-				return graphicsFamily >= 0 && presentFamily >= 0;
-			}
-		};
-	}
+			return false;
+		}
+
+		inline bool IsComplete() 
+		{
+			return graphicsFamily >= 0 && presentFamily >= 0;
+		}
+	};
 }

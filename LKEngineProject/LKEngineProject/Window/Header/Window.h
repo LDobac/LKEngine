@@ -2,26 +2,23 @@
 
 #include <GLFW/glfw3.h>
 
-namespace LKEngine
+namespace LKEngine::Window
 {
-	namespace Window
+	class Window
 	{
-		class Window
-		{
-		private:
-			GLFWwindow* window;
+	private:
+		GLFWwindow* window;
 
-			int width;
-			int height;
-		public:
-			explicit Window(const int width, const int height);
-			~Window(); 
+		int width;
+		int height;
+	public:
+		explicit Window(const int width, const int height);
+		~Window(); 
 
-			bool WindowShouldClose();
+		bool WindowShouldClose();
 
-			void PollEvents();
+		void PollEvents();
 
-			GLFWwindow* GetWindowHandle() const;
-		};
-	}
+		GLFWwindow* GetWindowHandle() const;
+	};
 }

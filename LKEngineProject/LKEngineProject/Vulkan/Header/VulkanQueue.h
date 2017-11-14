@@ -4,22 +4,19 @@
 
 #include "VulkanDeviceChild.h"
 
-namespace LKEngine
+namespace LKEngine::Vulkan
 {
-	namespace Vulkan
+	class VulkanQueue
+		: VulkanDeviceChild
 	{
-		class VulkanQueue
-			: VulkanDeviceChild
-		{
-		private:
-			VkQueue vkQueue;
+	private:
+		VkQueue vkQueue;
 
-			uint32_t familyIndex;
-			uint32_t queueIndex;
-		public:
-			explicit VulkanQueue(VulkanDevice* device, uint32_t familyIndex, uint32_t queueIndex);
+		uint32_t familyIndex;
+		uint32_t queueIndex;
+	public:
+		explicit VulkanQueue(VulkanDevice* device, uint32_t familyIndex, uint32_t queueIndex);
 
-			VkQueue GetRawHandle() const;
-		};
-	}
+		VkQueue GetRawHandle() const;
+	};
 }

@@ -5,55 +5,53 @@
 #include "VulkanBaseInterface.h"
 #include "VulkanInstance.h"
 
-namespace LKEngine
+//Foward Declaration
+namespace LKEngine::Window
 {
-	namespace Window
+	class Window;
+}
+
+namespace LKEngine::Vulkan
+{
+	class VulkanQueue;
+	class VulkanSwapchain;
+	class VulkanRenderPass;
+
+	class VulkanDevice 
+		: public BaseInterface
 	{
-		class Window;
-	}
+	private:
+		VulkanInstance* instance;
 
-	namespace Vulkan
-	{
-		class VulkanQueue;
-		class VulkanSwapchain;
-		class VulkanRenderPass;
+		VkDevice vkDevice;
 
-		class VulkanDevice 
-			: public BaseInterface
-		{
-		private:
-			VulkanInstance* instance;
+		VkPhysicalDevice gpu;
+		VkPhysicalDeviceProperties gpuProp;
 
-			VkDevice vkDevice;
+		VkSurfaceKHR surface;
 
-			VkPhysicalDevice gpu;
-			VkPhysicalDeviceProperties gpuProp;
+		VulkanSwapchain* swapchain;
 
-			VkSurfaceKHR surface;
+		VulkanQueue* graphicsQueue;
+		VulkanQueue* presentQueue;
 
-			VulkanSwapchain* swapchain;
+		VulkanRenderPass* renderPass;
+	public:
+		explicit VulkanDevice();
+		virtual ~VulkanDevice();
 
-			VulkanQueue* graphicsQueue;
-			VulkanQueue* presentQueue;
+		void Init(Window::Window* window, bool debug);
+		virtual void Shutdown() override;
 
-			VulkanRenderPass* renderPass;
-		public:
-			explicit VulkanDevice();
-			virtual ~VulkanDevice();
+		VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
-			void Init(Window::Window* window, bool debug);
-			virtual void Shutdown() override;
+		VkDevice GetRawDevice() const;
+	private:
+		void CreateSurface(Window::Window* window);
+		void RequirePhysicalDevice();
+		void CreateDevice(bool vaildationLayerOn);
+		void CreateSwapchain(Window::Window* window);
 
-			VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-
-			VkDevice GetRawDevice() const;
-		private:
-			void CreateSurface(Window::Window* window);
-			void RequirePhysicalDevice();
-			void CreateDevice(bool vaildationLayerOn);
-			void CreateSwapchain(Window::Window* window);
-
-			bool CheckDeviceFeatures(VkPhysicalDevice device);
-		};
-	}
+		bool CheckDeviceFeatures(VkPhysicalDevice device);
+	};
 }

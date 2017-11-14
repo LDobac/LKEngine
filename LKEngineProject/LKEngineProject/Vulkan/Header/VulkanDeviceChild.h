@@ -2,18 +2,15 @@
 
 #include "VulkanDevice.h"
 
-namespace LKEngine
+namespace LKEngine::Vulkan
 {
-	namespace Vulkan
+	class VulkanDeviceChild
 	{
-		class VulkanDeviceChild
-		{
-		protected:
-			VulkanDevice* device;
-		public:
-			explicit VulkanDeviceChild(VulkanDevice* device) :device(device) {}
-			virtual ~VulkanDeviceChild() {}
-		};
-	}
+	protected:
+		VulkanDevice* device;
+	public:
+		explicit VulkanDeviceChild(VulkanDevice* device) :device(device) {}
+		virtual ~VulkanDeviceChild() {}
+	};
 }
 

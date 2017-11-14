@@ -5,53 +5,51 @@
 #include "VulkanBaseInterface.h"
 #include "VulkanDeviceChild.h"
 
-namespace LKEngine
+//Foward Declaration
+namespace LKEngine::Window
 {
-	namespace Window
+	class Window;
+}
+
+namespace LKEngine::Vulkan
+{
+	class VulkanDevice;
+	class VulkanImage;
+
+	struct SwapchainSupportDetail
 	{
-		class Window;
-	}
+		VkSurfaceCapabilitiesKHR capabilities;
+		std::vector<VkSurfaceFormatKHR> formats;
+		std::vector<VkPresentModeKHR> presentModes;
 
-	namespace Vulkan
+	public:
+		explicit SwapchainSupportDetail(VkPhysicalDevice gpu,VkSurfaceKHR surface);
+		bool CheckSwapchainAdequate();
+	};
+
+	class VulkanSwapchain
+		: public BaseInterface, VulkanDeviceChild
 	{
-		class VulkanDevice;
-		class VulkanImage;
+	private:
+		VkSwapchainKHR swapchain;
 
-		struct SwapchainSupportDetail
-		{
-			VkSurfaceCapabilitiesKHR capabilities;
-			std::vector<VkSurfaceFormatKHR> formats;
-			std::vector<VkPresentModeKHR> presentModes;
+		VkFormat swapchainFormat;
+		VkExtent2D swapchainExtent;
 
-		public:
-			explicit SwapchainSupportDetail(VkPhysicalDevice gpu,VkSurfaceKHR surface);
-			bool CheckSwapchainAdequate();
-		};
+		std::vector<VulkanImage*> swapchainImages;
 
-		class VulkanSwapchain
-			: public BaseInterface, VulkanDeviceChild
-		{
-		private:
-			VkSwapchainKHR swapchain;
+		Window::Window* window;
+	public:
+		explicit VulkanSwapchain(VulkanDevice* device, Window::Window* window);
+		virtual ~VulkanSwapchain();
 
-			VkFormat swapchainFormat;
-			VkExtent2D swapchainExtent;
+		void Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface);
+		virtual void Shutdown() override;
 
-			std::vector<VulkanImage*> swapchainImages;
-
-			Window::Window* window;
-		public:
-			explicit VulkanSwapchain(VulkanDevice* device, Window::Window* window);
-			virtual ~VulkanSwapchain();
-
-			void Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface);
-			virtual void Shutdown() override;
-
-			VkFormat GetFormat() const;
-		private:
-			VkSurfaceFormatKHR ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const;
-			VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR> availablePresentModes) const;
-			VkExtent2D ChooseSwapchainExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
-		};
-	}
+		VkFormat GetFormat() const;
+	private:
+		VkSurfaceFormatKHR ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const;
+		VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR> availablePresentModes) const;
+		VkExtent2D ChooseSwapchainExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
+	};
 }

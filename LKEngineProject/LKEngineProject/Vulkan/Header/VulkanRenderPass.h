@@ -5,23 +5,20 @@
 #include "VulkanBaseInterface.h"
 #include "VulkanDeviceChild.h"
 
-namespace LKEngine
+namespace LKEngine::Vulkan
 {
-	namespace Vulkan
+	class VulkanSwapchain;
+
+	class VulkanRenderPass
+		: public BaseInterface, VulkanDeviceChild
 	{
-		class VulkanSwapchain;
+	private:
+		VkRenderPass renderPass;
+	public:
+		explicit VulkanRenderPass(VulkanDevice* device);
+		virtual ~VulkanRenderPass();
 
-		class VulkanRenderPass
-			: public BaseInterface, VulkanDeviceChild
-		{
-		private:
-			VkRenderPass renderPass;
-		public:
-			explicit VulkanRenderPass(VulkanDevice* device);
-			virtual ~VulkanRenderPass();
-
-			void Init(VulkanSwapchain* swapchain);
-			virtual void Shutdown() override;
-		};
-	}
+		void Init(VulkanSwapchain* swapchain);
+		virtual void Shutdown() override;
+	};
 }

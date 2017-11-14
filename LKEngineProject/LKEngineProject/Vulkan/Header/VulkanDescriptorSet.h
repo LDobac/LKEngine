@@ -1,12 +1,9 @@
 #pragma once
 
-namespace LKEngine
+namespace LKEngine::Vulkan
 {
-	namespace Vulkan
+	class VulkanDescriptorSetLayout
 	{
-		class VulkanDescriptorSetLayout
-		{
 
-		};
-	}
+	};
 }

@@ -1,19 +1,15 @@
 #pragma once
 
-namespace LKEngine
+namespace LKEngine::Vulkan
 {
-	namespace Vulkan
+	class BaseInterface
 	{
-		class BaseInterface
-		{
-		public:
-			BaseInterface() {}
-			virtual ~BaseInterface() {}
+	public:
+		BaseInterface() {}
+		virtual ~BaseInterface() {}
 
-			virtual void Init() {}
-			virtual void Shutdown() {}
-		};
-	}
-
+		virtual void Init() {}
+		virtual void Shutdown() {}
+	};
 }
 

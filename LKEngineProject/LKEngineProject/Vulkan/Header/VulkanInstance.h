@@ -4,28 +4,25 @@
 
 #include "VulkanBaseInterface.h"
 
-namespace LKEngine
+namespace LKEngine::Vulkan
 {
-	namespace Vulkan
+	class VulkanExtension;
+	class VulkanDebug;
+
+	class VulkanInstance
+		: public BaseInterface
 	{
-		class VulkanExtension;
-		class VulkanDebug;
+	private:
+		VkInstance vkInstance;
 
-		class VulkanInstance
-			: public BaseInterface
-		{
-		private:
-			VkInstance vkInstance;
+		VulkanDebug* debug;
+	public :
+		explicit VulkanInstance();
+		~VulkanInstance();
 
-			VulkanDebug* debug;
-		public :
-			explicit VulkanInstance();
-			~VulkanInstance();
+		void Init(bool vaildationLayerOn);
+		virtual void Shutdown() override;
 
-			void Init(bool vaildationLayerOn);
-			virtual void Shutdown() override;
-
-			VkInstance GetRawInstance() const;
-		};
-	}
+		VkInstance GetRawInstance() const;
+	};
 }

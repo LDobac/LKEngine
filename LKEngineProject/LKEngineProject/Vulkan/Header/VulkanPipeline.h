@@ -1,9 +1,5 @@
 #pragma once
 
-namespace LKEngine
+namespace LKEngine::Vulkan
 {
-	namespace Vulkan
-	{
-
-	}
 }

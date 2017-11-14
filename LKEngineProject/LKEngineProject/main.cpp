@@ -2,17 +2,12 @@
 
 #include <cstdlib>
 #include <crtdbg.h>
-#include <map>
 
 int main()
 {
-	using namespace LKEngine::Application;
+	LKEngine::Application::Application app(800, 600);
 
-	Application* app = new Application(800,600);
-
-	app->Loop();
-
-	delete app;
+	app.Loop();
 
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
