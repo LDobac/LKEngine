@@ -19,11 +19,11 @@ namespace LKEngine
 			explicit VulkanImage(VkImage& image, VulkanDevice* device);
 			virtual ~VulkanImage();
 
-			//VkImageView만 초기화(스왑 체인용)
+			//Initalize only VkImageView
 			void InitWithoutImage(VkFormat format, VkImageAspectFlags aspectFlags);
 
 			virtual void Shutdown() override;
-			//VkImageView만 삭제(스왑 체인용)
+			//Delete only VkImageView
 			void ShutdownWithoutImage();
 
 		private:
