@@ -1,17 +1,21 @@
-#include "WindowsApplication.h"
+#include "Application/Header/Application.h"
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <crtdbg.h>
+#include <map>
 
 int main()
 {
-	LKEngine::Window::WindowsApplication app;
+	using namespace LKEngine::Application;
 
-	app.CreateWindow(800, 600);
+	Application* app = new Application(800,600);
 
-	app.MainLoop();
+	app->Loop();
 
-	app.CleanUp();
+	delete app;
 
-	system("pause");
+	//메모리 누수 체크
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
+	return 0;
 }

@@ -1,67 +1,133 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Core">
-      <UniqueIdentifier>{becf71ea-f937-4e00-b0cd-fd1d80bd2db8}</UniqueIdentifier>
+    <Filter Include="Application">
+      <UniqueIdentifier>{8be061cb-1de9-4146-bac3-8c1009a15a1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Header">
-      <UniqueIdentifier>{df80b866-0b8f-4a6f-aea0-c52e69ac7f30}</UniqueIdentifier>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{ff073da5-dc0f-4114-8095-7ba5fe10be41}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Header\Utility">
-      <UniqueIdentifier>{cc3a8b22-4231-43a8-8b9e-c6a62a6d7b07}</UniqueIdentifier>
+    <Filter Include="Vulkan">
+      <UniqueIdentifier>{213d9768-fc4a-4c4b-b7a6-c45e28530738}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Header\Vulkan">
-      <UniqueIdentifier>{45a99c24-13f1-410b-b7ff-1d7720c08071}</UniqueIdentifier>
+    <Filter Include="Window">
+      <UniqueIdentifier>{7e47b8f6-770a-424e-bcc2-a9a322351951}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Header\Window">
-      <UniqueIdentifier>{57a6b3dd-e666-41f9-bf21-86379b7032f0}</UniqueIdentifier>
+    <Filter Include="Application\Header">
+      <UniqueIdentifier>{20ccd484-f07b-476a-9417-8980d90d9db7}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ManagedObject.h">
-      <Filter>Core\Header\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Macro.h">
-      <Filter>Core\Header\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanDevice.h">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowsApplication.h">
-      <Filter>Core\Header\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanInstance.h">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanDebug.h">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanExtension.h">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanQueue.h">
-      <Filter>Core\Header\Vulkan</Filter>
-    </ClInclude>
+    <Filter Include="Application\Source">
+      <UniqueIdentifier>{f8cc9e06-955c-47d4-beb0-309df5ba3dbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\Header">
+      <UniqueIdentifier>{22072a8c-fe9a-4533-b38c-a320ed8c58ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\Source">
+      <UniqueIdentifier>{bc6756dd-7088-461a-900d-e3c4743b0ff1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vulkan\Header">
+      <UniqueIdentifier>{1e461b50-9604-446a-86d2-cf104cff8b1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vulkan\Source">
+      <UniqueIdentifier>{3d8ca4a6-9332-4613-bbde-32bf6e87a5dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\Header">
+      <UniqueIdentifier>{29d35e60-565e-446e-8fd4-6b4ff8513090}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="WindowsApplication.cpp">
-      <Filter>Core\Header\Window</Filter>
+    <ClCompile Include="Application\Source\Application.cpp">
+      <Filter>Application\Source</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanExtension.cpp">
-      <Filter>Core\Header\Vulkan</Filter>
+    <ClCompile Include="Window\Source\Window.cpp">
+      <Filter>Window\Source</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanDevice.cpp">
-      <Filter>Core\Header\Vulkan</Filter>
+    <ClCompile Include="Vulkan\Source\VulkanDebug.cpp">
+      <Filter>Vulkan\Source</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanDebug.cpp">
-      <Filter>Core\Header\Vulkan</Filter>
+    <ClCompile Include="Vulkan\Source\VulkanDevice.cpp">
+      <Filter>Vulkan\Source</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanInstance.cpp">
-      <Filter>Core\Header\Vulkan</Filter>
+    <ClCompile Include="Vulkan\Source\VulkanExtension.cpp">
+      <Filter>Vulkan\Source</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanQueue.cpp">
-      <Filter>Core\Header\Vulkan</Filter>
+    <ClCompile Include="Vulkan\Source\VulkanImage.cpp">
+      <Filter>Vulkan\Source</Filter>
     </ClCompile>
+    <ClCompile Include="Vulkan\Source\VulkanInstance.cpp">
+      <Filter>Vulkan\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\Source\VulkanQueue.cpp">
+      <Filter>Vulkan\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\Source\VulkanQueueFamilyIndices.cpp">
+      <Filter>Vulkan\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\Source\VulkanRenderPass.cpp">
+      <Filter>Vulkan\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\Source\VulkanShaderModule.cpp">
+      <Filter>Vulkan\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\Source\VulkanSwapchain.cpp">
+      <Filter>Vulkan\Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application\Header\Application.h">
+      <Filter>Application\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Header\Window.h">
+      <Filter>Window\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanBaseInterface.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanDebug.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanDescriptorSet.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanDevice.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanDeviceChild.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanExtension.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanImage.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanInstance.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanPipeline.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanQueue.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanQueueFamilyIndices.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanRenderPass.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanShaderModule.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanSwapchain.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Header\Macro.h">
+      <Filter>Utility\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Header\ManagedObject.h">
+      <Filter>Utility\Header</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
