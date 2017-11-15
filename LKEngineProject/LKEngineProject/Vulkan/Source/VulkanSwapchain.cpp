@@ -102,13 +102,13 @@ void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surf
 	createInfo.presentMode = presentMode;
 	createInfo.clipped = VK_TRUE;
 
-	VkResult result = vkCreateSwapchainKHR(device->GetRawDevice(), &createInfo, nullptr, &swapchain);
+	VkResult result = vkCreateSwapchainKHR(*(*device), &createInfo, nullptr, &swapchain);
 	Check_Throw(result != VK_SUCCESS, "스왑 체인 생성 실패!");
 
 	std::vector<VkImage> tmpImages;
-	vkGetSwapchainImagesKHR(device->GetRawDevice(), swapchain, &imageCount, nullptr);
+	vkGetSwapchainImagesKHR(*(*device), swapchain, &imageCount, nullptr);
 	tmpImages.resize(imageCount);
-	vkGetSwapchainImagesKHR(device->GetRawDevice(), swapchain, &imageCount, tmpImages.data());
+	vkGetSwapchainImagesKHR(*(*device), swapchain, &imageCount, tmpImages.data());
 
 	swapchainImages.resize(imageCount);
 	for (size_t i = 0; i < swapchainImages.size(); i++)
@@ -132,7 +132,7 @@ void VulkanSwapchain::Shutdown()
 		swapchainImages[i]->ShutdownWithoutImage();
 	}
 
-	vkDestroySwapchainKHR(device->GetRawDevice(), swapchain, nullptr);
+	vkDestroySwapchainKHR(*(*device), swapchain, nullptr);
 }
 
 VkFormat VulkanSwapchain::GetFormat() const

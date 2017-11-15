@@ -43,19 +43,19 @@ void VulkanImage::InitWithoutImage(VkFormat format, VkImageAspectFlags aspectFla
 	viewInfo.subresourceRange.baseArrayLayer = 0;
 	viewInfo.subresourceRange.layerCount = 1;
 
-	VkResult result = vkCreateImageView(device->GetRawDevice(), &viewInfo, nullptr, &imageView);
+	VkResult result = vkCreateImageView(*(*device), &viewInfo, nullptr, &imageView);
 	Check_Throw(result != VK_SUCCESS, "이미지 뷰 생성 실패!");
 }
 
  void VulkanImage::Shutdown()
 {
-	 vkDestroyImageView(device->GetRawDevice(), imageView, nullptr);
-	 vkDestroyImage(device->GetRawDevice(), image, nullptr);
+	 vkDestroyImageView(*(*device), imageView, nullptr);
+	 vkDestroyImage(*(*device), image, nullptr);
 }
 
 void VulkanImage::ShutdownWithoutImage()
 {
-	vkDestroyImageView(device->GetRawDevice(), imageView, nullptr);
+	vkDestroyImageView(*(*device), imageView, nullptr);
 }
 
 void VulkanImage::CreateImage()

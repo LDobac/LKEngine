@@ -44,7 +44,7 @@ void VulkanRenderPass::Init(VulkanSwapchain * swapchain)
 	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
-	//깊이 설명
+	//깊이 디스크립션
 	VkFormat depthFormat = device->FindSupportedFormat({ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT }, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
 
 	VkAttachmentDescription depthAttachment = {};
@@ -64,7 +64,7 @@ void VulkanRenderPass::Init(VulkanSwapchain * swapchain)
 	*/
 	depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-	//컬러 설명 참조 설정
+	//컬러 디스크립션 참조 설정
 	VkAttachmentReference colorAttachmentRef = {};
 	/*
 	* 첨부 파일 디스크립터 배열에서 인덱스를 기준으로 참조할 첨부 파일 지정
@@ -120,7 +120,7 @@ void VulkanRenderPass::Init(VulkanSwapchain * swapchain)
 	renderPassInfo.dependencyCount = 1;
 	renderPassInfo.pDependencies = &dependency;
 
-	VkResult result = vkCreateRenderPass(device->GetRawDevice(), &renderPassInfo, nullptr, &renderPass);
+	VkResult result = vkCreateRenderPass(*(*device), &renderPassInfo, nullptr, &renderPass);
 	Check_Throw(result != VK_SUCCESS, "렌더 패스 생성 실패!");
 	
 	Console_Log("렌더 패스 생성 성공!");
@@ -128,5 +128,5 @@ void VulkanRenderPass::Init(VulkanSwapchain * swapchain)
 
 void VulkanRenderPass::Shutdown()
 {
-	vkDestroyRenderPass(device->GetRawDevice(), renderPass, nullptr);
+	vkDestroyRenderPass(*(*device), renderPass, nullptr);
 }

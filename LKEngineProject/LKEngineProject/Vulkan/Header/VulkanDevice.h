@@ -46,7 +46,7 @@ namespace LKEngine::Vulkan
 
 		VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
-		VkDevice GetRawDevice() const;
+		VkDevice operator*() const;
 	private:
 		void CreateSurface(LKEngine::Window::WindowsWindow * window);
 		void RequirePhysicalDevice();

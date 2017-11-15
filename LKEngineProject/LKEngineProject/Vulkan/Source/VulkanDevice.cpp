@@ -83,7 +83,7 @@ VkFormat VulkanDevice::FindSupportedFormat(const std::vector<VkFormat>& candidat
 	Check_Throw(true, "지원되는 포맷을 찾을 수 없습니다!");
 }
 
-VkDevice VulkanDevice::GetRawDevice() const
+VkDevice VulkanDevice::operator*() const
 {
 	return vkDevice;
 }
@@ -233,6 +233,8 @@ bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
 
 void VulkanDevice::CreateSurface(LKEngine::Window::WindowsWindow * window)
 {
+	Console_Log("Surface 생성 시작");
 	VkResult result = glfwCreateWindowSurface(*(*instance), window->GetWindowHandle(), nullptr, &surface);
 	Check_Throw(result != VK_SUCCESS, "Surface가 생성되지 않았습니다!");
+	Console_Log("Surface 생성 성공");
 }
