@@ -1,12 +1,12 @@
 #pragma once
 
-#include "VulkanBaseInterface.h"
+#include "IVulkanObject.h"
 #include "VulkanDeviceChild.h"
 
 namespace LKEngine::Vulkan
 {
 	class VulkanShaderModule
-		: public VulkanDeviceChild, VulkanBaseInterface
+		: public VulkanDeviceChild, IVulkanObject
 	{
 	private:
 		VkShaderModule shaderModule;

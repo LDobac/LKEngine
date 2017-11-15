@@ -40,9 +40,6 @@
     <ClCompile Include="Application\Source\Application.cpp">
       <Filter>Application\Source</Filter>
     </ClCompile>
-    <ClCompile Include="Window\Source\Window.cpp">
-      <Filter>Window\Source</Filter>
-    </ClCompile>
     <ClCompile Include="Vulkan\Source\VulkanDebug.cpp">
       <Filter>Vulkan\Source</Filter>
     </ClCompile>
@@ -73,16 +70,13 @@
     <ClCompile Include="Vulkan\Source\VulkanSwapchain.cpp">
       <Filter>Vulkan\Source</Filter>
     </ClCompile>
+    <ClCompile Include="Window\Source\WindowsWindow.cpp">
+      <Filter>Window\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Header\Application.h">
       <Filter>Application\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Window\Header\Window.h">
-      <Filter>Window\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanBaseInterface.h">
-      <Filter>Vulkan\Header</Filter>
     </ClInclude>
     <ClInclude Include="Vulkan\Header\VulkanDebug.h">
       <Filter>Vulkan\Header</Filter>
@@ -128,6 +122,15 @@
     </ClInclude>
     <ClInclude Include="Utility\Header\ManagedObject.h">
       <Filter>Utility\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Header\IWindow.h">
+      <Filter>Window\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Header\WindowsWindow.h">
+      <Filter>Window\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\IVulkanObject.h">
+      <Filter>Vulkan\Header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

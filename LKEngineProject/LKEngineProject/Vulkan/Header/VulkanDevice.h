@@ -2,13 +2,13 @@
 
 #include <vector>
 
-#include "VulkanBaseInterface.h"
+#include "IVulkanObject.h"
 #include "VulkanInstance.h"
 
 //Foward Declaration
 namespace LKEngine::Window
 {
-	class Window;
+	class WindowsWindow;
 }
 
 namespace LKEngine::Vulkan
@@ -18,7 +18,7 @@ namespace LKEngine::Vulkan
 	class VulkanRenderPass;
 
 	class VulkanDevice 
-		: public VulkanBaseInterface
+		: public IVulkanObject
 	{
 	private:
 		VulkanInstance* instance;
@@ -40,17 +40,18 @@ namespace LKEngine::Vulkan
 		explicit VulkanDevice();
 		virtual ~VulkanDevice();
 
-		void Init(Window::Window* window, bool debug);
+		virtual void Init() override { }
+		void Init(LKEngine::Window::WindowsWindow* window, bool debug);
 		virtual void Shutdown() override;
 
 		VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
 		VkDevice GetRawDevice() const;
 	private:
-		void CreateSurface(Window::Window* window);
+		void CreateSurface(LKEngine::Window::WindowsWindow * window);
 		void RequirePhysicalDevice();
 		void CreateDevice(bool vaildationLayerOn);
-		void CreateSwapchain(Window::Window* window);
+		void CreateSwapchain(LKEngine::Window::WindowsWindow * window);
 
 		bool CheckDeviceFeatures(VkPhysicalDevice device);
 	};

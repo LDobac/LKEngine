@@ -2,13 +2,13 @@
 
 #include <vulkan/vulkan.hpp>
 
-#include "VulkanBaseInterface.h"
+#include "IVulkanObject.h"
 #include "VulkanDeviceChild.h"
 
 //Foward Declaration
 namespace LKEngine::Window
 {
-	class Window;
+	class WindowsWindow;
 }
 
 namespace LKEngine::Vulkan
@@ -28,7 +28,7 @@ namespace LKEngine::Vulkan
 	};
 
 	class VulkanSwapchain
-		: public VulkanBaseInterface, VulkanDeviceChild
+		: public IVulkanObject, VulkanDeviceChild
 	{
 	private:
 		VkSwapchainKHR swapchain;
@@ -38,11 +38,12 @@ namespace LKEngine::Vulkan
 
 		std::vector<VulkanImage*> swapchainImages;
 
-		Window::Window* window;
+		Window::WindowsWindow* window;
 	public:
-		explicit VulkanSwapchain(VulkanDevice* device, Window::Window* window);
+		explicit VulkanSwapchain(VulkanDevice* device, Window::WindowsWindow* window);
 		virtual ~VulkanSwapchain();
 
+		virtual void Init() override { }
 		void Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface);
 		virtual void Shutdown() override;
 

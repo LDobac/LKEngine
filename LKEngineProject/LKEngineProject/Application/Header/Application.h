@@ -9,23 +9,23 @@ namespace LKEngine
 
 	namespace Window
 	{
-		class Window;
+		class WindowsWindow;
 	}
+}
 
-	namespace Application
+namespace LKEngine::Application
+{
+	class Application
 	{
-		class Application
-		{
-		private:
-			Window::Window* window;
-			Vulkan::VulkanDevice* device;
+	private:
+		Window::WindowsWindow* window;
+		Vulkan::VulkanDevice* device;
 
-		public:
-			Application(const int windowWidth,const int windowHeight);
-			~Application();
+	public:
+		Application(const int windowWidth,const int windowHeight);
+		~Application();
 
-			void Loop();
-		};
-	}
+		void Loop();
+	};
 }
 

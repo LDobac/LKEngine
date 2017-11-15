@@ -31,13 +31,13 @@
     <ClCompile Include="Vulkan\Source\VulkanRenderPass.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanShaderModule.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanSwapchain.cpp" />
-    <ClCompile Include="Window\Source\Window.cpp" />
+    <ClCompile Include="Window\Source\WindowsWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Header\Application.h" />
     <ClInclude Include="Utility\Header\Macro.h" />
     <ClInclude Include="Utility\Header\ManagedObject.h" />
-    <ClInclude Include="Vulkan\Header\VulkanBaseInterface.h" />
+    <ClInclude Include="Vulkan\Header\IVulkanObject.h" />
     <ClInclude Include="Vulkan\Header\VulkanDebug.h" />
     <ClInclude Include="Vulkan\Header\VulkanDescriptorSet.h" />
     <ClInclude Include="Vulkan\Header\VulkanDevice.h" />
@@ -51,7 +51,8 @@
     <ClInclude Include="Vulkan\Header\VulkanRenderPass.h" />
     <ClInclude Include="Vulkan\Header\VulkanShaderModule.h" />
     <ClInclude Include="Vulkan\Header\VulkanSwapchain.h" />
-    <ClInclude Include="Window\Header\Window.h" />
+    <ClInclude Include="Window\Header\IWindow.h" />
+    <ClInclude Include="Window\Header\WindowsWindow.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -131,7 +132,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/std:c++17 /NODEFAULTLIB:library %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

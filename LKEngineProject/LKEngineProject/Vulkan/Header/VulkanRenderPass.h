@@ -2,7 +2,7 @@
 
 #include <vulkan/vulkan.h>
 
-#include "VulkanBaseInterface.h"
+#include "IVulkanObject.h"
 #include "VulkanDeviceChild.h"
 
 namespace LKEngine::Vulkan
@@ -10,7 +10,7 @@ namespace LKEngine::Vulkan
 	class VulkanSwapchain;
 
 	class VulkanRenderPass
-		: public VulkanBaseInterface, VulkanDeviceChild
+		: public IVulkanObject, VulkanDeviceChild
 	{
 	private:
 		VkRenderPass renderPass;
@@ -18,6 +18,7 @@ namespace LKEngine::Vulkan
 		explicit VulkanRenderPass(VulkanDevice* device);
 		virtual ~VulkanRenderPass();
 
+		virtual void Init() { }
 		void Init(VulkanSwapchain* swapchain);
 		virtual void Shutdown() override;
 	};

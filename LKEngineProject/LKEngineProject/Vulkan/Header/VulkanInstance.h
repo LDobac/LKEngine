@@ -2,7 +2,7 @@
 
 #include <vulkan/vulkan.h>
 
-#include "VulkanBaseInterface.h"
+#include "IVulkanObject.h"
 
 namespace LKEngine::Vulkan
 {
@@ -10,7 +10,7 @@ namespace LKEngine::Vulkan
 	class VulkanDebug;
 
 	class VulkanInstance
-		: public VulkanBaseInterface
+		: public IVulkanObject
 	{
 	private:
 		VkInstance vkInstance;
@@ -20,9 +20,10 @@ namespace LKEngine::Vulkan
 		explicit VulkanInstance();
 		~VulkanInstance();
 
+		virtual void Init() override { }
 		void Init(bool vaildationLayerOn);
 		virtual void Shutdown() override;
 
-		VkInstance GetRawInstance() const;
+		VkInstance operator*();
 	};
 }

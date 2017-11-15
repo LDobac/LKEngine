@@ -2,14 +2,14 @@
 
 #include "../../Utility/Header/Macro.h"
 
-#include "../../Window/Header/Window.h"
+#include "../../Window/Header/WindowsWindow.h"
 #include "../../Vulkan/Header/VulkanDevice.h"
 
 using namespace LKEngine::Application;
 
 Application::Application(const int windowWidth, const int windowHeight)
 {
-	window = new Window::Window(windowWidth,windowHeight);
+	window = new Window::WindowsWindow(windowWidth,windowHeight);
 	device = new Vulkan::VulkanDevice();
 
 	device->Init(window,true);

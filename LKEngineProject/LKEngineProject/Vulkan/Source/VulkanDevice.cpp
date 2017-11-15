@@ -4,7 +4,7 @@
 #include <set>
 
 #include "../../Utility/Header/Macro.h"
-#include "../../Window/Header/Window.h"
+#include "../../Window/Header/WindowsWindow.h"
 #include "../Header/VulkanQueue.h"
 #include "../Header/VulkanQueueFamilyIndices.h"
 #include "../Header/VulkanExtension.h"
@@ -37,7 +37,7 @@ VulkanDevice::~VulkanDevice()
 	SAFE_DELETE(presentQueue);
 }
 
-void VulkanDevice::Init(LKEngine::Window::Window* window, bool debug)
+void VulkanDevice::Init(LKEngine::Window::WindowsWindow* window, bool debug)
 {
 	instance->Init(debug);
 
@@ -58,7 +58,7 @@ void VulkanDevice::Shutdown()
 
 	swapchain->Shutdown();
 
-	vkDestroySurfaceKHR(instance->GetRawInstance(), surface, nullptr);
+	vkDestroySurfaceKHR(*(*instance), surface, nullptr);
 
 	instance->Shutdown();
 }
@@ -94,10 +94,10 @@ void VulkanDevice::RequirePhysicalDevice()
 	gpu = VK_NULL_HANDLE;
 
 	uint32_t deviceCount = 0;
-	vkEnumeratePhysicalDevices(instance->GetRawInstance(), &deviceCount, nullptr);
+	vkEnumeratePhysicalDevices(*(*instance), &deviceCount, nullptr);
 
 	std::vector<VkPhysicalDevice> devices(deviceCount);
-	vkEnumeratePhysicalDevices(instance->GetRawInstance(), &deviceCount, devices.data());
+	vkEnumeratePhysicalDevices(*(*instance), &deviceCount, devices.data());
 
 	//TODO : 차후에 사용 가능한 GPU가 다수 일경우 그중에서 가장 적합한 GPU를 선택하도록 변경
 	for (auto device : devices)
@@ -203,7 +203,7 @@ void VulkanDevice::CreateDevice(bool vaildationLayerOn)
 	Console_Log("디바이스 생성 성공");
 }
 
-void VulkanDevice::CreateSwapchain(LKEngine::Window::Window * window)
+void VulkanDevice::CreateSwapchain(LKEngine::Window::WindowsWindow * window)
 {
 	swapchain = new VulkanSwapchain(this, window);
 	swapchain->Init(gpu, surface);
@@ -231,8 +231,8 @@ bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
 	return false;
 }
 
-void VulkanDevice::CreateSurface(LKEngine::Window::Window* window)
+void VulkanDevice::CreateSurface(LKEngine::Window::WindowsWindow * window)
 {
-	VkResult result = glfwCreateWindowSurface(instance->GetRawInstance(), window->GetWindowHandle(), nullptr, &surface);
+	VkResult result = glfwCreateWindowSurface(*(*instance), window->GetWindowHandle(), nullptr, &surface);
 	Check_Throw(result != VK_SUCCESS, "Surface가 생성되지 않았습니다!");
 }

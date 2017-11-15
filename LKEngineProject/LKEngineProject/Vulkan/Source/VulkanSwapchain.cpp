@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include "../../Utility/Header/Macro.h"
-#include "../../Window/Header/Window.h"
+#include "../../Window/Header/WindowsWindow.h"
 #include "../Header/VulkanQueueFamilyIndices.h"
 #include "../Header/VulkanDevice.h"
 #include "../Header/VulkanImage.h"
@@ -39,7 +39,7 @@ bool SwapchainSupportDetail::CheckSwapchainAdequate()
 	return !(formats.empty() || presentModes.empty());
 }
 
-VulkanSwapchain::VulkanSwapchain(VulkanDevice* device, LKEngine::Window::Window* window)
+VulkanSwapchain::VulkanSwapchain(VulkanDevice* device, LKEngine::Window::WindowsWindow* window)
 	: VulkanDeviceChild(device),
 	window(window),
 	swapchain(VK_NULL_HANDLE)

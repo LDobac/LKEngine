@@ -5,7 +5,7 @@
 
 #include "../../Utility/Header/Macro.h"
 
-#include "VulkanBaseInterface.h"
+#include "IVulkanObject.h"
 
 //Foward Declaration
 namespace LKEngine::Vulkan
@@ -15,7 +15,7 @@ namespace LKEngine::Vulkan
 
 namespace LKEngine::Vulkan
 {
-	class VulkanDebug : public VulkanBaseInterface
+	class VulkanDebug : public IVulkanObject
 	{
 	private:
 		VulkanInstance* instance;
