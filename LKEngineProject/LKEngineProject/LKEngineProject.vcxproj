@@ -108,11 +108,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Projects\VulkanLibs\glm;D:\Projects\VulkanLibs\glfw\glfw_x86\include;D:\Projects\VulkanLibs\1.0.65.0\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Projects\VulkanLibs\glfw\glfw_x86\lib-vc2015;D:\Projects\VulkanLibs\1.0.65.0\Lib32;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Projects\LKEngine\Libs\Vulkan\1.0.65.0\Include;D:\Projects\LKEngine\Libs\GLFW\include;D:\Projects\LKEngine\Libs\GLM;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Projects\LKEngine\Libs\Vulkan\1.0.65.0\Lib32;D:\Projects\LKEngine\Libs\GLFW\lib-vc2015x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\Projects\LKEngine\Libs\GLM;D:\Projects\LKEngine\Libs\Vulkan\1.0.65.0\Include;D:\Projects\LKEngine\Libs\GLFW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Projects\LKEngine\Libs\GLFW\lib-vc2015x64;D:\Projects\LKEngine\Libs\Vulkan\1.0.65.0\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -126,7 +128,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalOptions>/std:c++17 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -140,10 +142,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
