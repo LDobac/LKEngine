@@ -21,5 +21,7 @@ namespace LKEngine::Vulkan
 		virtual void Init() { }
 		void Init(VulkanSwapchain* swapchain);
 		virtual void Shutdown() override;
+
+		VkRenderPass GetHandle() const;
 	};
 }

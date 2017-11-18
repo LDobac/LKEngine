@@ -24,12 +24,13 @@
     <ClCompile Include="Vulkan\Source\VulkanCommandBuffers.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanCommandPool.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanDebug.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanDescriptorSets.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanDevice.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanExtension.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanPipeline.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanImage.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanInstance.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanQueue.cpp" />
-    <ClCompile Include="Vulkan\Source\VulkanQueueFamilyIndices.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanRenderPass.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanShaderModule.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanSwapchain.cpp" />
@@ -40,6 +41,7 @@
     <ClInclude Include="Utility\Header\Macro.h" />
     <ClInclude Include="Utility\Header\ManagedObject.h" />
     <ClInclude Include="Vulkan\Header\IVulkanObject.h" />
+    <ClInclude Include="Vulkan\Header\VertexInformation.h" />
     <ClInclude Include="Vulkan\Header\VulkanCommandBuffers.h" />
     <ClInclude Include="Vulkan\Header\VulkanCommandPool.h" />
     <ClInclude Include="Vulkan\Header\VulkanDebug.h" />
@@ -47,9 +49,9 @@
     <ClInclude Include="Vulkan\Header\VulkanDevice.h" />
     <ClInclude Include="Vulkan\Header\VulkanDeviceChild.h" />
     <ClInclude Include="Vulkan\Header\VulkanExtension.h" />
+    <ClInclude Include="Vulkan\Header\VulkanPipeline.h" />
     <ClInclude Include="Vulkan\Header\VulkanImage.h" />
     <ClInclude Include="Vulkan\Header\VulkanInstance.h" />
-    <ClInclude Include="Vulkan\Header\VulkanPipeline.h" />
     <ClInclude Include="Vulkan\Header\VulkanQueue.h" />
     <ClInclude Include="Vulkan\Header\VulkanQueueFamilyIndices.h" />
     <ClInclude Include="Vulkan\Header\VulkanRenderPass.h" />

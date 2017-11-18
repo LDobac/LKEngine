@@ -130,3 +130,8 @@ void VulkanRenderPass::Shutdown()
 {
 	vkDestroyRenderPass(device->GetHandle(), renderPass, nullptr);
 }
+
+VkRenderPass VulkanRenderPass::GetHandle() const
+{
+	return renderPass;
+}

@@ -8,18 +8,20 @@
 namespace LKEngine::Vulkan
 {
 	class VulkanDescriptorSetLayout
-		: public IVulkanObject
+		: public IVulkanObject, public VulkanDeviceChild
 	{
 	private:
-		VkDescriptorSetLayout seyLayout;
+		VkDescriptorSetLayout setLayout;
 		std::vector<VkDescriptorSetLayoutBinding> layoutBindings;
 	public:
 		explicit VulkanDescriptorSetLayout(VulkanDevice* device);
 
-		virtual void Init() override;
+		virtual void Init() override { }
 		virtual void Shutdown() override;
 
-		void AddDescriptor(VkShaderStageFlagBits stageFlag, const VkDescriptorSetLayoutBinding& binding, int index);
+		void AddDescriptor(VkDescriptorType type, VkShaderStageFlagBits stageFlag, int index);
 		void CreateDescriptorSetLayout();
+
+		const VkDescriptorSetLayout& GetHandle() const;
 	};
 }

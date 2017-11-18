@@ -10,6 +10,8 @@
 #include "../Header/VulkanSwapchain.h"
 #include "../Header/VulkanRenderPass.h"
 #include "../Header/VulkanCommandPool.h"
+#include "../Header/VulkanPipeline.h"
+#include "../Header/VulkanDescriptorSets.h"
 
 using namespace LKEngine::Vulkan;
 
@@ -25,10 +27,10 @@ VulkanDevice::VulkanDevice()
 	commandPool(nullptr)
 {
 	instance = new VulkanInstance();
-
 	renderPass = new VulkanRenderPass(this);
-
 	commandPool = new VulkanCommandPool(this);
+	graphicsPipeline = new VulkanGraphicsPipeline(this);
+	descriptorSetLayout = new VulkanDescriptorSetLayout(this);
 }
 
 VulkanDevice::~VulkanDevice()
@@ -39,6 +41,7 @@ VulkanDevice::~VulkanDevice()
 	SAFE_DELETE(graphicsQueue);
 	SAFE_DELETE(presentQueue);
 	SAFE_DELETE(commandPool);
+	SAFE_DELETE(graphicsPipeline);
 }
 
 void VulkanDevice::Init(LKEngine::Window::WindowsWindow* window, bool debug)
@@ -57,12 +60,20 @@ void VulkanDevice::Init(LKEngine::Window::WindowsWindow* window, bool debug)
 
 	renderPass->Init(swapchain);
 
+	swapchain->CreateFrameBuffers(renderPass);
+
+	CreateDescriptorSetLayout();
+
+	CreateGraphicsPipeline();
+
 	CreateCommandPool();
 }
 
 void VulkanDevice::Shutdown()
 {
 	commandPool->Shutdown();
+
+	graphicsPipeline->Shutdown();
 
 	renderPass->Shutdown();
 
@@ -91,6 +102,22 @@ VkFormat VulkanDevice::FindSupportedFormat(const std::vector<VkFormat>& candidat
 	}
 
 	Check_Throw(true, "지원되는 포맷을 찾을 수 없습니다!");
+}
+
+uint32_t VulkanDevice::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
+{
+	VkPhysicalDeviceMemoryProperties memProperties;
+	vkGetPhysicalDeviceMemoryProperties(gpu, &memProperties);
+
+	for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) 
+	{
+		if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties) 
+		{
+			return i;
+		}
+	}
+
+	throw std::runtime_error("failed to find suitable memory type!");
 }
 
 QueueFamilyIndices VulkanDevice::GetQueueFamilyIndices() const
@@ -225,7 +252,21 @@ void LKEngine::Vulkan::VulkanDevice::CreateQueue()
 void VulkanDevice::CreateSwapchain(LKEngine::Window::WindowsWindow * window)
 {
 	swapchain = new VulkanSwapchain(this, window);
-	swapchain->Init(gpu, surface,queueIndices);
+	swapchain->Init(gpu, surface, queueIndices);
+}
+
+void VulkanDevice::CreateDescriptorSetLayout()
+{
+	Console_Log("DescriptorSetLayout 생성 시작");
+	descriptorSetLayout->AddDescriptor(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0);
+	descriptorSetLayout->AddDescriptor(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
+	descriptorSetLayout->CreateDescriptorSetLayout();
+	Console_Log("DescriptorSetLayout 생성 성공");
+}
+
+void VulkanDevice::CreateGraphicsPipeline()
+{
+	graphicsPipeline->Init(renderPass, swapchain, descriptorSetLayout);
 }
 
 void VulkanDevice::CreateCommandPool()

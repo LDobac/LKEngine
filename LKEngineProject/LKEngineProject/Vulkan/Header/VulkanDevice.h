@@ -18,6 +18,8 @@ namespace LKEngine::Vulkan
 	class VulkanSwapchain;
 	class VulkanRenderPass;
 	class VulkanCommandPool;
+	class VulkanGraphicsPipeline;
+	class VulkanDescriptorSetLayout;
 
 	class VulkanDevice 
 		: public IVulkanObject
@@ -39,6 +41,10 @@ namespace LKEngine::Vulkan
 
 		VulkanRenderPass* renderPass;
 
+		VulkanDescriptorSetLayout* descriptorSetLayout;
+
+		VulkanGraphicsPipeline* graphicsPipeline;
+
 		VulkanCommandPool* commandPool;
 
 		QueueFamilyIndices queueIndices;
@@ -51,6 +57,7 @@ namespace LKEngine::Vulkan
 		virtual void Shutdown() override;
 
 		VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
 		QueueFamilyIndices GetQueueFamilyIndices() const;
 		VkDevice GetHandle() const;
@@ -60,6 +67,8 @@ namespace LKEngine::Vulkan
 		void CreateDevice(bool vaildationLayerOn);
 		void CreateQueue();
 		void CreateSwapchain(LKEngine::Window::WindowsWindow * window);
+		void CreateDescriptorSetLayout();
+		void CreateGraphicsPipeline();
 		void CreateCommandPool();
 
 		bool CheckDeviceFeatures(VkPhysicalDevice device);

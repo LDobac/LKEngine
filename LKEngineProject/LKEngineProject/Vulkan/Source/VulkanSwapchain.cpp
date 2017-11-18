@@ -6,6 +6,7 @@
 #include "../../Window/Header/WindowsWindow.h"
 #include "../Header/VulkanDevice.h"
 #include "../Header/VulkanImage.h"
+#include "../Header/VulkanRenderPass.h"
 
 using namespace LKEngine::Vulkan;
 
@@ -42,7 +43,9 @@ VulkanSwapchain::VulkanSwapchain(VulkanDevice* device, LKEngine::Window::Windows
 	: VulkanDeviceChild(device),
 	window(window),
 	swapchain(VK_NULL_HANDLE)
-{ }
+{
+	depthImage = new VulkanImage(device);
+}
 
 VulkanSwapchain::~VulkanSwapchain()
 {
@@ -50,6 +53,7 @@ VulkanSwapchain::~VulkanSwapchain()
 	{
 		SAFE_DELETE(image);
 	}
+	SAFE_DELETE(depthImage);
 }
 
 void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices)
@@ -109,6 +113,7 @@ void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surf
 	vkGetSwapchainImagesKHR(device->GetHandle(), swapchain, &imageCount, tmpImages.data());
 
 	swapchainImages.resize(imageCount);
+	frameBuffers.resize(imageCount);
 	for (size_t i = 0; i < swapchainImages.size(); i++)
 	{
 		VulkanImage* image = new VulkanImage(tmpImages[i], device);
@@ -120,6 +125,13 @@ void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surf
 	swapchainFormat = surfaceFormat.format;
 	swapchainExtent = extent;
 
+	VkFormat depthFormat = device->FindSupportedFormat({
+		VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT
+	},
+	VK_IMAGE_TILING_OPTIMAL, 
+	VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+	depthImage->Init(swapchainExtent.width, swapchainExtent.height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_ASPECT_DEPTH_BIT);
+
 	Console_Log("스왑 체인 생성 성공");
 }
 
@@ -128,9 +140,35 @@ void VulkanSwapchain::Shutdown()
 	for (size_t i = 0; i < swapchainImages.size(); i++)
 	{
 		swapchainImages[i]->ShutdownWithoutImage();
+		vkDestroyFramebuffer(device->GetHandle(), frameBuffers[i], nullptr);
 	}
 
 	vkDestroySwapchainKHR(device->GetHandle(), swapchain, nullptr);
+	depthImage->Shutdown();
+}
+
+void VulkanSwapchain::CreateFrameBuffers(VulkanRenderPass * renderPass)
+{
+	Console_Log("프레임버퍼 생성 시작");
+	frameBuffers.resize(swapchainImages.size());
+	for (size_t i = 0; i < frameBuffers.size(); i++)
+	{
+		std::array<VkImageView, 2> attachments = {
+			swapchainImages[i]->GetImageView(),
+			depthImage->GetImageView()
+		};
+		VkFramebufferCreateInfo framebufferInfo = {};
+		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+		framebufferInfo.renderPass = renderPass->GetHandle();
+		framebufferInfo.attachmentCount = attachments.size();
+		framebufferInfo.pAttachments = attachments.data();
+		framebufferInfo.width = swapchainExtent.width;
+		framebufferInfo.height = swapchainExtent.height;
+		framebufferInfo.layers = 1;
+
+		Check_Throw(vkCreateFramebuffer(device->GetHandle(), &framebufferInfo, nullptr, &frameBuffers[i]), "프레임 버퍼 생성 실패");
+	}
+	Console_Log("프레임버퍼 생성 성공");
 }
 
 VkFormat VulkanSwapchain::GetFormat() const
@@ -138,9 +176,19 @@ VkFormat VulkanSwapchain::GetFormat() const
 	return swapchainFormat;
 }
 
+VkExtent2D VulkanSwapchain::GetExtent() const
+{
+	return swapchainExtent;
+}
+
 const std::vector<VulkanImage*>& VulkanSwapchain::GetImages() const
 {
 	return swapchainImages;
+}
+
+const std::vector<VkFramebuffer> VulkanSwapchain::GetFrameBuffers() const
+{
+	return frameBuffers;
 }
 
 VkSurfaceFormatKHR VulkanSwapchain::ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const

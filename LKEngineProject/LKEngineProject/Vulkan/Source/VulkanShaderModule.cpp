@@ -48,6 +48,7 @@ void VulkanShaderModule::Init(const ShaderType type, const std::string & shaderP
 		if (fs::exists(oldFile))
 		{
 			fs::rename(oldFile, newFile);
+			fs::remove(oldFile);
 		}
 		else
 		{

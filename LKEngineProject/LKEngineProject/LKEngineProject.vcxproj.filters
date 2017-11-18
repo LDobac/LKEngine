@@ -58,9 +58,6 @@
     <ClCompile Include="Vulkan\Source\VulkanQueue.cpp">
       <Filter>Vulkan\Source</Filter>
     </ClCompile>
-    <ClCompile Include="Vulkan\Source\VulkanQueueFamilyIndices.cpp">
-      <Filter>Vulkan\Source</Filter>
-    </ClCompile>
     <ClCompile Include="Vulkan\Source\VulkanRenderPass.cpp">
       <Filter>Vulkan\Source</Filter>
     </ClCompile>
@@ -75,6 +72,8 @@
     </ClCompile>
     <ClCompile Include="Vulkan\Source\VulkanCommandPool.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanCommandBuffers.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanPipeline.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanDescriptorSets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Header\Application.h">
@@ -96,9 +95,6 @@
       <Filter>Vulkan\Header</Filter>
     </ClInclude>
     <ClInclude Include="Vulkan\Header\VulkanInstance.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanPipeline.h">
       <Filter>Vulkan\Header</Filter>
     </ClInclude>
     <ClInclude Include="Vulkan\Header\VulkanQueue.h">
@@ -136,5 +132,7 @@
     </ClInclude>
     <ClInclude Include="Vulkan\Header\VulkanCommandPool.h" />
     <ClInclude Include="Vulkan\Header\VulkanCommandBuffers.h" />
+    <ClInclude Include="Vulkan\Header\VulkanPipeline.h" />
+    <ClInclude Include="Vulkan\Header\VertexInformation.h" />
   </ItemGroup>
 </Project>

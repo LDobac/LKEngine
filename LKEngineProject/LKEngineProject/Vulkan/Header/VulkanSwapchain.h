@@ -15,6 +15,7 @@ namespace LKEngine::Vulkan
 {
 	class VulkanDevice;
 	class VulkanImage;
+	class VulkanRenderPass;
 
 	struct SwapchainSupportDetail
 	{
@@ -37,6 +38,9 @@ namespace LKEngine::Vulkan
 		VkExtent2D swapchainExtent;
 
 		std::vector<VulkanImage*> swapchainImages;
+		std::vector<VkFramebuffer> frameBuffers;
+
+		VulkanImage* depthImage;
 
 		Window::WindowsWindow* window;
 	public:
@@ -47,8 +51,12 @@ namespace LKEngine::Vulkan
 		void Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices);
 		virtual void Shutdown() override;
 
+		void CreateFrameBuffers(VulkanRenderPass* renderPass);
+
 		VkFormat GetFormat() const;
+		VkExtent2D GetExtent() const;
 		const std::vector<VulkanImage*>& GetImages() const;
+		const std::vector<VkFramebuffer> GetFrameBuffers() const;
 	private:
 		VkSurfaceFormatKHR ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const;
 		VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR> availablePresentModes) const;
