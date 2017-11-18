@@ -1,6 +1,7 @@
 #include "../Header/WindowsWindow.h"
 
 #include "../../Utility/Header/Macro.h"
+#include "../../Vulkan/Header/VulkanDevice.h"
 
 using namespace LKEngine::Window;
 
@@ -23,7 +24,7 @@ void WindowsWindow::PollEvents()
 	glfwPollEvents();
 }
 
-void WindowsWindow::Init()
+void WindowsWindow::Init(LKEngine::Vulkan::VulkanDevice* device)
 {
 	Console_Log("창 생성 시작");
 
@@ -31,6 +32,9 @@ void WindowsWindow::Init()
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	window = glfwCreateWindow(width, height, WINDOW_TITLE, nullptr, nullptr);
+
+	glfwSetWindowUserPointer(window, device);
+	glfwSetWindowSizeCallback(window, WindowsWindow::onWindowResized);
 
 	Check_Throw(window == nullptr, "창 생성 실패!");
 	Console_Log_If(window, "창 생성 성공");
@@ -45,4 +49,12 @@ void WindowsWindow::Shutdown()
 GLFWwindow * WindowsWindow::GetWindowHandle() const
 {
 	return window;
+}
+
+void WindowsWindow::onWindowResized(GLFWwindow * window, int width, int height)
+{
+	if (width == 0 || height == 0) return;
+
+	auto device = reinterpret_cast<LKEngine::Vulkan::VulkanDevice*>(glfwGetWindowUserPointer(window));
+	device->ResizeWindow();
 }

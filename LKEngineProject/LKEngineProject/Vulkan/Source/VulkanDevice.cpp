@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <set>
+#include <numeric>
 
 #include "../../Utility/Header/Macro.h"
 #include "../../Window/Header/WindowsWindow.h"
@@ -16,8 +17,9 @@
 
 using namespace LKEngine::Vulkan;
 
-VulkanDevice::VulkanDevice()
-	:instance(nullptr),
+VulkanDevice::VulkanDevice(LKEngine::Window::WindowsWindow* window)
+	:window(window),
+	instance(nullptr),
 	vkDevice(VK_NULL_HANDLE),
 	gpu(VK_NULL_HANDLE),
 	surface(VK_NULL_HANDLE),
@@ -28,6 +30,7 @@ VulkanDevice::VulkanDevice()
 	commandPool(nullptr)
 {
 	instance = new VulkanInstance();
+	swapchain = new VulkanSwapchain(this, window);
 	renderPass = new VulkanRenderPass(this);
 	commandPool = new VulkanCommandPool(this);
 	graphicsPipeline = new VulkanGraphicsPipeline(this);
@@ -50,7 +53,7 @@ VulkanDevice::~VulkanDevice()
 	SAFE_DELETE(renderFinishedSemaphore);
 }
 
-void VulkanDevice::Init(LKEngine::Window::WindowsWindow* window, bool debug)
+void VulkanDevice::Init(bool debug)
 {
 	instance->Init(debug);
 
@@ -62,7 +65,7 @@ void VulkanDevice::Init(LKEngine::Window::WindowsWindow* window, bool debug)
 
 	CreateQueue();
 
-	CreateSwapchain(window);
+	swapchain->Init(gpu, surface, queueIndices);
 
 	renderPass->Init(swapchain);
 
@@ -70,7 +73,7 @@ void VulkanDevice::Init(LKEngine::Window::WindowsWindow* window, bool debug)
 
 	CreateDescriptorSetLayout();
 
-	CreateGraphicsPipeline();
+	graphicsPipeline->Init(renderPass, swapchain, descriptorSetLayout);
 
 	CreateCommandPool();
 
@@ -79,6 +82,8 @@ void VulkanDevice::Init(LKEngine::Window::WindowsWindow* window, bool debug)
 
 void VulkanDevice::Shutdown()
 {
+	vkDeviceWaitIdle(vkDevice);
+
 	imageAvailableSemaphore->Shutdown();
 	renderFinishedSemaphore->Shutdown();
 
@@ -97,7 +102,72 @@ void VulkanDevice::Shutdown()
 
 void VulkanDevice::Draw()
 {
+	vkQueueWaitIdle(presentQueue->GetHandle());
+
+	uint32_t imageIndex = 0;
+	VkResult result = vkAcquireNextImageKHR(vkDevice, swapchain->GetHandle(), 
+		std::numeric_limits<uint64_t>::max(),
+		imageAvailableSemaphore->GetHandle(), 
+		VK_NULL_HANDLE,
+		&imageIndex);
+	if (result == VK_ERROR_OUT_OF_DATE_KHR)
+	{
+		ResizeWindow();
+		return;
+	}
+	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+	{
+		throw std::runtime_error("스왑 체인 이미지 요청 실패");
+	}
+
+	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+	graphicsQueue->Submit(imageAvailableSemaphore, renderFinishedSemaphore, waitStages, commandPool->GetBuffer(imageIndex));
+	presentQueue->Present(swapchain, renderFinishedSemaphore, imageIndex);
+}
+
+void VulkanDevice::ResizeWindow()
+{
+	Console_Log("리사이징 윈도우 시작");
+	vkDeviceWaitIdle(vkDevice);
+
+	//스왑 체인 재 생성
+	{
+		VulkanSwapchain* newSwapchain = new VulkanSwapchain(this, window);
+		newSwapchain->Init(gpu, surface, queueIndices, swapchain);
+
+		swapchain->Shutdown();
+		SAFE_DELETE(swapchain);
 	
+		swapchain = newSwapchain;
+	}
+	//렌더 패스 재 생성
+	{
+		renderPass->Shutdown();
+		SAFE_DELETE(renderPass);
+		renderPass = new VulkanRenderPass(this);
+		renderPass->Init(swapchain);
+	}
+	//그래픽 파이프라인 재 생성
+	{
+		graphicsPipeline->Shutdown();
+		SAFE_DELETE(graphicsPipeline);
+		graphicsPipeline = new VulkanGraphicsPipeline(this);
+		graphicsPipeline->Init(renderPass, swapchain, descriptorSetLayout);
+	}
+	//프레임 버퍼 재 생성
+	{
+		swapchain->CreateFrameBuffers(renderPass);
+	}
+	//커맨드 버퍼 재 생성
+	{
+		commandPool->FreeBuffers();
+		commandPool->AllocBuffers(swapchain); 
+		std::vector<VkClearValue> clearValues(2);
+		clearValues[0].color = { 0.0f, 0.0f, 1.0f, 1.0f };
+		clearValues[1].depthStencil = { 1.0f, 0 };
+		commandPool->Record(swapchain, renderPass, graphicsPipeline, clearValues);
+	}
+	Console_Log("리사이징 윈도우 성공");
 }
 
 VkFormat VulkanDevice::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
@@ -229,7 +299,6 @@ void VulkanDevice::CreateDevice(bool vaildationLayerOn)
 	VkPhysicalDeviceFeatures deviceFeatures = {};
 	deviceFeatures.samplerAnisotropy = VK_TRUE;
 
-
 	VkDeviceCreateInfo deviceCreateInfo = {};
 	deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 
@@ -257,18 +326,12 @@ void VulkanDevice::CreateDevice(bool vaildationLayerOn)
 	Console_Log("디바이스 생성 성공");
 }
 
-void LKEngine::Vulkan::VulkanDevice::CreateQueue()
+void VulkanDevice::CreateQueue()
 {
 	Console_Log("Queue 생성 시작");
 	graphicsQueue = new VulkanQueue(this, queueIndices.graphicsFamily, 0);
 	presentQueue = new VulkanQueue(this, queueIndices.presentFamily, 0);
 	Console_Log("Queue 생성 성공");
-}
-
-void VulkanDevice::CreateSwapchain(LKEngine::Window::WindowsWindow * window)
-{
-	swapchain = new VulkanSwapchain(this, window);
-	swapchain->Init(gpu, surface, queueIndices);
 }
 
 void VulkanDevice::CreateDescriptorSetLayout()
@@ -280,14 +343,15 @@ void VulkanDevice::CreateDescriptorSetLayout()
 	Console_Log("DescriptorSetLayout 생성 성공");
 }
 
-void VulkanDevice::CreateGraphicsPipeline()
-{
-	graphicsPipeline->Init(renderPass, swapchain, descriptorSetLayout);
-}
-
 void VulkanDevice::CreateCommandPool()
 {
-	commandPool->Init(swapchain, 0, graphicsQueue->GetFamilyIndex());
+	commandPool->Init(0, graphicsQueue->GetFamilyIndex());
+	commandPool->AllocBuffers(swapchain);
+
+	std::vector<VkClearValue> clearValues(2);
+	clearValues[0].color = { 0.0f, 0.0f, 1.0f, 1.0f };
+	clearValues[1].depthStencil = { 1.0f, 0 };
+	commandPool->Record(swapchain, renderPass, graphicsPipeline, clearValues);
 }
 
 void VulkanDevice::CreateSemaphore()

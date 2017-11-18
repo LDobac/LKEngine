@@ -15,5 +15,7 @@ namespace LKEngine::Vulkan
 
 		virtual void Init() override;
 		virtual void Shutdown() override;
+
+		const VkSemaphore& GetHandle() const;
 	};
 }

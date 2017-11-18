@@ -48,11 +48,12 @@ namespace LKEngine::Vulkan
 		virtual ~VulkanSwapchain();
 
 		virtual void Init() override { }
-		void Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices);
+		void Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices, VulkanSwapchain* oldSwapchain = nullptr);
 		virtual void Shutdown() override;
 
 		void CreateFrameBuffers(VulkanRenderPass* renderPass);
 
+		const VkSwapchainKHR& GetHandle() const;
 		VkFormat GetFormat() const;
 		VkExtent2D GetExtent() const;
 		const std::vector<VulkanImage*>& GetImages() const;

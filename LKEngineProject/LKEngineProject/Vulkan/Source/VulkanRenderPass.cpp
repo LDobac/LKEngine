@@ -131,6 +131,25 @@ void VulkanRenderPass::Shutdown()
 	vkDestroyRenderPass(device->GetHandle(), renderPass, nullptr);
 }
 
+void VulkanRenderPass::Begin(std::vector<VkClearValue> clearColors, const VkFramebuffer& frameBuffer, VkExtent2D extent, const VkCommandBuffer& cmdBuffer)
+{
+	VkRenderPassBeginInfo info = { };
+	info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	info.renderPass = renderPass;
+	info.framebuffer = frameBuffer;
+	info.renderArea.offset = { 0, 0 };
+	info.renderArea.extent = extent;
+	info.clearValueCount = clearColors.size();
+	info.pClearValues = clearColors.data();
+
+	vkCmdBeginRenderPass(cmdBuffer, &info, VK_SUBPASS_CONTENTS_INLINE);
+}
+
+void VulkanRenderPass::End(const VkCommandBuffer & cmdBuffer)
+{
+	vkCmdEndRenderPass(cmdBuffer);
+}
+
 VkRenderPass VulkanRenderPass::GetHandle() const
 {
 	return renderPass;

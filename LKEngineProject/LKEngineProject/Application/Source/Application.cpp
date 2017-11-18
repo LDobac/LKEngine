@@ -12,10 +12,10 @@ Application::Application(const int windowWidth, const int windowHeight)
 	Console_Log("초기화 시작");
 
 	window = new Window::WindowsWindow(windowWidth,windowHeight);
-	device = new Vulkan::VulkanDevice();
+	device = new Vulkan::VulkanDevice(window);
 
-	window->Init();
-	device->Init(window,true);
+	window->Init(device);
+	device->Init(true);
 
 	Console_Log("초기화 성공");
 }

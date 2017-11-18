@@ -20,8 +20,14 @@ void VulkanPipeline::Shutdown()
 {
 	if (pipeline != VK_NULL_HANDLE)
 	{
+		vkDestroyPipelineLayout(device->GetHandle(), pipelineLayout, nullptr);
 		vkDestroyPipeline(device->GetHandle(), pipeline, nullptr);
 	}
+}
+
+const VkPipeline & VulkanPipeline::GetHandle() const
+{
+	return pipeline;
 }
 
 VulkanGraphicsPipeline::VulkanGraphicsPipeline(VulkanDevice * device)
@@ -34,9 +40,9 @@ void VulkanGraphicsPipeline::Init(VulkanRenderPass* renderPass, VulkanSwapchain*
 	Console_Log("그래픽 파이프 라인 생성 시작");
 
 	VulkanShaderModule vertShaderModule(device);
-	vertShaderModule.Init(VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
+	vertShaderModule.Init(VulkanShaderModule::ShaderType::VERTEX, vertShaderModule.ReadCompiledShader("CompileShader/SimpleShader.vert.spv"));
 	VulkanShaderModule fragShaderModule(device);
-	fragShaderModule.Init(VulkanShaderModule::ShaderType::FRAGMENT, "Shader/SimpleShader.frag");
+	fragShaderModule.Init(VulkanShaderModule::ShaderType::FRAGMENT, fragShaderModule.ReadCompiledShader("CompileShader/SimpleShader.frag.spv"));
 
 	VkPipelineShaderStageCreateInfo vertShaderStageInfo = {};
 	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;

@@ -20,9 +20,15 @@ namespace LKEngine::Vulkan
 		~VulkanCommandPool();
 
 		virtual void Init() override {}
-		void Init(VulkanSwapchain* swapchain, VkCommandPoolCreateFlags flags,int32_t queueIndex);
+		void Init(VkCommandPoolCreateFlags flags,int32_t queueIndex);
 		virtual void Shutdown() override;
 
+		void AllocBuffers(VulkanSwapchain* swapchain);
+		void FreeBuffers();
+
+		void Record(VulkanSwapchain * swapchain, VulkanRenderPass * renderPass, VulkanGraphicsPipeline * graphicsPipeline, std::vector<VkClearValue> clearColor);
+
+		const VkCommandBuffer& GetBuffer(uint32_t index) const;
 		const VkCommandPool& GetHandle() const;
 	};
 }

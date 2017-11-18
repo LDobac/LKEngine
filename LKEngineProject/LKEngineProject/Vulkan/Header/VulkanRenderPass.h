@@ -22,6 +22,9 @@ namespace LKEngine::Vulkan
 		void Init(VulkanSwapchain* swapchain);
 		virtual void Shutdown() override;
 
+		void Begin(std::vector<VkClearValue> clearColors, const VkFramebuffer& frameBuffer, VkExtent2D extent, const VkCommandBuffer& cmdBuffer);
+		void End(const VkCommandBuffer& cmdBuffer);
+
 		VkRenderPass GetHandle() const;
 	};
 }

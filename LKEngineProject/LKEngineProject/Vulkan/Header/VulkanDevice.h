@@ -26,6 +26,8 @@ namespace LKEngine::Vulkan
 		: public IVulkanObject
 	{
 	private:
+		LKEngine::Window::WindowsWindow* window;
+
 		VulkanInstance* instance;
 
 		VkDevice vkDevice;
@@ -53,14 +55,16 @@ namespace LKEngine::Vulkan
 
 		QueueFamilyIndices queueIndices;
 	public:
-		explicit VulkanDevice();
+		explicit VulkanDevice(LKEngine::Window::WindowsWindow* window);
 		virtual ~VulkanDevice();
 
 		virtual void Init() override { }
-		void Init(LKEngine::Window::WindowsWindow* window, bool debug);
+		void Init(bool debug);
 		virtual void Shutdown() override;
 
 		void Draw();
+
+		void ResizeWindow();
 
 		VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
@@ -72,9 +76,7 @@ namespace LKEngine::Vulkan
 		void RequirePhysicalDevice();
 		void CreateDevice(bool vaildationLayerOn);
 		void CreateQueue();
-		void CreateSwapchain(LKEngine::Window::WindowsWindow * window);
 		void CreateDescriptorSetLayout();
-		void CreateGraphicsPipeline();
 		void CreateCommandPool();
 		void CreateSemaphore();
 

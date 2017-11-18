@@ -21,3 +21,8 @@ void VulkanSemaphore::Shutdown()
 {
 	vkDestroySemaphore(device->GetHandle(), semaphore, nullptr);
 }
+
+const VkSemaphore & VulkanSemaphore::GetHandle() const
+{
+	return semaphore;
+}

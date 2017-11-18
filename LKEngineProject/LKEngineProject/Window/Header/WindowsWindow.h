@@ -5,12 +5,16 @@
 
 #include "IWindow.h"
 #include "WindowsWindow.h"
-#include "../../Vulkan/Header/IVulkanObject.h"
+
+namespace LKEngine::Vulkan
+{
+	class VulkanDevice;
+}
 
 namespace LKEngine::Window
 {
 	class WindowsWindow
-		: IWindow, LKEngine::Vulkan::IVulkanObject
+		: public IWindow
 	{
 	private:
 		GLFWwindow* window;
@@ -22,9 +26,11 @@ namespace LKEngine::Window
 
 		void PollEvents() override;
 
-		virtual void Init() override;
-		virtual void Shutdown() override;
+		void Init(LKEngine::Vulkan::VulkanDevice* device);
+		void Shutdown();
 
 		GLFWwindow* GetWindowHandle() const;
+	private:
+		static void onWindowResized(GLFWwindow* window, int width, int height);
 	};
 }

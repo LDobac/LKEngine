@@ -56,7 +56,7 @@ VulkanSwapchain::~VulkanSwapchain()
 	SAFE_DELETE(depthImage);
 }
 
-void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices)
+void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices ,VulkanSwapchain* oldSwapchain)
 {
 	Console_Log("스왑 체인 생성 시작");
 
@@ -74,6 +74,7 @@ void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surf
 
 	VkSwapchainCreateInfoKHR createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+	if(oldSwapchain != nullptr) createInfo.oldSwapchain = oldSwapchain->GetHandle();
 	createInfo.surface = surface;
 
 	createInfo.minImageCount = imageCount;
@@ -169,6 +170,11 @@ void VulkanSwapchain::CreateFrameBuffers(VulkanRenderPass * renderPass)
 		Check_Throw(vkCreateFramebuffer(device->GetHandle(), &framebufferInfo, nullptr, &frameBuffers[i]), "프레임 버퍼 생성 실패");
 	}
 	Console_Log("프레임버퍼 생성 성공");
+}
+
+const VkSwapchainKHR & VulkanSwapchain::GetHandle() const
+{
+	return swapchain;
 }
 
 VkFormat VulkanSwapchain::GetFormat() const

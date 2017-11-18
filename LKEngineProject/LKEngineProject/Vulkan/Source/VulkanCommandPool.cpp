@@ -15,7 +15,7 @@ VulkanCommandPool::~VulkanCommandPool()
 	SAFE_DELETE(commandBuffers);
 }
 
-void VulkanCommandPool::Init(VulkanSwapchain* swapchain, VkCommandPoolCreateFlags flags, int32_t queueIndex)
+void VulkanCommandPool::Init(VkCommandPoolCreateFlags flags, int32_t queueIndex)
 {
 	Console_Log("명령 풀 생성 시작");
 	VkCommandPoolCreateInfo poolInfo = { };
@@ -25,9 +25,6 @@ void VulkanCommandPool::Init(VulkanSwapchain* swapchain, VkCommandPoolCreateFlag
 
 	Check_Throw(vkCreateCommandPool(device->GetHandle(), &poolInfo, nullptr, &commandPool) != VK_SUCCESS, "CommandPool 이 생성되지 않음");
 	Console_Log("명령 풀 생성 성공");
-
-	commandBuffers = new VulkanCommandBuffers(device, this);
-	commandBuffers->Init(swapchain);
 }
 
 void VulkanCommandPool::Shutdown()
@@ -36,6 +33,28 @@ void VulkanCommandPool::Shutdown()
 	{
 		vkDestroyCommandPool(device->GetHandle(), commandPool, nullptr);
 	}
+}
+
+void VulkanCommandPool::AllocBuffers(VulkanSwapchain* swapchain)
+{
+	commandBuffers = new VulkanCommandBuffers(device, this);
+	commandBuffers->Init(swapchain);
+}
+
+void VulkanCommandPool::FreeBuffers()
+{
+	commandBuffers->Free();
+	SAFE_DELETE(commandBuffers);
+}
+
+void VulkanCommandPool::Record(VulkanSwapchain * swapchain, VulkanRenderPass * renderPass, VulkanGraphicsPipeline * graphicsPipeline, std::vector<VkClearValue> clearColor)
+{
+	commandBuffers->Record(swapchain, renderPass, graphicsPipeline, clearColor);
+}
+
+const VkCommandBuffer & VulkanCommandPool::GetBuffer(uint32_t index) const
+{
+	return commandBuffers->GetBuffer(index);
 }
 
 const VkCommandPool & VulkanCommandPool::GetHandle() const
