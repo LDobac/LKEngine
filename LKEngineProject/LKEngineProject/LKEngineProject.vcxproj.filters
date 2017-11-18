@@ -74,6 +74,7 @@
     <ClCompile Include="Vulkan\Source\VulkanCommandBuffers.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanPipeline.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanDescriptorSets.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanSemaphore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Header\Application.h">
@@ -134,5 +135,6 @@
     <ClInclude Include="Vulkan\Header\VulkanCommandBuffers.h" />
     <ClInclude Include="Vulkan\Header\VulkanPipeline.h" />
     <ClInclude Include="Vulkan\Header\VertexInformation.h" />
+    <ClInclude Include="Vulkan\Header\VulkanSemaphore.h" />
   </ItemGroup>
 </Project>

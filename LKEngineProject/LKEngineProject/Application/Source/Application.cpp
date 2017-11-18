@@ -33,6 +33,7 @@ void LKEngine::Application::Application::Loop()
 {
 	while (!window->WindowShouldClose())
 	{
+		device->Draw();
 		window->PollEvents();
 	}
 }

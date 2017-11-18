@@ -12,6 +12,7 @@
 #include "../Header/VulkanCommandPool.h"
 #include "../Header/VulkanPipeline.h"
 #include "../Header/VulkanDescriptorSets.h"
+#include "../Header/VulkanSemaphore.h"
 
 using namespace LKEngine::Vulkan;
 
@@ -31,6 +32,8 @@ VulkanDevice::VulkanDevice()
 	commandPool = new VulkanCommandPool(this);
 	graphicsPipeline = new VulkanGraphicsPipeline(this);
 	descriptorSetLayout = new VulkanDescriptorSetLayout(this);
+	imageAvailableSemaphore = new VulkanSemaphore(this);
+	renderFinishedSemaphore = new VulkanSemaphore(this);
 }
 
 VulkanDevice::~VulkanDevice()
@@ -42,6 +45,9 @@ VulkanDevice::~VulkanDevice()
 	SAFE_DELETE(presentQueue);
 	SAFE_DELETE(commandPool);
 	SAFE_DELETE(graphicsPipeline);
+	SAFE_DELETE(descriptorSetLayout);
+	SAFE_DELETE(imageAvailableSemaphore);
+	SAFE_DELETE(renderFinishedSemaphore);
 }
 
 void VulkanDevice::Init(LKEngine::Window::WindowsWindow* window, bool debug)
@@ -67,10 +73,15 @@ void VulkanDevice::Init(LKEngine::Window::WindowsWindow* window, bool debug)
 	CreateGraphicsPipeline();
 
 	CreateCommandPool();
+
+	CreateSemaphore();
 }
 
 void VulkanDevice::Shutdown()
 {
+	imageAvailableSemaphore->Shutdown();
+	renderFinishedSemaphore->Shutdown();
+
 	commandPool->Shutdown();
 
 	graphicsPipeline->Shutdown();
@@ -79,9 +90,14 @@ void VulkanDevice::Shutdown()
 
 	swapchain->Shutdown();
 
-	vkDestroySurfaceKHR(*(*instance), surface, nullptr);
+	vkDestroySurfaceKHR(instance->GetHandle(), surface, nullptr);
 
 	instance->Shutdown();
+}
+
+void VulkanDevice::Draw()
+{
+	
 }
 
 VkFormat VulkanDevice::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
@@ -136,10 +152,10 @@ void VulkanDevice::RequirePhysicalDevice()
 	gpu = VK_NULL_HANDLE;
 
 	uint32_t deviceCount = 0;
-	vkEnumeratePhysicalDevices(*(*instance), &deviceCount, nullptr);
+	vkEnumeratePhysicalDevices(instance->GetHandle(), &deviceCount, nullptr);
 
 	std::vector<VkPhysicalDevice> devices(deviceCount);
-	vkEnumeratePhysicalDevices(*(*instance), &deviceCount, devices.data());
+	vkEnumeratePhysicalDevices(instance->GetHandle(), &deviceCount, devices.data());
 
 	//TODO : 차후에 사용 가능한 GPU가 다수 일경우 그중에서 가장 적합한 GPU를 선택하도록 변경
 	for (auto device : devices)
@@ -274,6 +290,14 @@ void VulkanDevice::CreateCommandPool()
 	commandPool->Init(swapchain, 0, graphicsQueue->GetFamilyIndex());
 }
 
+void VulkanDevice::CreateSemaphore()
+{
+	Console_Log("세마포어 생성 시작");
+	imageAvailableSemaphore->Init();
+	renderFinishedSemaphore->Init();
+	Console_Log("세마포어 생성 성공");
+}
+
 bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
 {
 	QueueFamilyIndices queueFamilyIndices;
@@ -299,7 +323,7 @@ bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
 void VulkanDevice::CreateSurface(LKEngine::Window::WindowsWindow * window)
 {
 	Console_Log("Surface 생성 시작");
-	VkResult result = glfwCreateWindowSurface(*(*instance), window->GetWindowHandle(), nullptr, &surface);
+	VkResult result = glfwCreateWindowSurface(instance->GetHandle(), window->GetWindowHandle(), nullptr, &surface);
 	Check_Throw(result != VK_SUCCESS, "Surface가 생성되지 않았습니다!");
 	Console_Log("Surface 생성 성공");
 }

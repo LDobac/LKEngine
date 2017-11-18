@@ -5,6 +5,8 @@
 
 int main()
 {
+	//_CrtSetBreakAlloc(171);
+
 	LKEngine::Application::Application app(800, 600);
 
 	app.Loop();

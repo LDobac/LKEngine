@@ -70,7 +70,7 @@ void VulkanInstance::Shutdown()
 	vkDestroyInstance(vkInstance, nullptr);
 }
 
-VkInstance VulkanInstance::operator*()
+VkInstance VulkanInstance::GetHandle() const
 {
 	return vkInstance;
 }

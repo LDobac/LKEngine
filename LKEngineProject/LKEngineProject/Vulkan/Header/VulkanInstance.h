@@ -24,6 +24,6 @@ namespace LKEngine::Vulkan
 		void Init(bool vaildationLayerOn);
 		virtual void Shutdown() override;
 
-		VkInstance operator*();
+		VkInstance GetHandle() const;
 	};
 }

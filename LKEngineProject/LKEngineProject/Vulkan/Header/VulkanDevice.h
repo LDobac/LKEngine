@@ -20,6 +20,7 @@ namespace LKEngine::Vulkan
 	class VulkanCommandPool;
 	class VulkanGraphicsPipeline;
 	class VulkanDescriptorSetLayout;
+	class VulkanSemaphore;
 
 	class VulkanDevice 
 		: public IVulkanObject
@@ -47,6 +48,9 @@ namespace LKEngine::Vulkan
 
 		VulkanCommandPool* commandPool;
 
+		VulkanSemaphore* imageAvailableSemaphore;
+		VulkanSemaphore* renderFinishedSemaphore;
+
 		QueueFamilyIndices queueIndices;
 	public:
 		explicit VulkanDevice();
@@ -55,6 +59,8 @@ namespace LKEngine::Vulkan
 		virtual void Init() override { }
 		void Init(LKEngine::Window::WindowsWindow* window, bool debug);
 		virtual void Shutdown() override;
+
+		void Draw();
 
 		VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
@@ -70,6 +76,7 @@ namespace LKEngine::Vulkan
 		void CreateDescriptorSetLayout();
 		void CreateGraphicsPipeline();
 		void CreateCommandPool();
+		void CreateSemaphore();
 
 		bool CheckDeviceFeatures(VkPhysicalDevice device);
 	};

@@ -22,7 +22,7 @@ void VulkanDebug::Init()
 	callbackInfo.pfnCallback = VulkanDebug::DebugCallback;
 	callbackInfo.pUserData = nullptr;
 
-	VkResult result = CreateDebugCallback(*(*instance), &callbackInfo, nullptr, &callbackInstance);
+	VkResult result = CreateDebugCallback(instance->GetHandle(), &callbackInfo, nullptr, &callbackInstance);
 	Check_Throw(result != VK_SUCCESS, "Vaildation Layer 积己 角菩!");
 
 	Console_Log("Vaildation Layer 积己 肯丰");
@@ -30,7 +30,7 @@ void VulkanDebug::Init()
 
 void VulkanDebug::Shutdown()
 {
-	DestroyDebugCallback(*(*instance), callbackInstance, nullptr);
+	DestroyDebugCallback(instance->GetHandle(), callbackInstance, nullptr);
 }
 
 VkResult VulkanDebug::CreateDebugCallback(VkInstance instance, const VkDebugReportCallbackCreateInfoEXT * pCreateInfo, const VkAllocationCallbacks * pAllocator, VkDebugReportCallbackEXT * pCallback)

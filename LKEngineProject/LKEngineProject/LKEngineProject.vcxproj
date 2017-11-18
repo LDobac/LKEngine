@@ -32,6 +32,7 @@
     <ClCompile Include="Vulkan\Source\VulkanInstance.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanQueue.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanRenderPass.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanSemaphore.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanShaderModule.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanSwapchain.cpp" />
     <ClCompile Include="Window\Source\WindowsWindow.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="Vulkan\Header\VulkanQueue.h" />
     <ClInclude Include="Vulkan\Header\VulkanQueueFamilyIndices.h" />
     <ClInclude Include="Vulkan\Header\VulkanRenderPass.h" />
+    <ClInclude Include="Vulkan\Header\VulkanSemaphore.h" />
     <ClInclude Include="Vulkan\Header\VulkanShaderModule.h" />
     <ClInclude Include="Vulkan\Header\VulkanSwapchain.h" />
     <ClInclude Include="Window\Header\IWindow.h" />
@@ -124,6 +126,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>D:\Projects\LKEngine\Libs\GLFW\include;D:\Projects\LKEngine\Libs\GLM;D:\Projects\LKEngine\Libs\Vulkan\1.0.65.0\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Projects\LKEngine\Libs\GLFW\lib-vc2015x86;D:\Projects\LKEngine\Libs\Vulkan\1.0.65.0\Lib32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -164,12 +168,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
