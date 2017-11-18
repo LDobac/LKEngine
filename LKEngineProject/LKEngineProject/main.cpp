@@ -5,7 +5,6 @@
 
 int main()
 {
-	
 	LKEngine::Application::Application app(800, 600);
 
 	app.Loop();

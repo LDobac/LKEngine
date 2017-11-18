@@ -44,10 +44,11 @@ namespace LKEngine::Vulkan
 		virtual ~VulkanSwapchain();
 
 		virtual void Init() override { }
-		void Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface);
+		void Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices);
 		virtual void Shutdown() override;
 
 		VkFormat GetFormat() const;
+		const std::vector<VulkanImage*>& GetImages() const;
 	private:
 		VkSurfaceFormatKHR ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const;
 		VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR> availablePresentModes) const;

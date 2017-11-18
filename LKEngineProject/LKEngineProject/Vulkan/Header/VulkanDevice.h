@@ -4,6 +4,7 @@
 
 #include "IVulkanObject.h"
 #include "VulkanInstance.h"
+#include "VulkanQueueFamilyIndices.h"
 
 //Foward Declaration
 namespace LKEngine::Window
@@ -16,6 +17,7 @@ namespace LKEngine::Vulkan
 	class VulkanQueue;
 	class VulkanSwapchain;
 	class VulkanRenderPass;
+	class VulkanCommandPool;
 
 	class VulkanDevice 
 		: public IVulkanObject
@@ -36,6 +38,10 @@ namespace LKEngine::Vulkan
 		VulkanQueue* presentQueue;
 
 		VulkanRenderPass* renderPass;
+
+		VulkanCommandPool* commandPool;
+
+		QueueFamilyIndices queueIndices;
 	public:
 		explicit VulkanDevice();
 		virtual ~VulkanDevice();
@@ -46,12 +52,15 @@ namespace LKEngine::Vulkan
 
 		VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
-		VkDevice operator*() const;
+		QueueFamilyIndices GetQueueFamilyIndices() const;
+		VkDevice GetHandle() const;
 	private:
 		void CreateSurface(LKEngine::Window::WindowsWindow * window);
 		void RequirePhysicalDevice();
 		void CreateDevice(bool vaildationLayerOn);
+		void CreateQueue();
 		void CreateSwapchain(LKEngine::Window::WindowsWindow * window);
+		void CreateCommandPool();
 
 		bool CheckDeviceFeatures(VkPhysicalDevice device);
 	};

@@ -4,7 +4,6 @@
 
 #include "../../Utility/Header/Macro.h"
 #include "../../Window/Header/WindowsWindow.h"
-#include "../Header/VulkanQueueFamilyIndices.h"
 #include "../Header/VulkanDevice.h"
 #include "../Header/VulkanImage.h"
 
@@ -53,7 +52,7 @@ VulkanSwapchain::~VulkanSwapchain()
 	}
 }
 
-void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface)
+void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices)
 {
 	Console_Log("스왑 체인 생성 시작");
 
@@ -80,11 +79,10 @@ void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surf
 	createInfo.imageArrayLayers = 1;
 	createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-	QueueFamilyIndices indices;
-	indices.FindQueueFamily(gpu, surface);
-	uint32_t queueFamilyIndices[] = { static_cast<uint32_t>(indices.graphicsFamily),static_cast<uint32_t>(indices.presentFamily) };
+	queueIndices.FindQueueFamily(gpu, surface);
+	uint32_t queueFamilyIndices[] = { static_cast<uint32_t>(queueIndices.graphicsFamily),static_cast<uint32_t>(queueIndices.presentFamily) };
 
-	if (indices.graphicsFamily != indices.presentFamily)
+	if (queueIndices.graphicsFamily != queueIndices.presentFamily)
 	{
 		createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 		createInfo.queueFamilyIndexCount = 2;
@@ -102,13 +100,13 @@ void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surf
 	createInfo.presentMode = presentMode;
 	createInfo.clipped = VK_TRUE;
 
-	VkResult result = vkCreateSwapchainKHR(*(*device), &createInfo, nullptr, &swapchain);
+	VkResult result = vkCreateSwapchainKHR(device->GetHandle(), &createInfo, nullptr, &swapchain);
 	Check_Throw(result != VK_SUCCESS, "스왑 체인 생성 실패!");
 
 	std::vector<VkImage> tmpImages;
-	vkGetSwapchainImagesKHR(*(*device), swapchain, &imageCount, nullptr);
+	vkGetSwapchainImagesKHR(device->GetHandle(), swapchain, &imageCount, nullptr);
 	tmpImages.resize(imageCount);
-	vkGetSwapchainImagesKHR(*(*device), swapchain, &imageCount, tmpImages.data());
+	vkGetSwapchainImagesKHR(device->GetHandle(), swapchain, &imageCount, tmpImages.data());
 
 	swapchainImages.resize(imageCount);
 	for (size_t i = 0; i < swapchainImages.size(); i++)
@@ -132,12 +130,17 @@ void VulkanSwapchain::Shutdown()
 		swapchainImages[i]->ShutdownWithoutImage();
 	}
 
-	vkDestroySwapchainKHR(*(*device), swapchain, nullptr);
+	vkDestroySwapchainKHR(device->GetHandle(), swapchain, nullptr);
 }
 
 VkFormat VulkanSwapchain::GetFormat() const
 {
 	return swapchainFormat;
+}
+
+const std::vector<VulkanImage*>& VulkanSwapchain::GetImages() const
+{
+	return swapchainImages;
 }
 
 VkSurfaceFormatKHR VulkanSwapchain::ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const

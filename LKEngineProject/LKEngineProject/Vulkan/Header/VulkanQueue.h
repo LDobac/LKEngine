@@ -17,6 +17,7 @@ namespace LKEngine::Vulkan
 	public:
 		explicit VulkanQueue(VulkanDevice* device, uint32_t familyIndex, uint32_t queueIndex);
 
-		VkQueue GetRawHandle() const;
+		VkQueue GetHandle() const;
+		uint32_t GetFamilyIndex() const;
 	};
 }

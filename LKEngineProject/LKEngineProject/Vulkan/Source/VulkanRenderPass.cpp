@@ -120,7 +120,7 @@ void VulkanRenderPass::Init(VulkanSwapchain * swapchain)
 	renderPassInfo.dependencyCount = 1;
 	renderPassInfo.pDependencies = &dependency;
 
-	VkResult result = vkCreateRenderPass(*(*device), &renderPassInfo, nullptr, &renderPass);
+	VkResult result = vkCreateRenderPass(device->GetHandle(), &renderPassInfo, nullptr, &renderPass);
 	Check_Throw(result != VK_SUCCESS, "렌더 패스 생성 실패!");
 	
 	Console_Log("렌더 패스 생성 성공!");
@@ -128,5 +128,5 @@ void VulkanRenderPass::Init(VulkanSwapchain * swapchain)
 
 void VulkanRenderPass::Shutdown()
 {
-	vkDestroyRenderPass(*(*device), renderPass, nullptr);
+	vkDestroyRenderPass(device->GetHandle(), renderPass, nullptr);
 }

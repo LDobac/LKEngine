@@ -85,13 +85,13 @@ void VulkanShaderModule::Init(const ShaderType type, const std::vector<char>& co
 
 	createInfo.pCode = codeAligned.data();
 	
-	VkResult result = vkCreateShaderModule(*(*device), &createInfo, nullptr, &shaderModule);
+	VkResult result = vkCreateShaderModule(device->GetHandle(), &createInfo, nullptr, &shaderModule);
 	Check_Throw(result != VK_SUCCESS, "Can't Create ShaderModule!");
 }
 
 void VulkanShaderModule::Shutdown()
 {
-	vkDestroyShaderModule(*(*device), shaderModule, nullptr);
+	vkDestroyShaderModule(device->GetHandle(), shaderModule, nullptr);
 }
 
 VkShaderModule VulkanShaderModule::GetHandle() const

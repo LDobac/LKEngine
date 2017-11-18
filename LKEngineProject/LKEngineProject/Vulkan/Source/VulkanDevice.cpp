@@ -6,10 +6,10 @@
 #include "../../Utility/Header/Macro.h"
 #include "../../Window/Header/WindowsWindow.h"
 #include "../Header/VulkanQueue.h"
-#include "../Header/VulkanQueueFamilyIndices.h"
 #include "../Header/VulkanExtension.h"
 #include "../Header/VulkanSwapchain.h"
 #include "../Header/VulkanRenderPass.h"
+#include "../Header/VulkanCommandPool.h"
 
 using namespace LKEngine::Vulkan;
 
@@ -21,11 +21,14 @@ VulkanDevice::VulkanDevice()
 	swapchain(nullptr),
 	graphicsQueue(nullptr),
 	presentQueue(nullptr),
-	renderPass(nullptr)
+	renderPass(nullptr),
+	commandPool(nullptr)
 {
 	instance = new VulkanInstance();
 
 	renderPass = new VulkanRenderPass(this);
+
+	commandPool = new VulkanCommandPool(this);
 }
 
 VulkanDevice::~VulkanDevice()
@@ -35,6 +38,7 @@ VulkanDevice::~VulkanDevice()
 	SAFE_DELETE(renderPass);
 	SAFE_DELETE(graphicsQueue);
 	SAFE_DELETE(presentQueue);
+	SAFE_DELETE(commandPool);
 }
 
 void VulkanDevice::Init(LKEngine::Window::WindowsWindow* window, bool debug)
@@ -47,13 +51,19 @@ void VulkanDevice::Init(LKEngine::Window::WindowsWindow* window, bool debug)
 
 	CreateDevice(debug);
 
+	CreateQueue();
+
 	CreateSwapchain(window);
 
 	renderPass->Init(swapchain);
+
+	CreateCommandPool();
 }
 
 void VulkanDevice::Shutdown()
 {
+	commandPool->Shutdown();
+
 	renderPass->Shutdown();
 
 	swapchain->Shutdown();
@@ -83,7 +93,12 @@ VkFormat VulkanDevice::FindSupportedFormat(const std::vector<VkFormat>& candidat
 	Check_Throw(true, "지원되는 포맷을 찾을 수 없습니다!");
 }
 
-VkDevice VulkanDevice::operator*() const
+QueueFamilyIndices VulkanDevice::GetQueueFamilyIndices() const
+{
+	return queueIndices;
+}
+
+VkDevice VulkanDevice::GetHandle() const
 {
 	return vkDevice;
 }
@@ -149,10 +164,9 @@ void VulkanDevice::CreateDevice(bool vaildationLayerOn)
 {
 	Console_Log("디바이스 생성 시작");
 
-	QueueFamilyIndices indices;
-	indices.FindQueueFamily(gpu, surface);
+	queueIndices.FindQueueFamily(gpu, surface);
 
-	std::set<int> uniqueQueueFamilies = { indices.graphicsFamily,indices.presentFamily };
+	std::set<int> uniqueQueueFamilies = { queueIndices.graphicsFamily,queueIndices.presentFamily };
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 
 	//TODO : 나중에 큐가 여러개 있을경우 처리 및 큐의 우선 순의 설정
@@ -197,16 +211,26 @@ void VulkanDevice::CreateDevice(bool vaildationLayerOn)
 	VkResult result = vkCreateDevice(gpu, &deviceCreateInfo, nullptr, &vkDevice);
 	Check_Throw(result != VK_SUCCESS, "디바이스 생성 실패!");
 
-	graphicsQueue = new VulkanQueue(this, indices.graphicsFamily, 0);
-	presentQueue = new VulkanQueue(this, indices.presentFamily, 0);
-
 	Console_Log("디바이스 생성 성공");
+}
+
+void LKEngine::Vulkan::VulkanDevice::CreateQueue()
+{
+	Console_Log("Queue 생성 시작");
+	graphicsQueue = new VulkanQueue(this, queueIndices.graphicsFamily, 0);
+	presentQueue = new VulkanQueue(this, queueIndices.presentFamily, 0);
+	Console_Log("Queue 생성 성공");
 }
 
 void VulkanDevice::CreateSwapchain(LKEngine::Window::WindowsWindow * window)
 {
 	swapchain = new VulkanSwapchain(this, window);
-	swapchain->Init(gpu, surface);
+	swapchain->Init(gpu, surface,queueIndices);
+}
+
+void VulkanDevice::CreateCommandPool()
+{
+	commandPool->Init(swapchain, 0, graphicsQueue->GetFamilyIndex());
 }
 
 bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
