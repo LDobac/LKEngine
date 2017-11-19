@@ -15,6 +15,10 @@
 #include "../Header/VulkanDescriptorSets.h"
 #include "../Header/VulkanSemaphore.h"
 
+
+#include "../Header/VulkanBuffer.h"
+#include "../Header/VertexInformation.h"
+
 using namespace LKEngine::Vulkan;
 
 VulkanDevice::VulkanDevice(LKEngine::Window::WindowsWindow* window)
@@ -51,6 +55,12 @@ VulkanDevice::~VulkanDevice()
 	SAFE_DELETE(descriptorSetLayout);
 	SAFE_DELETE(imageAvailableSemaphore);
 	SAFE_DELETE(renderFinishedSemaphore);
+
+
+
+
+
+	SAFE_DELETE(vertexBuffer);
 }
 
 void VulkanDevice::Init(bool debug)
@@ -78,11 +88,27 @@ void VulkanDevice::Init(bool debug)
 	CreateCommandPool();
 
 	CreateSemaphore();
+
+
+
+
+
+	CreateVertexBuffer();
+	
+
+
+
+	
+
+	RecordCommandBuffer();
 }
 
 void VulkanDevice::Shutdown()
 {
 	vkDeviceWaitIdle(vkDevice);
+
+	vertexBuffer->Shutdown();
+
 
 	imageAvailableSemaphore->Shutdown();
 	renderFinishedSemaphore->Shutdown();
@@ -102,7 +128,7 @@ void VulkanDevice::Shutdown()
 
 void VulkanDevice::Draw()
 {
-	vkQueueWaitIdle(presentQueue->GetHandle());
+	presentQueue->WaitIdle();
 
 	uint32_t imageIndex = 0;
 	VkResult result = vkAcquireNextImageKHR(vkDevice, swapchain->GetHandle(), 
@@ -161,13 +187,15 @@ void VulkanDevice::ResizeWindow()
 	//커맨드 버퍼 재 생성
 	{
 		commandPool->FreeBuffers();
-		commandPool->AllocBuffers(swapchain); 
-		std::vector<VkClearValue> clearValues(2);
-		clearValues[0].color = { 0.0f, 0.0f, 1.0f, 1.0f };
-		clearValues[1].depthStencil = { 1.0f, 0 };
-		commandPool->Record(swapchain, renderPass, graphicsPipeline, clearValues);
+		commandPool->AllocBuffers(swapchain->GetFrameBuffers().size()); 
+		RecordCommandBuffer();
 	}
 	Console_Log("리사이징 윈도우 성공");
+}
+
+void VulkanDevice::WaitIdle()
+{
+	vkDeviceWaitIdle(vkDevice);
 }
 
 VkFormat VulkanDevice::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
@@ -346,12 +374,7 @@ void VulkanDevice::CreateDescriptorSetLayout()
 void VulkanDevice::CreateCommandPool()
 {
 	commandPool->Init(0, graphicsQueue->GetFamilyIndex());
-	commandPool->AllocBuffers(swapchain);
-
-	std::vector<VkClearValue> clearValues(2);
-	clearValues[0].color = { 0.0f, 0.0f, 1.0f, 1.0f };
-	clearValues[1].depthStencil = { 1.0f, 0 };
-	commandPool->Record(swapchain, renderPass, graphicsPipeline, clearValues);
+	commandPool->AllocBuffers(swapchain->GetFrameBuffers().size());
 }
 
 void VulkanDevice::CreateSemaphore()
@@ -360,6 +383,13 @@ void VulkanDevice::CreateSemaphore()
 	imageAvailableSemaphore->Init();
 	renderFinishedSemaphore->Init();
 	Console_Log("세마포어 생성 성공");
+}
+
+void VulkanDevice::CreateVertexBuffer()
+{
+	vertexBuffer = new VulkanGraphicsBuffer(this, commandPool, graphicsQueue);
+	vertexBuffer->Init(sizeof(Vertex) * vertices.size(), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE);
+	vertexBuffer->Map(vertices.data());
 }
 
 bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
@@ -382,6 +412,37 @@ bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
 	}
 	
 	return false;
+}
+
+void VulkanDevice::RecordCommandBuffer()
+{
+	std::vector<VkClearValue> clearValues(2);
+	clearValues[0].color = { 0.0f, 0.0f, 1.0f, 1.0f };
+	clearValues[1].depthStencil = { 1.0f, 0 };
+
+	std::vector<VkFramebuffer> framebuffers = swapchain->GetFrameBuffers();
+	VkExtent2D extent = swapchain->GetExtent();
+
+	for (size_t i = 0; i < commandPool->GetBufferSize(); i++)
+	{
+		auto commandBuffer = commandPool->GetBuffer(i);
+
+		commandPool->RecordBegin(i, VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT);
+		renderPass->Begin(clearValues, framebuffers[i], extent, commandBuffer);
+
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetHandle());
+
+		VkBuffer vertexBuffers[] = {
+			vertexBuffer->GetBuffer()
+		};
+		VkDeviceSize offsets[] = { 0 };
+		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+
+		vkCmdDraw(commandBuffer, vertices.size(), 1, 0, 0);
+
+		renderPass->End(commandBuffer);
+		commandPool->RecordEnd(i);
+	}
 }
 
 void VulkanDevice::CreateSurface(LKEngine::Window::WindowsWindow * window)

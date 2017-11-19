@@ -22,6 +22,8 @@ Application::Application(const int windowWidth, const int windowHeight)
 
 Application::~Application()
 {
+	device->WaitIdle();
+
 	device->Shutdown();
 	window->Shutdown();
 

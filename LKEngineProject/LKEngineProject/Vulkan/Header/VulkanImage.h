@@ -28,7 +28,7 @@ namespace LKEngine::Vulkan
 		void ShutdownWithoutImage();
 
 		VkImage GetImage() const;
-		VkImageView GetImageView() const;
+		const VkImageView& GetImageView() const;
 	private:
 		void CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usageFlag, VkMemoryPropertyFlags properties);
 		void CreateImageView(VkFormat format, VkImageAspectFlags aspectFlags);

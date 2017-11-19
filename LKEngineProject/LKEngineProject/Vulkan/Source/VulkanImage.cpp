@@ -56,7 +56,7 @@ VkImage VulkanImage::GetImage() const
 	return image;
 }
 
-VkImageView VulkanImage::GetImageView() const
+const VkImageView& VulkanImage::GetImageView() const
 {
 	return imageView;
 }

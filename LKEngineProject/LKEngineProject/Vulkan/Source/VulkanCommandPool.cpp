@@ -35,26 +35,36 @@ void VulkanCommandPool::Shutdown()
 	}
 }
 
-void VulkanCommandPool::AllocBuffers(VulkanSwapchain* swapchain)
+void VulkanCommandPool::AllocBuffers(size_t size)
 {
 	commandBuffers = new VulkanCommandBuffers(device, this);
-	commandBuffers->Init(swapchain);
+	commandBuffers->AllocBuffers(size);
 }
 
 void VulkanCommandPool::FreeBuffers()
 {
-	commandBuffers->Free();
+	commandBuffers->FreeAll();
 	SAFE_DELETE(commandBuffers);
 }
 
-void VulkanCommandPool::Record(VulkanSwapchain * swapchain, VulkanRenderPass * renderPass, VulkanGraphicsPipeline * graphicsPipeline, std::vector<VkClearValue> clearColor)
+void VulkanCommandPool::RecordBegin(uint32_t index, VkCommandBufferUsageFlags flags)
 {
-	commandBuffers->Record(swapchain, renderPass, graphicsPipeline, clearColor);
+	commandBuffers->RecordBegin(index, flags);
+}
+
+void VulkanCommandPool::RecordEnd(uint32_t index)
+{
+	commandBuffers->RecordEnd(index);
 }
 
 const VkCommandBuffer & VulkanCommandPool::GetBuffer(uint32_t index) const
 {
 	return commandBuffers->GetBuffer(index);
+}
+
+size_t VulkanCommandPool::GetBufferSize() const
+{
+	return commandBuffers->GetBufferSize();
 }
 
 const VkCommandPool & VulkanCommandPool::GetHandle() const

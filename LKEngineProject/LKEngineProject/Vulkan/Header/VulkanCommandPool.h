@@ -6,7 +6,6 @@
 namespace LKEngine::Vulkan
 {
 	class VulkanCommandBuffers;
-	class VulkanSwapchain;
 
 	class VulkanCommandPool
 		: public IVulkanObject, public VulkanDeviceChild
@@ -23,12 +22,14 @@ namespace LKEngine::Vulkan
 		void Init(VkCommandPoolCreateFlags flags,int32_t queueIndex);
 		virtual void Shutdown() override;
 
-		void AllocBuffers(VulkanSwapchain* swapchain);
+		void AllocBuffers(size_t size);
 		void FreeBuffers();
 
-		void Record(VulkanSwapchain * swapchain, VulkanRenderPass * renderPass, VulkanGraphicsPipeline * graphicsPipeline, std::vector<VkClearValue> clearColor);
+		void RecordBegin(uint32_t index, VkCommandBufferUsageFlags flags);
+		void RecordEnd(uint32_t index);
 
 		const VkCommandBuffer& GetBuffer(uint32_t index) const;
+		size_t GetBufferSize() const;
 		const VkCommandPool& GetHandle() const;
 	};
 }

@@ -31,6 +31,11 @@ void VulkanQueue::Submit(VulkanSemaphore* waitSemaphore, VulkanSemaphore* signal
 	Check_Throw(vkQueueSubmit(vkQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS, "Queue Submit ½ÇÆÐ");
 }
 
+void VulkanQueue::Submit(const VkSubmitInfo & submitInfo)
+{
+	vkQueueSubmit(vkQueue, 1, &submitInfo, VK_NULL_HANDLE);
+}
+
 void VulkanQueue::Present(VulkanSwapchain * swapchain, VulkanSemaphore* waitSemaphore, uint32_t imageIndex)
 {
 	VkPresentInfoKHR info = { };
@@ -45,6 +50,11 @@ void VulkanQueue::Present(VulkanSwapchain * swapchain, VulkanSemaphore* waitSema
 	info.pResults = nullptr;
 
 	vkQueuePresentKHR(vkQueue, &info);
+}
+
+void VulkanQueue::WaitIdle()
+{
+	vkQueueWaitIdle(vkQueue);
 }
 
 uint32_t LKEngine::Vulkan::VulkanQueue::GetFamilyIndex() const

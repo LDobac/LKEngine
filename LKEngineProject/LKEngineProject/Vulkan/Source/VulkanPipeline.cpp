@@ -40,9 +40,9 @@ void VulkanGraphicsPipeline::Init(VulkanRenderPass* renderPass, VulkanSwapchain*
 	Console_Log("그래픽 파이프 라인 생성 시작");
 
 	VulkanShaderModule vertShaderModule(device);
-	vertShaderModule.Init(VulkanShaderModule::ShaderType::VERTEX, vertShaderModule.ReadCompiledShader("CompileShader/SimpleShader.vert.spv"));
+	vertShaderModule.Init(VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
 	VulkanShaderModule fragShaderModule(device);
-	fragShaderModule.Init(VulkanShaderModule::ShaderType::FRAGMENT, fragShaderModule.ReadCompiledShader("CompileShader/SimpleShader.frag.spv"));
+	fragShaderModule.Init(VulkanShaderModule::ShaderType::FRAGMENT, "Shader/SimpleShader.frag");
 
 	VkPipelineShaderStageCreateInfo vertShaderStageInfo = {};
 	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -100,7 +100,7 @@ void VulkanGraphicsPipeline::Init(VulkanRenderPass* renderPass, VulkanSwapchain*
 	rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
 	rasterizer.lineWidth = 1.0f;
 	rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-	rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+	rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
 	rasterizer.depthBiasEnable = VK_FALSE;
 
 	VkPipelineMultisampleStateCreateInfo multisampling = {};

@@ -21,6 +21,7 @@ namespace LKEngine::Vulkan
 	class VulkanGraphicsPipeline;
 	class VulkanDescriptorSetLayout;
 	class VulkanSemaphore;
+	class VulkanGraphicsBuffer;
 
 	class VulkanDevice 
 		: public IVulkanObject
@@ -54,6 +55,8 @@ namespace LKEngine::Vulkan
 		VulkanSemaphore* renderFinishedSemaphore;
 
 		QueueFamilyIndices queueIndices;
+
+		VulkanGraphicsBuffer* vertexBuffer;
 	public:
 		explicit VulkanDevice(LKEngine::Window::WindowsWindow* window);
 		virtual ~VulkanDevice();
@@ -65,6 +68,8 @@ namespace LKEngine::Vulkan
 		void Draw();
 
 		void ResizeWindow();
+
+		void WaitIdle();
 
 		VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
@@ -80,6 +85,10 @@ namespace LKEngine::Vulkan
 		void CreateCommandPool();
 		void CreateSemaphore();
 
+		void CreateVertexBuffer();
+
 		bool CheckDeviceFeatures(VkPhysicalDevice device);
+
+		void RecordCommandBuffer();
 	};
 }

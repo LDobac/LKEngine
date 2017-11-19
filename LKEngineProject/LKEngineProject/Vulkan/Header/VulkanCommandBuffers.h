@@ -20,11 +20,13 @@ namespace LKEngine::Vulkan
 	public:
 		explicit VulkanCommandBuffers(VulkanDevice* device, VulkanCommandPool* commandPool);
 
-		void Init(VulkanSwapchain* swapchain);
-		void Free();
+		void AllocBuffers(size_t size);
+		void FreeAll();
 
-		void Record(VulkanSwapchain* swapchain, VulkanRenderPass* renderPass, VulkanGraphicsPipeline* graphicsPipeline, std::vector<VkClearValue> clearColor);
+		void RecordBegin(uint32_t index, VkCommandBufferUsageFlags flags);
+		void RecordEnd(uint32_t index);
 
 		const VkCommandBuffer& GetBuffer(uint32_t index) const;
+		size_t GetBufferSize() const;
 	};
 }
