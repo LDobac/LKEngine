@@ -55,7 +55,7 @@ const VkDeviceSize VulkanBuffer::GetBufferSize() const
 	return bufferSize;
 }
 
-void VulkanBuffer::CopyBuffer(VulkanBuffer * dstBuffer, VulkanSingleCommandPool * commandPool, VulkanQueue * transferQueue)
+void VulkanBuffer::CopyBuffer(VulkanBuffer * dstBuffer, VulkanSingleCommandPool * commandPool)
 {
 	VkBufferCopy copyRegion = {};
 	copyRegion.size = bufferSize;

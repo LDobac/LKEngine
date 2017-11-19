@@ -23,10 +23,8 @@ namespace LKEngine::Vulkan
 	class VulkanSemaphore;
 	class VulkanDescriptorPool;
 	class VulkanDescriptorSet;
-	class VulkanTexture;
+	class VulkanMesh;
 	
-	class VulkanBuffer;
-
 	class VulkanDevice 
 	{
 	private:
@@ -62,10 +60,7 @@ namespace LKEngine::Vulkan
 
 		QueueFamilyIndices queueIndices;
 
-		VulkanBuffer* vertexBuffer;
-		VulkanBuffer* indexBuffer;
-		VulkanBuffer* uniformBuffer;
-		VulkanTexture* texture;
+		VulkanMesh* mesh;
 	public:
 		explicit VulkanDevice(LKEngine::Window::WindowsWindow* window);
 		virtual ~VulkanDevice();

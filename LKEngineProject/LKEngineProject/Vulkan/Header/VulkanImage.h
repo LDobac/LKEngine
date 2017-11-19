@@ -5,6 +5,8 @@
 
 namespace LKEngine::Vulkan
 {
+	class VulkanBuffer;
+
 	class VulkanImage
 		: public VulkanDeviceChild
 	{

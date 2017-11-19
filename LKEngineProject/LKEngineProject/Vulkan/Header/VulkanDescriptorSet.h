@@ -4,6 +4,9 @@
 
 namespace LKEngine::Vulkan
 {
+	class VulkanBuffer;
+	class VulkanTexture;
+
 	class VulkanDescriptorSet
 		: public VulkanDeviceChild
 	{

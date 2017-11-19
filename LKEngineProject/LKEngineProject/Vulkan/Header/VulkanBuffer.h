@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../Utility/Header/Macro.h"
 #include "VulkanDeviceChild.h"
 
 namespace LKEngine::Vulkan
@@ -34,9 +35,9 @@ namespace LKEngine::Vulkan
 		const VkDeviceMemory& GetBufferMemory() const;
 		const VkDeviceSize GetBufferSize() const;
 
-		void CopyBuffer(VulkanBuffer* dstBuffer, VulkanSingleCommandPool* commandPool, VulkanQueue* transferQueue);
+		void CopyBuffer(VulkanBuffer* dstBuffer, VulkanSingleCommandPool* commandPool);
 		template<typename T>
-		void CopyLocalMemory(const T* data, VulkanSingleCommandPool* commandPool, VulkanQueue* transferQueue)
+		void CopyLocalMemory(const T* data, VulkanSingleCommandPool* commandPool)
 		{
 			VulkanBuffer* stagingBuffer = new VulkanBuffer(device);
 			stagingBuffer->Init(
@@ -45,7 +46,7 @@ namespace LKEngine::Vulkan
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 				VK_SHARING_MODE_EXCLUSIVE);
 			stagingBuffer->Map(data);
-			stagingBuffer->CopyBuffer(this, commandPool, transferQueue);
+			stagingBuffer->CopyBuffer(this, commandPool);
 			stagingBuffer->Shutdown();
 			SAFE_DELETE(stagingBuffer);
 		}

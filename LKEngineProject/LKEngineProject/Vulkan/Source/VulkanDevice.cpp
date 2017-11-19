@@ -22,9 +22,7 @@
 #include "../Header/VulkanDescriptorPool.h"
 #include "../Header/VulkanDescriptorSet.h"
 
-#include "../Header/VulkanTexture.h"
-#include "../Header/VulkanBuffer.h"
-#include "../Header/VertexInformation.h"
+#include "../Header/VulkanMesh.h"
 
 using namespace LKEngine::Vulkan;
 
@@ -70,12 +68,7 @@ VulkanDevice::~VulkanDevice()
 	SAFE_DELETE(renderFinishedSemaphore);
 
 
-
-
-	SAFE_DELETE(indexBuffer);
-	SAFE_DELETE(vertexBuffer);
-	SAFE_DELETE(uniformBuffer);
-	SAFE_DELETE(texture);
+	SAFE_DELETE(mesh);
 }
 
 void VulkanDevice::Init(bool debug)
@@ -121,11 +114,7 @@ void VulkanDevice::Shutdown()
 {
 	vkDeviceWaitIdle(vkDevice);
 
-	indexBuffer->Shutdown();
-	vertexBuffer->Shutdown();
-	uniformBuffer->Shutdown();
-	texture->Shutdown();
-
+	mesh->Shutdown();
 
 	imageAvailableSemaphore->Shutdown();
 	renderFinishedSemaphore->Shutdown();
@@ -156,8 +145,7 @@ void VulkanDevice::Update()
 	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	ubo.proj = glm::perspective(glm::radians(45.0f), swapchain->GetExtent().width / (float)swapchain->GetExtent().height, 0.1f, 10.0f);
 	ubo.proj[1][1] *= -1;
-
-	uniformBuffer->CopyLocalMemory(&ubo, singleCommandPool, graphicsQueue);
+	mesh->GetUniformBuffer()->CopyLocalMemory(&ubo, singleCommandPool);
 }
 
 void VulkanDevice::Draw()
@@ -419,8 +407,8 @@ void VulkanDevice::CreateDescriptorSet()
 {
 	Console_Log("디스크립터 셋 생성 시작");
 	descriptorSet->Init(descriptorSetLayout, descriptorPool);
-	descriptorSet->AddBufferInfo(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, uniformBuffer, 0, 0);
-	descriptorSet->AddTextureInfo(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, texture, 1);
+	descriptorSet->AddBufferInfo(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, mesh->GetUniformBuffer(), 0, 0);
+	descriptorSet->AddTextureInfo(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, mesh->GetTexture(), 1);
 	descriptorSet->UpdateSets();
 	Console_Log("디스크립터 셋 생성 성공");
 }
@@ -443,33 +431,8 @@ void VulkanDevice::CreateSemaphore()
 
 void VulkanDevice::CreateDataBuffers()
 {
-	vertexBuffer = new VulkanBuffer(this);
-	vertexBuffer->Init(
-		sizeof(Vertex) * vertices.size(),
-		VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		VK_SHARING_MODE_EXCLUSIVE);
-	vertexBuffer->CopyLocalMemory(vertices.data(), singleCommandPool, graphicsQueue);
-
-	indexBuffer = new VulkanBuffer(this);
-	indexBuffer->Init(
-		sizeof(indices[0]) * indices.size(),
-		VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		VK_SHARING_MODE_EXCLUSIVE
-	);
-	indexBuffer->CopyLocalMemory(indices.data(), singleCommandPool, graphicsQueue);
-
-	uniformBuffer = new VulkanBuffer(this);
-	uniformBuffer->Init(
-		sizeof(UniformBufferObject),
-		VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		VK_SHARING_MODE_EXCLUSIVE
-	);
-
-	texture = new VulkanTexture(this);
-	texture->Init("Textures/texture.jpg", singleCommandPool);
+	mesh = new VulkanMesh(this);
+	mesh->Init("Models/chalet.obj", "Textures/chalet.jpg", singleCommandPool);
 }
 
 bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
@@ -513,11 +476,11 @@ void VulkanDevice::RecordCommandBuffer()
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetHandle());
 
 		VkBuffer vertexBuffers[] = {
-			vertexBuffer->GetBuffer()
+			mesh->GetVertexBuffer()->GetBuffer()
 		};
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-		vkCmdBindIndexBuffer(commandBuffer, indexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT16);
+		vkCmdBindIndexBuffer(commandBuffer, mesh->GetIndexBuffer()->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
 		vkCmdBindDescriptorSets(commandBuffer,
 			VK_PIPELINE_BIND_POINT_GRAPHICS,
@@ -526,7 +489,7 @@ void VulkanDevice::RecordCommandBuffer()
 			&descriptorSet->GetHandle(),
 			0, nullptr);
 
-		vkCmdDrawIndexed(commandBuffer, indices.size(), 1, 0, 0, 0);
+		vkCmdDrawIndexed(commandBuffer, mesh->GetIndices().size(), 1, 0, 0, 0);
 
 		renderPass->End(commandBuffer);
 		commandPool->RecordEnd(i);

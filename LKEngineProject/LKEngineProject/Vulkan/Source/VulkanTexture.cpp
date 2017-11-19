@@ -32,10 +32,10 @@ const VkSampler & VulkanTexture::GetSampler() const
 	return sampler;
 }
 
-void LKEngine::Vulkan::VulkanTexture::CreateTexture(std::string path, VulkanSingleCommandPool * commandPool)
+void VulkanTexture::CreateTexture(std::string path, VulkanSingleCommandPool * commandPool)
 {
 	int texWidth, texHeight, texChannels;
-	stbi_uc* pixels = stbi_load("Textures/texture.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	stbi_uc* pixels = stbi_load(path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	if (pixels == nullptr)
 	{
 		throw std::runtime_error("이미지 불러오기 실패");
