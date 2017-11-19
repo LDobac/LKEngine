@@ -22,6 +22,7 @@ namespace LKEngine::Vulkan
 		virtual void Shutdown() override;
 
 		const VkPipeline& GetHandle() const;
+		const VkPipelineLayout& GetLayout() const;
 	};
 
 	class VulkanGraphicsPipeline

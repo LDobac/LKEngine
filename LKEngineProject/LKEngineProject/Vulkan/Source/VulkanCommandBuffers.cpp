@@ -16,7 +16,6 @@ VulkanCommandBuffers::VulkanCommandBuffers(VulkanDevice * device, VulkanCommandP
 
 void VulkanCommandBuffers::AllocBuffers(size_t size)
 {
-	Console_Log("명령 버퍼 생성 시작");
 	commandBuffers.resize(size);
 
 	VkCommandBufferAllocateInfo allocInfo = { };
@@ -26,7 +25,6 @@ void VulkanCommandBuffers::AllocBuffers(size_t size)
 	allocInfo.commandBufferCount = commandBuffers.size();
 
 	Check_Throw(vkAllocateCommandBuffers(device->GetHandle(), &allocInfo, commandBuffers.data()) != VK_SUCCESS, "Command Buffer 생성 실패");
-	Console_Log("명령 버퍼 생성 성공");
 }
 
 void VulkanCommandBuffers::FreeAll()

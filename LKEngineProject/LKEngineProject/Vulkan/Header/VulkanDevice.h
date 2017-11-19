@@ -21,7 +21,10 @@ namespace LKEngine::Vulkan
 	class VulkanGraphicsPipeline;
 	class VulkanDescriptorSetLayout;
 	class VulkanSemaphore;
-	class VulkanGraphicsBuffer;
+	class VulkanDescriptorPool;
+	class VulkanDescriptorSet;
+	
+	class VulkanBuffer;
 
 	class VulkanDevice 
 		: public IVulkanObject
@@ -46,6 +49,8 @@ namespace LKEngine::Vulkan
 		VulkanRenderPass* renderPass;
 
 		VulkanDescriptorSetLayout* descriptorSetLayout;
+		VulkanDescriptorPool* descriptorPool;
+		VulkanDescriptorSet* descriptorSet;
 
 		VulkanGraphicsPipeline* graphicsPipeline;
 
@@ -56,7 +61,9 @@ namespace LKEngine::Vulkan
 
 		QueueFamilyIndices queueIndices;
 
-		VulkanGraphicsBuffer* vertexBuffer;
+		VulkanBuffer* vertexBuffer;
+		VulkanBuffer* indexBuffer;
+		VulkanBuffer* uniformBuffer;
 	public:
 		explicit VulkanDevice(LKEngine::Window::WindowsWindow* window);
 		virtual ~VulkanDevice();
@@ -65,6 +72,7 @@ namespace LKEngine::Vulkan
 		void Init(bool debug);
 		virtual void Shutdown() override;
 
+		void Update();
 		void Draw();
 
 		void ResizeWindow();
@@ -82,10 +90,12 @@ namespace LKEngine::Vulkan
 		void CreateDevice(bool vaildationLayerOn);
 		void CreateQueue();
 		void CreateDescriptorSetLayout();
+		void CreateDescriptorPool();
+		void CreateDescriptorSet();
 		void CreateCommandPool();
 		void CreateSemaphore();
 
-		void CreateVertexBuffer();
+		void CreateDataBuffers();
 
 		bool CheckDeviceFeatures(VkPhysicalDevice device);
 

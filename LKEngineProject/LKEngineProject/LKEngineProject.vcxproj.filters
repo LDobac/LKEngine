@@ -73,9 +73,11 @@
     <ClCompile Include="Vulkan\Source\VulkanCommandPool.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanCommandBuffers.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanPipeline.cpp" />
-    <ClCompile Include="Vulkan\Source\VulkanDescriptorSets.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanSemaphore.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanBuffer.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanDescriptorPool.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanDescriptorSetLayout.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanDescriptorSet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Header\Application.h">
@@ -129,14 +131,16 @@
     <ClInclude Include="Vulkan\Header\IVulkanObject.h">
       <Filter>Vulkan\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanDescriptorSets.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
     <ClInclude Include="Vulkan\Header\VulkanCommandPool.h" />
     <ClInclude Include="Vulkan\Header\VulkanCommandBuffers.h" />
     <ClInclude Include="Vulkan\Header\VulkanPipeline.h" />
     <ClInclude Include="Vulkan\Header\VertexInformation.h" />
     <ClInclude Include="Vulkan\Header\VulkanSemaphore.h" />
     <ClInclude Include="Vulkan\Header\VulkanBuffer.h" />
+    <ClInclude Include="Vulkan\Header\VulkanDescriptorPool.h" />
+    <ClInclude Include="Vulkan\Header\VulkanDescriptorSetLayout.h">
+      <Filter>Vulkan\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\Header\VulkanDescriptorSet.h" />
   </ItemGroup>
 </Project>

@@ -17,14 +17,13 @@ VulkanCommandPool::~VulkanCommandPool()
 
 void VulkanCommandPool::Init(VkCommandPoolCreateFlags flags, int32_t queueIndex)
 {
-	Console_Log("명령 풀 생성 시작");
+	
 	VkCommandPoolCreateInfo poolInfo = { };
 	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	poolInfo.queueFamilyIndex = queueIndex;
 	poolInfo.flags = flags;
 
 	Check_Throw(vkCreateCommandPool(device->GetHandle(), &poolInfo, nullptr, &commandPool) != VK_SUCCESS, "CommandPool 이 생성되지 않음");
-	Console_Log("명령 풀 생성 성공");
 }
 
 void VulkanCommandPool::Shutdown()

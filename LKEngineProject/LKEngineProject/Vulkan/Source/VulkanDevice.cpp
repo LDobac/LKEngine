@@ -3,6 +3,11 @@
 #include <vector>
 #include <set>
 #include <numeric>
+#include <chrono>
+
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "../../Utility/Header/Macro.h"
 #include "../../Window/Header/WindowsWindow.h"
@@ -12,9 +17,10 @@
 #include "../Header/VulkanRenderPass.h"
 #include "../Header/VulkanCommandPool.h"
 #include "../Header/VulkanPipeline.h"
-#include "../Header/VulkanDescriptorSets.h"
+#include "../Header/VulkanDescriptorSetLayout.h"
 #include "../Header/VulkanSemaphore.h"
-
+#include "../Header/VulkanDescriptorPool.h"
+#include "../Header/VulkanDescriptorSet.h"
 
 #include "../Header/VulkanBuffer.h"
 #include "../Header/VertexInformation.h"
@@ -39,6 +45,8 @@ VulkanDevice::VulkanDevice(LKEngine::Window::WindowsWindow* window)
 	commandPool = new VulkanCommandPool(this);
 	graphicsPipeline = new VulkanGraphicsPipeline(this);
 	descriptorSetLayout = new VulkanDescriptorSetLayout(this);
+	descriptorPool = new VulkanDescriptorPool(this);
+	descriptorSet = new VulkanDescriptorSet(this);
 	imageAvailableSemaphore = new VulkanSemaphore(this);
 	renderFinishedSemaphore = new VulkanSemaphore(this);
 }
@@ -53,14 +61,17 @@ VulkanDevice::~VulkanDevice()
 	SAFE_DELETE(commandPool);
 	SAFE_DELETE(graphicsPipeline);
 	SAFE_DELETE(descriptorSetLayout);
+	SAFE_DELETE(descriptorPool);
+	SAFE_DELETE(descriptorSet);
 	SAFE_DELETE(imageAvailableSemaphore);
 	SAFE_DELETE(renderFinishedSemaphore);
 
 
 
 
-
+	SAFE_DELETE(indexBuffer);
 	SAFE_DELETE(vertexBuffer);
+	SAFE_DELETE(uniformBuffer);
 }
 
 void VulkanDevice::Init(bool debug)
@@ -83,22 +94,17 @@ void VulkanDevice::Init(bool debug)
 
 	CreateDescriptorSetLayout();
 
+	CreateDescriptorPool();
+
 	graphicsPipeline->Init(renderPass, swapchain, descriptorSetLayout);
 
 	CreateCommandPool();
 
 	CreateSemaphore();
 
-
-
-
-
-	CreateVertexBuffer();
+	CreateDataBuffers();
 	
-
-
-
-	
+	CreateDescriptorSet();
 
 	RecordCommandBuffer();
 }
@@ -107,7 +113,9 @@ void VulkanDevice::Shutdown()
 {
 	vkDeviceWaitIdle(vkDevice);
 
+	indexBuffer->Shutdown();
 	vertexBuffer->Shutdown();
+	uniformBuffer->Shutdown();
 
 
 	imageAvailableSemaphore->Shutdown();
@@ -124,6 +132,31 @@ void VulkanDevice::Shutdown()
 	vkDestroySurfaceKHR(instance->GetHandle(), surface, nullptr);
 
 	instance->Shutdown();
+}
+
+void VulkanDevice::Update()
+{
+	static auto startTime = std::chrono::high_resolution_clock::now();
+
+	auto currentTime = std::chrono::high_resolution_clock::now();
+	float time = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime).count() / 1000.0f;
+
+	UniformBufferObject ubo = {};
+	ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.proj = glm::perspective(glm::radians(45.0f), swapchain->GetExtent().width / (float)swapchain->GetExtent().height, 0.1f, 10.0f);
+	ubo.proj[1][1] *= -1;
+
+	VulkanBuffer* stagingBuffer = new VulkanBuffer(this);
+	stagingBuffer->Init(
+		sizeof(UniformBufferObject),
+		VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+		VK_SHARING_MODE_EXCLUSIVE);
+	stagingBuffer->Map(&ubo);
+	stagingBuffer->CopyBuffer(uniformBuffer, commandPool, graphicsQueue);
+	stagingBuffer->Shutdown();
+	SAFE_DELETE(stagingBuffer);
 }
 
 void VulkanDevice::Draw()
@@ -366,15 +399,34 @@ void VulkanDevice::CreateDescriptorSetLayout()
 {
 	Console_Log("DescriptorSetLayout 생성 시작");
 	descriptorSetLayout->AddDescriptor(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0);
-	descriptorSetLayout->AddDescriptor(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
+	//descriptorSetLayout->AddDescriptor(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
 	descriptorSetLayout->CreateDescriptorSetLayout();
 	Console_Log("DescriptorSetLayout 생성 성공");
 }
 
+void VulkanDevice::CreateDescriptorPool()
+{
+	Console_Log("디스크립터 풀 생성 시작");
+	descriptorPool->AddPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
+	descriptorPool->CreatePool();
+	Console_Log("디스크립터 풀 생성 성공");
+}
+
+void VulkanDevice::CreateDescriptorSet()
+{
+	Console_Log("디스크립터 셋 생성 시작");
+	descriptorSet->Init(descriptorSetLayout, descriptorPool);
+	descriptorSet->AddBufferInfo(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, uniformBuffer, 0, 0);
+	descriptorSet->UpdateSets();
+	Console_Log("디스크립터 셋 생성 성공");
+}
+
 void VulkanDevice::CreateCommandPool()
 {
+	Console_Log("명령 풀 생성 시작");
 	commandPool->Init(0, graphicsQueue->GetFamilyIndex());
 	commandPool->AllocBuffers(swapchain->GetFrameBuffers().size());
+	Console_Log("명령 풀 생성 성공");
 }
 
 void VulkanDevice::CreateSemaphore()
@@ -385,11 +437,50 @@ void VulkanDevice::CreateSemaphore()
 	Console_Log("세마포어 생성 성공");
 }
 
-void VulkanDevice::CreateVertexBuffer()
+void VulkanDevice::CreateDataBuffers()
 {
-	vertexBuffer = new VulkanGraphicsBuffer(this, commandPool, graphicsQueue);
-	vertexBuffer->Init(sizeof(Vertex) * vertices.size(), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE);
-	vertexBuffer->Map(vertices.data());
+	VulkanBuffer* stagingBuffer;
+	vertexBuffer = new VulkanBuffer(this);
+	vertexBuffer->Init(
+		sizeof(Vertex) * vertices.size(),
+		VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+		VK_SHARING_MODE_EXCLUSIVE);
+
+	stagingBuffer = new VulkanBuffer(this);
+	stagingBuffer->Init(sizeof(Vertex) * vertices.size(),
+		VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+		VK_SHARING_MODE_EXCLUSIVE);
+	stagingBuffer->Map(vertices.data());
+	stagingBuffer->CopyBuffer(vertexBuffer, commandPool, graphicsQueue);
+	stagingBuffer->Shutdown();
+	SAFE_DELETE(stagingBuffer);
+
+	indexBuffer = new VulkanBuffer(this);
+	indexBuffer->Init(
+		sizeof(indices[0]) * indices.size(),
+		VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+		VK_SHARING_MODE_EXCLUSIVE
+	);
+	stagingBuffer = new VulkanBuffer(this);
+	stagingBuffer->Init(sizeof(indices[0]) * indices.size(),
+		VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+		VK_SHARING_MODE_EXCLUSIVE);
+	stagingBuffer->Map(indices.data());
+	stagingBuffer->CopyBuffer(indexBuffer, commandPool, graphicsQueue);
+	stagingBuffer->Shutdown();
+	SAFE_DELETE(stagingBuffer);
+
+	uniformBuffer = new VulkanBuffer(this);
+	uniformBuffer->Init(
+		sizeof(UniformBufferObject),
+		VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+		VK_SHARING_MODE_EXCLUSIVE
+	);
 }
 
 bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
@@ -417,7 +508,7 @@ bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
 void VulkanDevice::RecordCommandBuffer()
 {
 	std::vector<VkClearValue> clearValues(2);
-	clearValues[0].color = { 0.0f, 0.0f, 1.0f, 1.0f };
+	clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
 	clearValues[1].depthStencil = { 1.0f, 0 };
 
 	std::vector<VkFramebuffer> framebuffers = swapchain->GetFrameBuffers();
@@ -437,8 +528,16 @@ void VulkanDevice::RecordCommandBuffer()
 		};
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+		vkCmdBindIndexBuffer(commandBuffer, indexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT16);
 
-		vkCmdDraw(commandBuffer, vertices.size(), 1, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			graphicsPipeline->GetLayout(),
+			0, 1, 
+			&descriptorSet->GetHandle(),
+			0, nullptr);
+
+		vkCmdDrawIndexed(commandBuffer, indices.size(), 1, 0, 0, 0);
 
 		renderPass->End(commandBuffer);
 		commandPool->RecordEnd(i);

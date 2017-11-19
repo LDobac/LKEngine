@@ -25,7 +25,9 @@
     <ClCompile Include="Vulkan\Source\VulkanCommandBuffers.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanCommandPool.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanDebug.cpp" />
-    <ClCompile Include="Vulkan\Source\VulkanDescriptorSets.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanDescriptorPool.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanDescriptorSet.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanDescriptorSetLayout.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanDevice.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanExtension.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanPipeline.cpp" />
@@ -44,11 +46,13 @@
     <ClInclude Include="Utility\Header\ManagedObject.h" />
     <ClInclude Include="Vulkan\Header\IVulkanObject.h" />
     <ClInclude Include="Vulkan\Header\VertexInformation.h" />
+    <ClInclude Include="Vulkan\Header\VulkanDescriptorSet.h" />
     <ClInclude Include="Vulkan\Header\VulkanBuffer.h" />
     <ClInclude Include="Vulkan\Header\VulkanCommandBuffers.h" />
     <ClInclude Include="Vulkan\Header\VulkanCommandPool.h" />
     <ClInclude Include="Vulkan\Header\VulkanDebug.h" />
-    <ClInclude Include="Vulkan\Header\VulkanDescriptorSets.h" />
+    <ClInclude Include="Vulkan\Header\VulkanDescriptorSetLayout.h" />
+    <ClInclude Include="Vulkan\Header\VulkanDescriptorPool.h" />
     <ClInclude Include="Vulkan\Header\VulkanDevice.h" />
     <ClInclude Include="Vulkan\Header\VulkanDeviceChild.h" />
     <ClInclude Include="Vulkan\Header\VulkanExtension.h" />
