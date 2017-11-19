@@ -5,6 +5,7 @@
 #include "../Header/VulkanDescriptorSetLayout.h"
 #include "../Header/VulkanDescriptorPool.h"
 #include "../Header/VulkanBuffer.h"
+#include "../Header/VulkanTexture.h"
 
 using namespace LKEngine::Vulkan;
 
@@ -40,9 +41,27 @@ void VulkanDescriptorSet::AddBufferInfo(VkDescriptorType type, VulkanBuffer * bu
 	descriptorWrite.descriptorType = type;
 	descriptorWrite.descriptorCount = 1;
 	descriptorWrite.pBufferInfo = &bufferInfos.back();
-	descriptorWrite.pImageInfo = nullptr;
-	descriptorWrite.pTexelBufferView = nullptr;
 	
+	descriptorWrites.push_back(descriptorWrite);
+}
+
+void VulkanDescriptorSet::AddTextureInfo(VkDescriptorType type, VulkanTexture * image, uint32_t binding)
+{
+	VkDescriptorImageInfo info = { };
+	info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	info.imageView = image->GetImageView();
+	info.sampler = image->GetSampler();
+	imageInfos.push_back(info);
+
+	VkWriteDescriptorSet descriptorWrite = {};
+	descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	descriptorWrite.dstSet = descriptorSet;
+	descriptorWrite.dstBinding = binding;
+	descriptorWrite.dstArrayElement = 0;
+	descriptorWrite.descriptorType = type;
+	descriptorWrite.descriptorCount = 1;
+	descriptorWrite.pImageInfo = &imageInfos.back();
+
 	descriptorWrites.push_back(descriptorWrite);
 }
 

@@ -8,10 +8,15 @@ namespace LKEngine::Vulkan
 	class VulkanImage
 		: public VulkanDeviceChild
 	{
-	private:
+	protected:
 		VkImage image;
 		VkImageView imageView;
 		VkDeviceMemory memory;
+
+		size_t width;
+		size_t height;
+
+		VkFormat format;
 	public:
 		explicit VulkanImage(VulkanDevice* device);
 		explicit VulkanImage(VkImage& image, VulkanDevice* device);
@@ -25,11 +30,18 @@ namespace LKEngine::Vulkan
 		//Delete only VkImageView
 		void ShutdownWithoutImage();
 
+		void TransitionLayout(VulkanSingleCommandPool* commandPool, VkImageLayout oldLayout, VkImageLayout newLayout);
+
+		size_t GetWidth() const;
+		size_t GetHeight() const;
 		VkImage GetImage() const;
+		VkFormat GetFormat() const;
 		const VkImageView& GetImageView() const;
 	private:
 		void CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usageFlag, VkMemoryPropertyFlags properties);
 		void CreateImageView(VkFormat format, VkImageAspectFlags aspectFlags);
 		void CreateMemory(VkMemoryPropertyFlags properties);
+	protected:
+		void CopyBufferToImage(VulkanBuffer* srcBuffer, VulkanImage* dstImagem, VulkanSingleCommandPool* commandPool);
 	};
 }

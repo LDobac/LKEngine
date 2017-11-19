@@ -46,8 +46,10 @@ namespace LKEngine::Vulkan
 		explicit VulkanSwapchain(VulkanDevice* device, Window::WindowsWindow* window);
 		virtual ~VulkanSwapchain();
 
-		void Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices, VulkanSwapchain* oldSwapchain = nullptr);
+		void Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices,VulkanSwapchain* oldSwapchain = nullptr);
 		virtual void Shutdown();
+
+		void InitDepthBuffer(VulkanSingleCommandPool* commandPool);
 
 		void CreateFrameBuffers(VulkanRenderPass* renderPass);
 

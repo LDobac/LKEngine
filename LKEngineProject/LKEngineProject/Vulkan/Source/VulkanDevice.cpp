@@ -22,6 +22,7 @@
 #include "../Header/VulkanDescriptorPool.h"
 #include "../Header/VulkanDescriptorSet.h"
 
+#include "../Header/VulkanTexture.h"
 #include "../Header/VulkanBuffer.h"
 #include "../Header/VertexInformation.h"
 
@@ -74,6 +75,7 @@ VulkanDevice::~VulkanDevice()
 	SAFE_DELETE(indexBuffer);
 	SAFE_DELETE(vertexBuffer);
 	SAFE_DELETE(uniformBuffer);
+	SAFE_DELETE(texture);
 }
 
 void VulkanDevice::Init(bool debug)
@@ -88,23 +90,27 @@ void VulkanDevice::Init(bool debug)
 
 	CreateQueue();
 
+	singleCommandPool->Init(graphicsQueue);
+
 	swapchain->Init(gpu, surface, queueIndices);
 
+	swapchain->InitDepthBuffer(singleCommandPool);
+
 	renderPass->Init(swapchain);
+
+	CreateCommandPool();
 
 	swapchain->CreateFrameBuffers(renderPass);
 
 	CreateDescriptorSetLayout();
 
-	CreateDescriptorPool();
-
 	graphicsPipeline->Init(renderPass, swapchain, descriptorSetLayout);
-
-	CreateCommandPool();
 
 	CreateSemaphore();
 
 	CreateDataBuffers();
+
+	CreateDescriptorPool();
 	
 	CreateDescriptorSet();
 
@@ -118,6 +124,7 @@ void VulkanDevice::Shutdown()
 	indexBuffer->Shutdown();
 	vertexBuffer->Shutdown();
 	uniformBuffer->Shutdown();
+	texture->Shutdown();
 
 
 	imageAvailableSemaphore->Shutdown();
@@ -209,6 +216,7 @@ void VulkanDevice::ResizeWindow()
 	}
 	//프레임 버퍼 재 생성
 	{
+		swapchain->InitDepthBuffer(singleCommandPool);
 		swapchain->CreateFrameBuffers(renderPass);
 	}
 	//커맨드 버퍼 재 생성
@@ -393,7 +401,7 @@ void VulkanDevice::CreateDescriptorSetLayout()
 {
 	Console_Log("DescriptorSetLayout 생성 시작");
 	descriptorSetLayout->AddDescriptor(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0);
-	//descriptorSetLayout->AddDescriptor(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
+	descriptorSetLayout->AddDescriptor(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
 	descriptorSetLayout->CreateDescriptorSetLayout();
 	Console_Log("DescriptorSetLayout 생성 성공");
 }
@@ -402,6 +410,7 @@ void VulkanDevice::CreateDescriptorPool()
 {
 	Console_Log("디스크립터 풀 생성 시작");
 	descriptorPool->AddPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
+	descriptorPool->AddPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 	descriptorPool->CreatePool();
 	Console_Log("디스크립터 풀 생성 성공");
 }
@@ -411,6 +420,7 @@ void VulkanDevice::CreateDescriptorSet()
 	Console_Log("디스크립터 셋 생성 시작");
 	descriptorSet->Init(descriptorSetLayout, descriptorPool);
 	descriptorSet->AddBufferInfo(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, uniformBuffer, 0, 0);
+	descriptorSet->AddTextureInfo(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, texture, 1);
 	descriptorSet->UpdateSets();
 	Console_Log("디스크립터 셋 생성 성공");
 }
@@ -420,8 +430,6 @@ void VulkanDevice::CreateCommandPool()
 	Console_Log("명령 풀 생성 시작");
 	commandPool->Init(0, graphicsQueue->GetFamilyIndex());
 	commandPool->AllocBuffers(swapchain->GetFrameBuffers().size());
-
-	singleCommandPool->Init(graphicsQueue);
 	Console_Log("명령 풀 생성 성공");
 }
 
@@ -435,7 +443,6 @@ void VulkanDevice::CreateSemaphore()
 
 void VulkanDevice::CreateDataBuffers()
 {
-	VulkanBuffer* stagingBuffer;
 	vertexBuffer = new VulkanBuffer(this);
 	vertexBuffer->Init(
 		sizeof(Vertex) * vertices.size(),
@@ -460,6 +467,9 @@ void VulkanDevice::CreateDataBuffers()
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 		VK_SHARING_MODE_EXCLUSIVE
 	);
+
+	texture = new VulkanTexture(this);
+	texture->Init("Textures/texture.jpg", singleCommandPool);
 }
 
 bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)

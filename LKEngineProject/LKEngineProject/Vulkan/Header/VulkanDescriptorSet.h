@@ -11,6 +11,8 @@ namespace LKEngine::Vulkan
 		VkDescriptorSet descriptorSet;
 
 		std::vector<VkDescriptorBufferInfo> bufferInfos;
+		std::vector<VkDescriptorImageInfo> imageInfos;
+
 		std::vector<VkWriteDescriptorSet> descriptorWrites;
 	public:
 		explicit VulkanDescriptorSet(VulkanDevice* device);
@@ -18,6 +20,7 @@ namespace LKEngine::Vulkan
 		void Init(VulkanDescriptorSetLayout* setLayout, VulkanDescriptorPool* pool);
 
 		void AddBufferInfo(VkDescriptorType type, VulkanBuffer* buffer, size_t offset, uint32_t binding);
+		void AddTextureInfo(VkDescriptorType type, VulkanTexture* image, uint32_t binding);
 
 		void UpdateSets();
 

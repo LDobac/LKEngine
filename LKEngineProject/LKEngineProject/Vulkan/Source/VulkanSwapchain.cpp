@@ -56,7 +56,7 @@ VulkanSwapchain::~VulkanSwapchain()
 	SAFE_DELETE(depthImage);
 }
 
-void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices ,VulkanSwapchain* oldSwapchain)
+void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices , VulkanSwapchain* oldSwapchain)
 {
 	Console_Log("스왑 체인 생성 시작");
 
@@ -126,13 +126,6 @@ void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surf
 	swapchainFormat = surfaceFormat.format;
 	swapchainExtent = extent;
 
-	VkFormat depthFormat = device->FindSupportedFormat({
-		VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT
-	},
-	VK_IMAGE_TILING_OPTIMAL, 
-	VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
-	depthImage->Init(swapchainExtent.width, swapchainExtent.height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_IMAGE_ASPECT_DEPTH_BIT);
-
 	Console_Log("스왑 체인 생성 성공");
 }
 
@@ -146,6 +139,24 @@ void VulkanSwapchain::Shutdown()
 
 	vkDestroySwapchainKHR(device->GetHandle(), swapchain, nullptr);
 	depthImage->Shutdown();
+}
+
+void VulkanSwapchain::InitDepthBuffer(VulkanSingleCommandPool * commandPool)
+{
+	Console_Log("깊이 버퍼 생성 시작");
+	VkFormat depthFormat = device->FindSupportedFormat({
+		VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT
+	},
+		VK_IMAGE_TILING_OPTIMAL,
+		VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+	depthImage->Init(swapchainExtent.width, swapchainExtent.height, 
+		depthFormat, 
+		VK_IMAGE_TILING_OPTIMAL,
+		VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
+		VK_IMAGE_ASPECT_DEPTH_BIT);
+	depthImage->TransitionLayout(commandPool, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+	Console_Log("깊이 버퍼 생성 성공");
 }
 
 void VulkanSwapchain::CreateFrameBuffers(VulkanRenderPass * renderPass)
