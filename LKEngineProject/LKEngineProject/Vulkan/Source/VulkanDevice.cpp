@@ -43,6 +43,7 @@ VulkanDevice::VulkanDevice(LKEngine::Window::WindowsWindow* window)
 	swapchain = new VulkanSwapchain(this, window);
 	renderPass = new VulkanRenderPass(this);
 	commandPool = new VulkanCommandPool(this);
+	singleCommandPool = new VulkanSingleCommandPool(this);
 	graphicsPipeline = new VulkanGraphicsPipeline(this);
 	descriptorSetLayout = new VulkanDescriptorSetLayout(this);
 	descriptorPool = new VulkanDescriptorPool(this);
@@ -59,6 +60,7 @@ VulkanDevice::~VulkanDevice()
 	SAFE_DELETE(graphicsQueue);
 	SAFE_DELETE(presentQueue);
 	SAFE_DELETE(commandPool);
+	SAFE_DELETE(singleCommandPool);
 	SAFE_DELETE(graphicsPipeline);
 	SAFE_DELETE(descriptorSetLayout);
 	SAFE_DELETE(descriptorPool);
@@ -122,6 +124,7 @@ void VulkanDevice::Shutdown()
 	renderFinishedSemaphore->Shutdown();
 
 	commandPool->Shutdown();
+	singleCommandPool->Shutdown();
 
 	graphicsPipeline->Shutdown();
 
@@ -147,16 +150,7 @@ void VulkanDevice::Update()
 	ubo.proj = glm::perspective(glm::radians(45.0f), swapchain->GetExtent().width / (float)swapchain->GetExtent().height, 0.1f, 10.0f);
 	ubo.proj[1][1] *= -1;
 
-	VulkanBuffer* stagingBuffer = new VulkanBuffer(this);
-	stagingBuffer->Init(
-		sizeof(UniformBufferObject),
-		VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		VK_SHARING_MODE_EXCLUSIVE);
-	stagingBuffer->Map(&ubo);
-	stagingBuffer->CopyBuffer(uniformBuffer, commandPool, graphicsQueue);
-	stagingBuffer->Shutdown();
-	SAFE_DELETE(stagingBuffer);
+	uniformBuffer->CopyLocalMemory(&ubo, singleCommandPool, graphicsQueue);
 }
 
 void VulkanDevice::Draw()
@@ -426,6 +420,8 @@ void VulkanDevice::CreateCommandPool()
 	Console_Log("명령 풀 생성 시작");
 	commandPool->Init(0, graphicsQueue->GetFamilyIndex());
 	commandPool->AllocBuffers(swapchain->GetFrameBuffers().size());
+
+	singleCommandPool->Init(graphicsQueue);
 	Console_Log("명령 풀 생성 성공");
 }
 
@@ -446,16 +442,7 @@ void VulkanDevice::CreateDataBuffers()
 		VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		VK_SHARING_MODE_EXCLUSIVE);
-
-	stagingBuffer = new VulkanBuffer(this);
-	stagingBuffer->Init(sizeof(Vertex) * vertices.size(),
-		VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		VK_SHARING_MODE_EXCLUSIVE);
-	stagingBuffer->Map(vertices.data());
-	stagingBuffer->CopyBuffer(vertexBuffer, commandPool, graphicsQueue);
-	stagingBuffer->Shutdown();
-	SAFE_DELETE(stagingBuffer);
+	vertexBuffer->CopyLocalMemory(vertices.data(), singleCommandPool, graphicsQueue);
 
 	indexBuffer = new VulkanBuffer(this);
 	indexBuffer->Init(
@@ -464,15 +451,7 @@ void VulkanDevice::CreateDataBuffers()
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		VK_SHARING_MODE_EXCLUSIVE
 	);
-	stagingBuffer = new VulkanBuffer(this);
-	stagingBuffer->Init(sizeof(indices[0]) * indices.size(),
-		VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		VK_SHARING_MODE_EXCLUSIVE);
-	stagingBuffer->Map(indices.data());
-	stagingBuffer->CopyBuffer(indexBuffer, commandPool, graphicsQueue);
-	stagingBuffer->Shutdown();
-	SAFE_DELETE(stagingBuffer);
+	indexBuffer->CopyLocalMemory(indices.data(), singleCommandPool, graphicsQueue);
 
 	uniformBuffer = new VulkanBuffer(this);
 	uniformBuffer->Init(

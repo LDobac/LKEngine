@@ -1,6 +1,5 @@
 #pragma once
 
-#include "IVulkanObject.h"
 #include "VulkanDeviceChild.h"
 
 namespace LKEngine::Vulkan
@@ -8,7 +7,7 @@ namespace LKEngine::Vulkan
 	class VulkanCommandBuffers;
 
 	class VulkanCommandPool
-		: public IVulkanObject, public VulkanDeviceChild
+		: public VulkanDeviceChild
 	{
 	private:
 		VkCommandPool commandPool = VK_NULL_HANDLE;
@@ -16,11 +15,10 @@ namespace LKEngine::Vulkan
 		VulkanCommandBuffers* commandBuffers;
 	public:
 		VulkanCommandPool(VulkanDevice* device);
-		~VulkanCommandPool();
+		virtual ~VulkanCommandPool();
 
-		virtual void Init() override {}
 		void Init(VkCommandPoolCreateFlags flags,int32_t queueIndex);
-		virtual void Shutdown() override;
+		virtual void Shutdown();
 
 		void AllocBuffers(size_t size);
 		void FreeBuffers();
@@ -30,6 +28,28 @@ namespace LKEngine::Vulkan
 
 		const VkCommandBuffer& GetBuffer(uint32_t index) const;
 		size_t GetBufferSize() const;
+		const VkCommandPool& GetHandle() const;
+	};
+
+	class VulkanSingleCommandPool
+		: public VulkanDeviceChild
+	{
+	private:
+		VkCommandPool commandPool = VK_NULL_HANDLE;
+
+		VulkanCommandBuffers* commandBuffers;
+
+		VulkanQueue* transferQueue;
+	public:
+		explicit VulkanSingleCommandPool(VulkanDevice* device);
+		~VulkanSingleCommandPool();
+
+		void Init(VulkanQueue* queue);
+		void Shutdown();
+
+		const VkCommandBuffer& RecordBegin();
+		void RecordEnd();
+
 		const VkCommandPool& GetHandle() const;
 	};
 }

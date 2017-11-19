@@ -1,13 +1,12 @@
 #pragma once
 
-#include "IVulkanObject.h"
 #include "VulkanDeviceChild.h"
 #include <vulkan/vulkan.hpp>
 
 namespace LKEngine::Vulkan
 {
 	class VulkanImage
-		: public IVulkanObject, VulkanDeviceChild
+		: public VulkanDeviceChild
 	{
 	private:
 		VkImage image;
@@ -18,12 +17,11 @@ namespace LKEngine::Vulkan
 		explicit VulkanImage(VkImage& image, VulkanDevice* device);
 		virtual ~VulkanImage();
 
-		virtual void Init() override { }
-		//Initalize only VkImageView
 		void Init(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usageFlag, VkMemoryPropertyFlags properties, VkImageAspectFlags aspectFlags);
+		//Initalize only VkImageView
 		void InitWithoutImage(VkFormat format, VkImageAspectFlags aspectFlags);
 
-		virtual void Shutdown() override;
+		virtual void Shutdown();
 		//Delete only VkImageView
 		void ShutdownWithoutImage();
 

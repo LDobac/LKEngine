@@ -2,7 +2,6 @@
 
 #include <vector>
 
-#include "IVulkanObject.h"
 #include "VulkanInstance.h"
 #include "VulkanQueueFamilyIndices.h"
 
@@ -18,6 +17,7 @@ namespace LKEngine::Vulkan
 	class VulkanSwapchain;
 	class VulkanRenderPass;
 	class VulkanCommandPool;
+	class VulkanSingleCommandPool;
 	class VulkanGraphicsPipeline;
 	class VulkanDescriptorSetLayout;
 	class VulkanSemaphore;
@@ -27,7 +27,6 @@ namespace LKEngine::Vulkan
 	class VulkanBuffer;
 
 	class VulkanDevice 
-		: public IVulkanObject
 	{
 	private:
 		LKEngine::Window::WindowsWindow* window;
@@ -55,6 +54,7 @@ namespace LKEngine::Vulkan
 		VulkanGraphicsPipeline* graphicsPipeline;
 
 		VulkanCommandPool* commandPool;
+		VulkanSingleCommandPool* singleCommandPool;
 
 		VulkanSemaphore* imageAvailableSemaphore;
 		VulkanSemaphore* renderFinishedSemaphore;
@@ -68,9 +68,8 @@ namespace LKEngine::Vulkan
 		explicit VulkanDevice(LKEngine::Window::WindowsWindow* window);
 		virtual ~VulkanDevice();
 
-		virtual void Init() override { }
 		void Init(bool debug);
-		virtual void Shutdown() override;
+		virtual void Shutdown();
 
 		void Update();
 		void Draw();

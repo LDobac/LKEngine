@@ -2,13 +2,12 @@
 
 #include <vulkan/vulkan.hpp>
 #include <vector>
-#include "IVulkanObject.h"
 #include "VulkanDeviceChild.h"
 
 namespace LKEngine::Vulkan
 {
 	class VulkanDescriptorSetLayout
-		: public IVulkanObject, public VulkanDeviceChild
+		: public VulkanDeviceChild
 	{
 	private:
 		VkDescriptorSetLayout setLayout;
@@ -16,8 +15,7 @@ namespace LKEngine::Vulkan
 	public:
 		explicit VulkanDescriptorSetLayout(VulkanDevice* device);
 
-		virtual void Init() override { }
-		virtual void Shutdown() override;
+		virtual void Shutdown();
 
 		void AddDescriptor(VkDescriptorType type, VkShaderStageFlagBits stageFlag, int index);
 		void CreateDescriptorSetLayout();

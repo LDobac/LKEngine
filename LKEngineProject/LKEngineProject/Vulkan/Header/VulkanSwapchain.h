@@ -2,7 +2,6 @@
 
 #include <vulkan/vulkan.hpp>
 
-#include "IVulkanObject.h"
 #include "VulkanDeviceChild.h"
 
 //Foward Declaration
@@ -29,7 +28,7 @@ namespace LKEngine::Vulkan
 	};
 
 	class VulkanSwapchain
-		: public IVulkanObject, VulkanDeviceChild
+		: public VulkanDeviceChild
 	{
 	private:
 		VkSwapchainKHR swapchain;
@@ -47,9 +46,8 @@ namespace LKEngine::Vulkan
 		explicit VulkanSwapchain(VulkanDevice* device, Window::WindowsWindow* window);
 		virtual ~VulkanSwapchain();
 
-		virtual void Init() override { }
 		void Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices, VulkanSwapchain* oldSwapchain = nullptr);
-		virtual void Shutdown() override;
+		virtual void Shutdown();
 
 		void CreateFrameBuffers(VulkanRenderPass* renderPass);
 

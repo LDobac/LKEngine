@@ -2,15 +2,12 @@
 
 #include <vulkan/vulkan.h>
 
-#include "IVulkanObject.h"
-
 namespace LKEngine::Vulkan
 {
 	class VulkanExtension;
 	class VulkanDebug;
 
 	class VulkanInstance
-		: public IVulkanObject
 	{
 	private:
 		VkInstance vkInstance;
@@ -20,9 +17,8 @@ namespace LKEngine::Vulkan
 		explicit VulkanInstance();
 		~VulkanInstance();
 
-		virtual void Init() override { }
 		void Init(bool vaildationLayerOn);
-		virtual void Shutdown() override;
+		virtual void Shutdown();
 
 		VkInstance GetHandle() const;
 	};

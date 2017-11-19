@@ -78,6 +78,7 @@
     <ClCompile Include="Vulkan\Source\VulkanDescriptorPool.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanDescriptorSetLayout.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanDescriptorSet.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Header\Application.h">
@@ -128,9 +129,6 @@
     <ClInclude Include="Window\Header\WindowsWindow.h">
       <Filter>Window\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Vulkan\Header\IVulkanObject.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
     <ClInclude Include="Vulkan\Header\VulkanCommandPool.h" />
     <ClInclude Include="Vulkan\Header\VulkanCommandBuffers.h" />
     <ClInclude Include="Vulkan\Header\VulkanPipeline.h" />
@@ -142,5 +140,6 @@
       <Filter>Vulkan\Header</Filter>
     </ClInclude>
     <ClInclude Include="Vulkan\Header\VulkanDescriptorSet.h" />
+    <ClInclude Include="Vulkan\Header\VulkanTexture.h" />
   </ItemGroup>
 </Project>

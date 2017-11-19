@@ -8,7 +8,7 @@
 
 using namespace LKEngine::Vulkan;
 
-VulkanCommandBuffers::VulkanCommandBuffers(VulkanDevice * device, VulkanCommandPool* commandPool)
+VulkanCommandBuffers::VulkanCommandBuffers(VulkanDevice * device, VkCommandPool& commandPool)
 	:VulkanDeviceChild(device),
 	commandPool(commandPool)
 {
@@ -20,7 +20,7 @@ void VulkanCommandBuffers::AllocBuffers(size_t size)
 
 	VkCommandBufferAllocateInfo allocInfo = { };
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	allocInfo.commandPool = commandPool->GetHandle();
+	allocInfo.commandPool = commandPool;
 	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 	allocInfo.commandBufferCount = commandBuffers.size();
 
@@ -29,7 +29,7 @@ void VulkanCommandBuffers::AllocBuffers(size_t size)
 
 void VulkanCommandBuffers::FreeAll()
 {
-	vkFreeCommandBuffers(device->GetHandle(), commandPool->GetHandle(), commandBuffers.size(), commandBuffers.data());
+	vkFreeCommandBuffers(device->GetHandle(), commandPool, commandBuffers.size(), commandBuffers.data());
 }
 
 void VulkanCommandBuffers::RecordBegin(uint32_t index, VkCommandBufferUsageFlags flags)

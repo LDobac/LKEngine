@@ -1,12 +1,11 @@
 #pragma once
 
-#include "IVulkanObject.h"
 #include "VulkanDeviceChild.h"
 
 namespace LKEngine::Vulkan
 {
 	class VulkanShaderModule
-		: public VulkanDeviceChild, IVulkanObject
+		: public VulkanDeviceChild
 	{
 	public:
 		enum class ShaderType
@@ -23,11 +22,10 @@ namespace LKEngine::Vulkan
 		VulkanShaderModule(VulkanDevice* device);
 		~VulkanShaderModule();
 
-		virtual void Init() override {} 
 		void Init(const ShaderType type, const std::string& shaderPath);
 		void Init(const ShaderType type, const std::vector<char>& compileCode);
 
-		virtual void Shutdown() override;
+		virtual void Shutdown();
 
 		std::vector<char> ReadCompiledShader(const std::string& file);
 

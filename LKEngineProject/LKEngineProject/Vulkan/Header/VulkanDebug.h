@@ -5,8 +5,6 @@
 
 #include "../../Utility/Header/Macro.h"
 
-#include "IVulkanObject.h"
-
 //Foward Declaration
 namespace LKEngine::Vulkan
 {
@@ -15,7 +13,7 @@ namespace LKEngine::Vulkan
 
 namespace LKEngine::Vulkan
 {
-	class VulkanDebug : public IVulkanObject
+	class VulkanDebug
 	{
 	private:
 		VulkanInstance* instance;
@@ -25,9 +23,8 @@ namespace LKEngine::Vulkan
 		explicit VulkanDebug(VulkanInstance* vkInstance);
 		virtual ~VulkanDebug();
 
-		virtual void Init() override;
-
-		virtual void Shutdown() override;
+		virtual void Init();
+		virtual void Shutdown();
 
 		static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objType, uint64_t obj, size_t location, int32_t code, const char* layerPrefix, const char* msg, void* userData) 
 		{

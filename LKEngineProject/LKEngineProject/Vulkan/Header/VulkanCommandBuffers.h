@@ -1,12 +1,10 @@
 #pragma once
 
-#include "IVulkanObject.h"
 #include "VulkanDeviceChild.h"
 
 namespace LKEngine::Vulkan
 {
 	class VulkanSwapchain;
-	class VulkanCommandPool;
 	class VulkanRenderPass;
 	class VulkanGraphicsPipeline;
 
@@ -14,11 +12,11 @@ namespace LKEngine::Vulkan
 		: public VulkanDeviceChild
 	{
 	private:
-		VulkanCommandPool* commandPool;
+		VkCommandPool& commandPool;
 
 		std::vector<VkCommandBuffer> commandBuffers;
 	public:
-		explicit VulkanCommandBuffers(VulkanDevice* device, VulkanCommandPool* commandPool);
+		explicit VulkanCommandBuffers(VulkanDevice* device, VkCommandPool& commandPool);
 
 		void AllocBuffers(size_t size);
 		void FreeAll();

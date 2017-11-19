@@ -1,6 +1,5 @@
 #pragma once
 
-#include "IVulkanObject.h"
 #include "VulkanDeviceChild.h"
 
 namespace LKEngine::Vulkan
@@ -10,7 +9,7 @@ namespace LKEngine::Vulkan
 	class VulkanDescriptorSetLayout;
 
 	class VulkanPipeline
-		: public IVulkanObject, public VulkanDeviceChild
+		: public VulkanDeviceChild
 	{
 	protected:
 		VkPipeline pipeline;
@@ -18,8 +17,7 @@ namespace LKEngine::Vulkan
 	public:
 		explicit VulkanPipeline(VulkanDevice* device);
 
-		virtual void Init() override { }
-		virtual void Shutdown() override;
+		virtual void Shutdown();
 
 		const VkPipeline& GetHandle() const;
 		const VkPipelineLayout& GetLayout() const;

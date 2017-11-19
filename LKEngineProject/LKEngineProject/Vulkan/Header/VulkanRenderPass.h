@@ -2,7 +2,6 @@
 
 #include <vulkan/vulkan.h>
 
-#include "IVulkanObject.h"
 #include "VulkanDeviceChild.h"
 
 namespace LKEngine::Vulkan
@@ -10,7 +9,7 @@ namespace LKEngine::Vulkan
 	class VulkanSwapchain;
 
 	class VulkanRenderPass
-		: public IVulkanObject, VulkanDeviceChild
+		: public VulkanDeviceChild
 	{
 	private:
 		VkRenderPass renderPass;
@@ -18,9 +17,8 @@ namespace LKEngine::Vulkan
 		explicit VulkanRenderPass(VulkanDevice* device);
 		virtual ~VulkanRenderPass();
 
-		virtual void Init() { }
 		void Init(VulkanSwapchain* swapchain);
-		virtual void Shutdown() override;
+		virtual void Shutdown();
 
 		void Begin(std::vector<VkClearValue> clearColors, const VkFramebuffer& frameBuffer, VkExtent2D extent, const VkCommandBuffer& cmdBuffer);
 		void End(const VkCommandBuffer& cmdBuffer);

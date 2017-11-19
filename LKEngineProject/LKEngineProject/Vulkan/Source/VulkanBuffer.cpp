@@ -1,7 +1,7 @@
 #include "../Header/VulkanBuffer.h"
 
 #include "../Header/VulkanQueue.h"
-#include "../Header/VulkanCommandBuffers.h"
+#include "../Header/VulkanCommandPool.h"
 #include "../../Utility/Header/Macro.h"
 
 using namespace LKEngine::Vulkan;
@@ -55,28 +55,14 @@ const VkDeviceSize VulkanBuffer::GetBufferSize() const
 	return bufferSize;
 }
 
-void VulkanBuffer::CopyBuffer(VulkanBuffer * dstBuffer, VulkanCommandPool * commandPool, VulkanQueue * transferQueue)
+void VulkanBuffer::CopyBuffer(VulkanBuffer * dstBuffer, VulkanSingleCommandPool * commandPool, VulkanQueue * transferQueue)
 {
-	//TODO : 나중에 임시 명령 버퍼 전용 명령 풀 만들기
-	//임시 명령풀은 VK_COMMAND_POOL_CREATE_TRANSIMENT_BIT 사용해야 함
-	VulkanCommandBuffers cmdBuffers(device, commandPool);
-	cmdBuffers.AllocBuffers(1);
-
 	VkBufferCopy copyRegion = {};
 	copyRegion.size = bufferSize;
 
-	cmdBuffers.RecordBegin(0, VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+	VkCommandBuffer cmdBuffer = commandPool->RecordBegin();
 
-	vkCmdCopyBuffer(cmdBuffers.GetBuffer(0), buffer, dstBuffer->GetBuffer(), 1, &copyRegion);
+	vkCmdCopyBuffer(cmdBuffer, buffer, dstBuffer->GetBuffer(), 1, &copyRegion);
 
-	cmdBuffers.RecordEnd(0);
-
-	VkSubmitInfo submitInfo = {};
-	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &cmdBuffers.GetBuffer(0);
-	transferQueue->Submit(submitInfo);
-	transferQueue->WaitIdle();
-
-	cmdBuffers.FreeAll();
+	commandPool->RecordEnd();
 }

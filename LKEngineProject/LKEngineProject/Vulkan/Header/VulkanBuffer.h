@@ -1,15 +1,14 @@
 #pragma once
 
-#include "IVulkanObject.h"
 #include "VulkanDeviceChild.h"
 
 namespace LKEngine::Vulkan
 {
-	class VulkanCommandPool;
+	class VulkanSingleCommandPool;
 	class VulkanQueue;
 
 	class VulkanBuffer
-		: public IVulkanObject, public VulkanDeviceChild
+		: public VulkanDeviceChild
 	{
 	protected:
 		VkBuffer buffer;
@@ -19,9 +18,8 @@ namespace LKEngine::Vulkan
 	public:
 		explicit VulkanBuffer(VulkanDevice* device);
 
-		virtual void Init() override { }
 		void Init(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties ,VkSharingMode sharingMode);
-		virtual void Shutdown() override;
+		virtual void Shutdown();
 
 		template<typename T>
 		inline void Map(const T* data,int offset = 0,VkMemoryMapFlags flags = 0)
@@ -36,6 +34,20 @@ namespace LKEngine::Vulkan
 		const VkDeviceMemory& GetBufferMemory() const;
 		const VkDeviceSize GetBufferSize() const;
 
-		void CopyBuffer(VulkanBuffer* dstBuffer, VulkanCommandPool* commandPool, VulkanQueue* transferQueue);
+		void CopyBuffer(VulkanBuffer* dstBuffer, VulkanSingleCommandPool* commandPool, VulkanQueue* transferQueue);
+		template<typename T>
+		void CopyLocalMemory(const T* data, VulkanSingleCommandPool* commandPool, VulkanQueue* transferQueue)
+		{
+			VulkanBuffer* stagingBuffer = new VulkanBuffer(device);
+			stagingBuffer->Init(
+				bufferSize,
+				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+				VK_SHARING_MODE_EXCLUSIVE);
+			stagingBuffer->Map(data);
+			stagingBuffer->CopyBuffer(this, commandPool, transferQueue);
+			stagingBuffer->Shutdown();
+			SAFE_DELETE(stagingBuffer);
+		}
 	};
 }
