@@ -21,6 +21,8 @@
   <ItemGroup>
     <ClCompile Include="Application\Source\Application.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Src\Camera.cpp" />
+    <ClCompile Include="Src\Entity.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanBuffer.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanCommandBuffers.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanCommandPool.cpp" />
@@ -44,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Header\Application.h" />
+    <ClInclude Include="Src\Camera.h" />
     <ClInclude Include="Src\Entity.h" />
     <ClInclude Include="Src\Scene.h" />
     <ClInclude Include="Utility\Header\Macro.h" />

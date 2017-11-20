@@ -80,6 +80,8 @@
     <ClCompile Include="Vulkan\Source\VulkanDescriptorSet.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanTexture.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanMesh.cpp" />
+    <ClCompile Include="Src\Entity.cpp" />
+    <ClCompile Include="Src\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Header\Application.h">
@@ -146,5 +148,6 @@
     <ClInclude Include="Vulkan\Header\VulkanMaterial.h" />
     <ClInclude Include="Src\Entity.h" />
     <ClInclude Include="Src\Scene.h" />
+    <ClInclude Include="Src\Camera.h" />
   </ItemGroup>
 </Project>

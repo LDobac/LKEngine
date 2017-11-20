@@ -10,21 +10,23 @@ using namespace LKEngine::Application;
 Application::Application(const int windowWidth, const int windowHeight)
 {
 	window = new Window::WindowsWindow(windowWidth,windowHeight);
-	device = new Vulkan::VulkanDevice(window);
+	device = Vulkan::VulkanDevice::GetInstance();
+
+	device->SetDebugMode(true);
+	device->SetWindow(window);
 
 	window->Init(device);
-	device->Init(true);
+	device->Init();
 }
 
 Application::~Application()
 {
 	device->WaitIdle();
 
-	device->Shutdown();
+	Vulkan::VulkanDevice::Release();
 	window->Shutdown();
 
 	SAFE_DELETE(window);
-	SAFE_DELETE(device);
 }
 
 void LKEngine::Application::Application::Loop()

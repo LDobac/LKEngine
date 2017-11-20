@@ -8,14 +8,13 @@
 
 USING_LK_VULKAN_SPACE
 
-VulkanMesh::VulkanMesh(VulkanDevice* device)
-	: VulkanDeviceChild(device)
+VulkanMesh::VulkanMesh()
 {
-	vertexBuffer = new VulkanBuffer(device);
-	indexBuffer = new VulkanBuffer(device);
-	uniformBuffer = new VulkanBuffer(device);
+	vertexBuffer = new VulkanBuffer(VulkanDevice::GetInstance());
+	indexBuffer = new VulkanBuffer(VulkanDevice::GetInstance());
+	uniformBuffer = new VulkanBuffer(VulkanDevice::GetInstance());
 
-	texture = new VulkanTexture(device);
+	texture = new VulkanTexture();
 }
 
 VulkanMesh::~VulkanMesh()
@@ -26,12 +25,12 @@ VulkanMesh::~VulkanMesh()
 	SAFE_DELETE(texture);
 }
 
-void VulkanMesh::Init(std::string meshPath, std::string texPath, VulkanSingleCommandPool* commandPool)
+void VulkanMesh::Init(std::string meshPath, std::string texPath)
 {
 	LoadModel(meshPath);
-	LoadTexture(texPath, commandPool);
-	CreateVertexBuffer(commandPool);
-	CreateIndexBuffer(commandPool);
+	LoadTexture(texPath);
+	CreateVertexBuffer(VulkanDevice::GetInstance()->GetSingleCommandPool());
+	CreateIndexBuffer(VulkanDevice::GetInstance()->GetSingleCommandPool());
 	CreateUniformBuffer();
 }
 
@@ -113,9 +112,9 @@ void VulkanMesh::LoadModel(std::string meshPath)
 	}
 }
 
-void VulkanMesh::LoadTexture(std::string texPath, VulkanSingleCommandPool* commandPool)
+void VulkanMesh::LoadTexture(std::string texPath)
 {
-	texture->Init(texPath, commandPool);
+	texture->Init(texPath);
 }
 
 void VulkanMesh::CreateVertexBuffer(VulkanSingleCommandPool* commandPool)

@@ -9,13 +9,13 @@
 
 USING_LK_VULKAN_SPACE
 
-VulkanTexture::VulkanTexture(VulkanDevice * device)
-	:VulkanImage(device)
+VulkanTexture::VulkanTexture()
+	:VulkanImage(VulkanDevice::GetInstance())
 { }
 
-void VulkanTexture::Init(std::string path, VulkanSingleCommandPool* commandPool)
+void VulkanTexture::Init(std::string path)
 {
-	CreateTexture(path, commandPool);
+	CreateTexture(path, VulkanDevice::GetInstance()->GetSingleCommandPool());
 	CreateSampler();
 }
 

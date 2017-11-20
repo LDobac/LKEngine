@@ -9,7 +9,6 @@
 LK_VULKAN_SPACE_BEGIN
 
 class VulkanMesh
-	: private VulkanDeviceChild
 {
 private:
 	VulkanBuffer* vertexBuffer;
@@ -21,10 +20,10 @@ private:
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
 public:
-	VulkanMesh(VulkanDevice* device);
+	VulkanMesh();
 	~VulkanMesh();
 
-	void Init(std::string meshPath, std::string texPath, VulkanSingleCommandPool* commandPool);
+	void Init(std::string meshPath, std::string texPath);
 	void Shutdown();
 
 	const std::vector<Vertex>& GetVertices() const;
@@ -35,7 +34,7 @@ public:
 	VulkanTexture* GetTexture() const;
 private:
 	void LoadModel(std::string meshPath);
-	void LoadTexture(std::string texPath, VulkanSingleCommandPool* commandPool);
+	void LoadTexture(std::string texPath);
 	void CreateVertexBuffer(VulkanSingleCommandPool* commandPool);
 	void CreateIndexBuffer(VulkanSingleCommandPool* commandPool);
 	void CreateUniformBuffer();

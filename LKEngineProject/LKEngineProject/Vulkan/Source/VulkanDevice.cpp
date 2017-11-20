@@ -27,9 +27,10 @@
 
 USING_LK_VULKAN_SPACE
 
-VulkanDevice::VulkanDevice(LKEngine::Window::WindowsWindow * window)
-	:window(window),
-	instance(nullptr),
+VulkanDevice::VulkanDevice()
+	: isDebug(false),
+	window(nullptr),
+	vulkanInstance(nullptr),
 	gpu(VK_NULL_HANDLE),
 	vkDevice(VK_NULL_HANDLE),
 	surface(VK_NULL_HANDLE),
@@ -41,24 +42,11 @@ VulkanDevice::VulkanDevice(LKEngine::Window::WindowsWindow * window)
 	singleCommandPool(nullptr),
 	imageAvailableSemaphore(nullptr),
 	renderFinishedSemaphore(nullptr)
-{
-	instance = new VulkanInstance();
-	swapchain = new VulkanSwapchain(this, window);
-	renderPass = new VulkanRenderPass(this);
-	commandPool = new VulkanCommandPool(this);
-	singleCommandPool = new VulkanSingleCommandPool(this);
-	imageAvailableSemaphore = new VulkanSemaphore(this);
-	renderFinishedSemaphore = new VulkanSemaphore(this);
-
-	graphicsPipeline = new VulkanGraphicsPipeline(this);
-	descriptorSetLayout = new VulkanDescriptorSetLayout(this);
-	descriptorPool = new VulkanDescriptorPool(this);
-	descriptorSet = new VulkanDescriptorSet(this);
-}
+{ }
 
 VulkanDevice::~VulkanDevice()
 {
-	SAFE_DELETE(instance);
+	SAFE_DELETE(vulkanInstance);
 	SAFE_DELETE(swapchain);
 	SAFE_DELETE(renderPass);
 	SAFE_DELETE(graphicsQueue);
@@ -76,12 +64,52 @@ VulkanDevice::~VulkanDevice()
 	SAFE_DELETE(mesh);
 }
 
-void VulkanDevice::Init(bool debug)
+VulkanDevice* VulkanDevice::instance = nullptr;
+VulkanDevice * VulkanDevice::GetInstance()
 {
-	InitInstance(debug);
+	if (instance == nullptr)
+	{
+		instance = new VulkanDevice();
+	}
+
+	return instance;
+}
+
+void VulkanDevice::Release()
+{
+	instance->Shutdown();
+	SAFE_DELETE(instance);
+}
+
+void VulkanDevice::SetDebugMode(bool debug)
+{
+	isDebug = debug;
+}
+
+void VulkanDevice::SetWindow(LKEngine::Window::WindowsWindow * window)
+{
+	this->window = window;
+}
+
+void VulkanDevice::Init()
+{
+	vulkanInstance = new VulkanInstance();
+	swapchain = new VulkanSwapchain(this, window);
+	renderPass = new VulkanRenderPass(this);
+	commandPool = new VulkanCommandPool(this);
+	singleCommandPool = new VulkanSingleCommandPool(this);
+	imageAvailableSemaphore = new VulkanSemaphore(this);
+	renderFinishedSemaphore = new VulkanSemaphore(this);
+
+	graphicsPipeline = new VulkanGraphicsPipeline(this);
+	descriptorSetLayout = new VulkanDescriptorSetLayout(this);
+	descriptorPool = new VulkanDescriptorPool(this);
+	descriptorSet = new VulkanDescriptorSet(this);
+
+	InitInstance();
 	InitSurface();
 	RequireGPU();
-	InitDevice(debug);
+	InitDevice();
 	CreateQueue();
 	InitSwapchain();
 	InitCommandPool();
@@ -92,8 +120,8 @@ void VulkanDevice::Init(bool debug)
 	CreateSemaphore();
 
 	{
-		mesh = new VulkanMesh(this);
-		mesh->Init("Models/chalet.obj", "Textures/chalet.jpg", singleCommandPool);
+		mesh = new VulkanMesh();
+		mesh->Init("Models/chalet.obj", "Textures/chalet.jpg");
 	}
 	{
 		descriptorSetLayout->AddDescriptor(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0);
@@ -173,9 +201,9 @@ void VulkanDevice::Shutdown()
 
 	swapchain->Shutdown();
 
-	vkDestroySurfaceKHR(instance->GetHandle(), surface, nullptr);
+	vkDestroySurfaceKHR(vulkanInstance->GetHandle(), surface, nullptr);
 
-	instance->Shutdown();
+	vulkanInstance->Shutdown();
 }
 
 void VulkanDevice::Update()
@@ -341,24 +369,34 @@ VkDevice VulkanDevice::GetHandle() const
 	return vkDevice;
 }
 
-void VulkanDevice::InitInstance(bool debug)
+VulkanSwapchain * VulkanDevice::GetSwapchain() const
 {
-	instance->Init(debug);
+	return swapchain;
+}
+
+VulkanSingleCommandPool * VulkanDevice::GetSingleCommandPool() const
+{
+	return singleCommandPool;
+}
+
+void VulkanDevice::InitInstance()
+{
+	vulkanInstance->Init(isDebug);
 }
 
 void VulkanDevice::InitSurface()
 {
-	VkResult result = glfwCreateWindowSurface(instance->GetHandle(), window->GetWindowHandle(), nullptr, &surface);
+	VkResult result = glfwCreateWindowSurface(vulkanInstance->GetHandle(), window->GetWindowHandle(), nullptr, &surface);
 	Check_Throw(result != VK_SUCCESS, "Surface가 생성되지 않았습니다!");
 }
 
 void VulkanDevice::RequireGPU()
 {
 	uint32_t deviceCount = 0;
-	vkEnumeratePhysicalDevices(instance->GetHandle(), &deviceCount, nullptr);
+	vkEnumeratePhysicalDevices(vulkanInstance->GetHandle(), &deviceCount, nullptr);
 
 	std::vector<VkPhysicalDevice> devices(deviceCount);
-	vkEnumeratePhysicalDevices(instance->GetHandle(), &deviceCount, devices.data());
+	vkEnumeratePhysicalDevices(vulkanInstance->GetHandle(), &deviceCount, devices.data());
 
 	//TODO : 차후에 사용 가능한 GPU가 다수 일경우 그중에서 가장 적합한 GPU를 선택하도록 변경
 	for (auto device : devices)
@@ -405,7 +443,7 @@ void VulkanDevice::RequireGPU()
 	Console_Log_Format("Max Descriptor Sets Bound : %d , Timestamps : %d", gpuProp.limits.maxBoundDescriptorSets, gpuProp.limits.timestampComputeAndGraphics);
 }
 
-void VulkanDevice::InitDevice(bool debug)
+void VulkanDevice::InitDevice()
 {
 	queueIndices.FindQueueFamily(gpu, surface);
 
@@ -440,7 +478,7 @@ void VulkanDevice::InitDevice(bool debug)
 	deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(Vulkan::deviceExtensions.size());
 	deviceCreateInfo.ppEnabledExtensionNames = Vulkan::deviceExtensions.data();
 
-	if (debug)
+	if (isDebug)
 	{
 		deviceCreateInfo.enabledLayerCount = static_cast<uint32_t>(Vulkan::vaildationLayers.size());
 		deviceCreateInfo.ppEnabledLayerNames = Vulkan::vaildationLayers.data();

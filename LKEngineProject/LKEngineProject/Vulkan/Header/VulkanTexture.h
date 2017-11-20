@@ -11,9 +11,9 @@ class VulkanTexture
 private:
 	VkSampler sampler;
 public:
-	explicit VulkanTexture(VulkanDevice* device);
+	explicit VulkanTexture();
 
-	void Init(std::string path,VulkanSingleCommandPool* commandPool);
+	void Init(std::string path);
 	virtual void Shutdown() override;
 
 	const VkSampler& GetSampler() const;

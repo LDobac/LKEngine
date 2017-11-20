@@ -29,9 +29,19 @@ class VulkanMesh;
 class VulkanDevice 
 {
 private:
+	static VulkanDevice* instance;
+
+	explicit VulkanDevice();
+	~VulkanDevice();
+public:
+	static VulkanDevice* GetInstance();
+	static void Release();
+private:
+	bool isDebug;
+
 	LKEngine::Window::WindowsWindow* window;
 
-	VulkanInstance* instance;
+	VulkanInstance* vulkanInstance;
 
 	VkPhysicalDevice gpu;
 	VkPhysicalDeviceProperties gpuProp;
@@ -61,11 +71,10 @@ private:
 	VulkanGraphicsPipeline* graphicsPipeline;
 	VulkanMesh* mesh;
 public:
-	explicit VulkanDevice(LKEngine::Window::WindowsWindow* window);
-	virtual ~VulkanDevice();
+	void SetDebugMode(bool debug);
+	void SetWindow(LKEngine::Window::WindowsWindow* window);
 
-	void Init(bool debug);
-	virtual void Shutdown();
+	void Init();
 
 	void Update();
 	void Draw();
@@ -79,11 +88,16 @@ public:
 
 	QueueFamilyIndices GetQueueFamilyIndices() const;
 	VkDevice GetHandle() const;
+
+	VulkanSwapchain* GetSwapchain() const;
+	VulkanSingleCommandPool* GetSingleCommandPool() const;
 private:
-	void InitInstance(bool debug);
+	void Shutdown();
+
+	void InitInstance();
 	void InitSurface();
 	void RequireGPU();
-	void InitDevice(bool debug);
+	void InitDevice();
 	void CreateQueue();
 	void InitSwapchain();
 	void InitCommandPool();
@@ -96,5 +110,4 @@ private:
 	bool CheckDeviceFeatures(VkPhysicalDevice device);
 
 };
-
 LK_VULKAN_SPACE_END
