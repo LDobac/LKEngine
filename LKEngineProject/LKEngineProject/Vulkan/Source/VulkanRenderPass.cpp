@@ -1,10 +1,10 @@
 #include "../Header/VulkanRenderPass.h"
 
-#include "../../Utility/Header/Macro.h"
 #include "../Header/VulkanSwapchain.h"
 
+#include "../../Utility/Header/Macro.h"
 
-using namespace LKEngine::Vulkan;
+USING_LK_VULKAN_SPACE
 
 VulkanRenderPass::VulkanRenderPass(VulkanDevice * device)
 	:VulkanDeviceChild(device),
@@ -16,8 +16,6 @@ LKEngine::Vulkan::VulkanRenderPass::~VulkanRenderPass()
 
 void VulkanRenderPass::Init(VulkanSwapchain * swapchain)
 {
-	Console_Log("렌더 패스 생성 시작");
-
 	//컬러 버퍼 설명
 	VkAttachmentDescription colorAttachment = {};
 	//포맷은 스왑 체인 포맷과 일치 해야 함
@@ -122,8 +120,6 @@ void VulkanRenderPass::Init(VulkanSwapchain * swapchain)
 
 	VkResult result = vkCreateRenderPass(device->GetHandle(), &renderPassInfo, nullptr, &renderPass);
 	Check_Throw(result != VK_SUCCESS, "렌더 패스 생성 실패!");
-	
-	Console_Log("렌더 패스 생성 성공!");
 }
 
 void VulkanRenderPass::Shutdown()

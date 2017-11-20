@@ -4,9 +4,8 @@
 #include "../Header/VulkanCommandPool.h"
 #include "../Header/VulkanRenderPass.h"
 #include "../Header/VulkanPipeline.h"
-#include "../../Utility/Header/Macro.h"
 
-using namespace LKEngine::Vulkan;
+USING_LK_VULKAN_SPACE
 
 VulkanCommandBuffers::VulkanCommandBuffers(VulkanDevice * device, VkCommandPool& commandPool)
 	:VulkanDeviceChild(device),

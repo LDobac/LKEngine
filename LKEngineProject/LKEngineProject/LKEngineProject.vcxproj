@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Header\Application.h" />
+    <ClInclude Include="Src\Entity.h" />
+    <ClInclude Include="Src\Scene.h" />
     <ClInclude Include="Utility\Header\Macro.h" />
     <ClInclude Include="Utility\Header\ManagedObject.h" />
     <ClInclude Include="Vulkan\Header\VertexInformation.h" />
@@ -57,6 +59,7 @@
     <ClInclude Include="Vulkan\Header\VulkanDevice.h" />
     <ClInclude Include="Vulkan\Header\VulkanDeviceChild.h" />
     <ClInclude Include="Vulkan\Header\VulkanExtension.h" />
+    <ClInclude Include="Vulkan\Header\VulkanMaterial.h" />
     <ClInclude Include="Vulkan\Header\VulkanMesh.h" />
     <ClInclude Include="Vulkan\Header\VulkanPipeline.h" />
     <ClInclude Include="Vulkan\Header\VulkanImage.h" />

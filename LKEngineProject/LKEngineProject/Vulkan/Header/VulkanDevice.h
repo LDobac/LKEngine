@@ -5,96 +5,96 @@
 #include "VulkanInstance.h"
 #include "VulkanQueueFamilyIndices.h"
 
-//Foward Declaration
+#include "../../Utility/Header/Macro.h"
+
 namespace LKEngine::Window
 {
 	class WindowsWindow;
 }
 
-namespace LKEngine::Vulkan
-{
-	class VulkanQueue;
-	class VulkanSwapchain;
-	class VulkanRenderPass;
-	class VulkanCommandPool;
-	class VulkanSingleCommandPool;
-	class VulkanGraphicsPipeline;
-	class VulkanDescriptorSetLayout;
-	class VulkanSemaphore;
-	class VulkanDescriptorPool;
-	class VulkanDescriptorSet;
-	class VulkanMesh;
+LK_VULKAN_SPACE_BEGIN
+
+class VulkanQueue;
+class VulkanSwapchain;
+class VulkanRenderPass;
+class VulkanCommandPool;
+class VulkanSingleCommandPool;
+class VulkanGraphicsPipeline;
+class VulkanDescriptorSetLayout;
+class VulkanSemaphore;
+class VulkanDescriptorPool;
+class VulkanDescriptorSet;
+class VulkanMesh;
 	
-	class VulkanDevice 
-	{
-	private:
-		LKEngine::Window::WindowsWindow* window;
+class VulkanDevice 
+{
+private:
+	LKEngine::Window::WindowsWindow* window;
 
-		VulkanInstance* instance;
+	VulkanInstance* instance;
 
-		VkDevice vkDevice;
+	VkPhysicalDevice gpu;
+	VkPhysicalDeviceProperties gpuProp;
 
-		VkPhysicalDevice gpu;
-		VkPhysicalDeviceProperties gpuProp;
+	VkDevice vkDevice;
 
-		VkSurfaceKHR surface;
+	VkSurfaceKHR surface;
 
-		VulkanSwapchain* swapchain;
+	VulkanSwapchain* swapchain;
 
-		VulkanQueue* graphicsQueue;
-		VulkanQueue* presentQueue;
+	VulkanQueue* graphicsQueue;
+	VulkanQueue* presentQueue;
 
-		VulkanRenderPass* renderPass;
+	VulkanRenderPass* renderPass;
 
-		VulkanDescriptorSetLayout* descriptorSetLayout;
-		VulkanDescriptorPool* descriptorPool;
-		VulkanDescriptorSet* descriptorSet;
+	VulkanCommandPool* commandPool;
+	VulkanSingleCommandPool* singleCommandPool;
 
-		VulkanGraphicsPipeline* graphicsPipeline;
+	VulkanSemaphore* imageAvailableSemaphore;
+	VulkanSemaphore* renderFinishedSemaphore;
 
-		VulkanCommandPool* commandPool;
-		VulkanSingleCommandPool* singleCommandPool;
+	QueueFamilyIndices queueIndices;
 
-		VulkanSemaphore* imageAvailableSemaphore;
-		VulkanSemaphore* renderFinishedSemaphore;
+	VulkanDescriptorSetLayout* descriptorSetLayout;
+	VulkanDescriptorPool* descriptorPool;
+	VulkanDescriptorSet* descriptorSet;
+	VulkanGraphicsPipeline* graphicsPipeline;
+	VulkanMesh* mesh;
+public:
+	explicit VulkanDevice(LKEngine::Window::WindowsWindow* window);
+	virtual ~VulkanDevice();
 
-		QueueFamilyIndices queueIndices;
+	void Init(bool debug);
+	virtual void Shutdown();
 
-		VulkanMesh* mesh;
-	public:
-		explicit VulkanDevice(LKEngine::Window::WindowsWindow* window);
-		virtual ~VulkanDevice();
+	void Update();
+	void Draw();
 
-		void Init(bool debug);
-		virtual void Shutdown();
+	void ResizeWindow();
 
-		void Update();
-		void Draw();
+	void WaitIdle();
 
-		void ResizeWindow();
+	VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
-		void WaitIdle();
+	QueueFamilyIndices GetQueueFamilyIndices() const;
+	VkDevice GetHandle() const;
+private:
+	void InitInstance(bool debug);
+	void InitSurface();
+	void RequireGPU();
+	void InitDevice(bool debug);
+	void CreateQueue();
+	void InitSwapchain();
+	void InitCommandPool();
+	void AllocCommandBuffers();
+	void InitDepthBuffer();
+	void InitRenderPass();
+	void CreateFramebuffers();
+	void CreateSemaphore();
 
-		VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+	bool CheckDeviceFeatures(VkPhysicalDevice device);
 
-		QueueFamilyIndices GetQueueFamilyIndices() const;
-		VkDevice GetHandle() const;
-	private:
-		void CreateSurface(LKEngine::Window::WindowsWindow * window);
-		void RequirePhysicalDevice();
-		void CreateDevice(bool vaildationLayerOn);
-		void CreateQueue();
-		void CreateDescriptorSetLayout();
-		void CreateDescriptorPool();
-		void CreateDescriptorSet();
-		void CreateCommandPool();
-		void CreateSemaphore();
+};
 
-		void CreateDataBuffers();
-
-		bool CheckDeviceFeatures(VkPhysicalDevice device);
-
-		void RecordCommandBuffer();
-	};
-}
+LK_VULKAN_SPACE_END

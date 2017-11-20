@@ -2,19 +2,20 @@
 
 #include "VulkanDeviceChild.h"
 
-namespace LKEngine::Vulkan
+LK_VULKAN_SPACE_BEGIN
+
+class VulkanSemaphore
+	: public VulkanDeviceChild
 {
-	class VulkanSemaphore
-		: public VulkanDeviceChild
-	{
-	private:
-		VkSemaphore semaphore;
-	public:
-		explicit VulkanSemaphore(VulkanDevice* device);
+private:
+	VkSemaphore semaphore;
+public:
+	explicit VulkanSemaphore(VulkanDevice* device);
 
-		virtual void Init();
-		virtual void Shutdown();
+	virtual void Init();
+	virtual void Shutdown();
 
-		const VkSemaphore& GetHandle() const;
-	};
-}
+	const VkSemaphore& GetHandle() const;
+};
+
+LK_VULKAN_SPACE_END

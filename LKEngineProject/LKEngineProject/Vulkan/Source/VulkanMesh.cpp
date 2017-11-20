@@ -2,11 +2,11 @@
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
-
-#include "../../Utility/Header/Macro.h"
 #include <unordered_map>
 
-using namespace LKEngine::Vulkan;
+#include "../../Utility/Header/Macro.h"
+
+USING_LK_VULKAN_SPACE
 
 VulkanMesh::VulkanMesh(VulkanDevice* device)
 	: VulkanDeviceChild(device)

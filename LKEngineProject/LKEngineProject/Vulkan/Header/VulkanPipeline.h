@@ -2,33 +2,34 @@
 
 #include "VulkanDeviceChild.h"
 
-namespace LKEngine::Vulkan
+LK_VULKAN_SPACE_BEGIN
+
+class VulkanRenderPass;
+class VulkanSwapchain;
+class VulkanDescriptorSetLayout;
+
+class VulkanPipeline
+	: public VulkanDeviceChild
 {
-	class VulkanRenderPass;
-	class VulkanSwapchain;
-	class VulkanDescriptorSetLayout;
+protected:
+	VkPipeline pipeline;
+	VkPipelineLayout pipelineLayout;
+public:
+	explicit VulkanPipeline(VulkanDevice* device);
 
-	class VulkanPipeline
-		: public VulkanDeviceChild
-	{
-	protected:
-		VkPipeline pipeline;
-		VkPipelineLayout pipelineLayout;
-	public:
-		explicit VulkanPipeline(VulkanDevice* device);
+	virtual void Shutdown();
 
-		virtual void Shutdown();
+	const VkPipeline& GetHandle() const;
+	const VkPipelineLayout& GetLayout() const;
+};
 
-		const VkPipeline& GetHandle() const;
-		const VkPipelineLayout& GetLayout() const;
-	};
+class VulkanGraphicsPipeline
+	: public VulkanPipeline
+{
+public:
+	explicit VulkanGraphicsPipeline(VulkanDevice* device);
 
-	class VulkanGraphicsPipeline
-		: public VulkanPipeline
-	{
-	public:
-		explicit VulkanGraphicsPipeline(VulkanDevice* device);
+	void Init(VulkanRenderPass* renderPass, VulkanSwapchain* swapchain, VulkanDescriptorSetLayout* descriptorSetLayout);
+};
 
-		void Init(VulkanRenderPass* renderPass, VulkanSwapchain* swapchain, VulkanDescriptorSetLayout* descriptorSetLayout);
-	};
-}
+LK_VULKAN_SPACE_END

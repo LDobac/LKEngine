@@ -2,14 +2,12 @@
 
 #include "../Header/VulkanQueue.h"
 #include "../Header/VulkanCommandPool.h"
-#include "../../Utility/Header/Macro.h"
 
-using namespace LKEngine::Vulkan;
+USING_LK_VULKAN_SPACE
 
 VulkanBuffer::VulkanBuffer(VulkanDevice * device)
 	:VulkanDeviceChild(device)
-{
-}
+{ }
 
 void VulkanBuffer::Init(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkSharingMode sharingMode)
 {

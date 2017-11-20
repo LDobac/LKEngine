@@ -1,7 +1,8 @@
 #include "../Header/VulkanDescriptorPool.h"
+
 #include "../../Utility/Header/Macro.h"
 
-using namespace LKEngine::Vulkan;
+USING_LK_VULKAN_SPACE
 
 VulkanDescriptorPool::VulkanDescriptorPool(VulkanDevice * device)
 	:VulkanDeviceChild(device)

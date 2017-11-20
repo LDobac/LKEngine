@@ -1,13 +1,13 @@
 #include "../Header/VulkanDescriptorSet.h"
 
-#include "../../Utility/Header/Macro.h"
-
 #include "../Header/VulkanDescriptorSetLayout.h"
 #include "../Header/VulkanDescriptorPool.h"
 #include "../Header/VulkanBuffer.h"
 #include "../Header/VulkanTexture.h"
 
-using namespace LKEngine::Vulkan;
+#include "../../Utility/Header/Macro.h"
+
+USING_LK_VULKAN_SPACE
 
 VulkanDescriptorSet::VulkanDescriptorSet(VulkanDevice * device)
 	:VulkanDeviceChild(device)
@@ -22,7 +22,7 @@ void VulkanDescriptorSet::Init(VulkanDescriptorSetLayout* setLayout, VulkanDescr
 	allocInfo.descriptorSetCount = 1;
 	allocInfo.pSetLayouts = layouts;
 
-	Check_Throw(vkAllocateDescriptorSets(device->GetHandle(), &allocInfo, &descriptorSet) != VK_SUCCESS, "디스크립터 셋 할당");
+	Check_Throw(vkAllocateDescriptorSets(device->GetHandle(), &allocInfo, &descriptorSet) != VK_SUCCESS, "디스크립터 셋 할당 실패");
 }
 
 void VulkanDescriptorSet::AddBufferInfo(VkDescriptorType type, VulkanBuffer * buffer, size_t offset, uint32_t binding)

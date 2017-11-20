@@ -4,29 +4,30 @@
 
 #include "VulkanDeviceChild.h"
 
-namespace LKEngine::Vulkan
+LK_VULKAN_SPACE_BEGIN
+
+class VulkanSemaphore;
+class VulkanSwapchain;
+
+class VulkanQueue
+	: VulkanDeviceChild
 {
-	class VulkanSemaphore;
-	class VulkanSwapchain;
+private:
+	VkQueue vkQueue;
 
-	class VulkanQueue
-		: VulkanDeviceChild
-	{
-	private:
-		VkQueue vkQueue;
+	uint32_t familyIndex;
+	uint32_t queueIndex;
+public:
+	explicit VulkanQueue(VulkanDevice* device, uint32_t familyIndex, uint32_t queueIndex);
 
-		uint32_t familyIndex;
-		uint32_t queueIndex;
-	public:
-		explicit VulkanQueue(VulkanDevice* device, uint32_t familyIndex, uint32_t queueIndex);
+	void Submit(VulkanSemaphore* waitSemaphore, VulkanSemaphore* signalSemaphore,VkPipelineStageFlags* stageFlags ,const VkCommandBuffer& commandBuffer);
+	void Submit(const VkSubmitInfo& submitInfo);
+	void Present(VulkanSwapchain* swapchain, VulkanSemaphore* waitSemaphore,uint32_t imageIndex);
 
-		void Submit(VulkanSemaphore* waitSemaphore, VulkanSemaphore* signalSemaphore,VkPipelineStageFlags* stageFlags ,const VkCommandBuffer& commandBuffer);
-		void Submit(const VkSubmitInfo& submitInfo);
-		void Present(VulkanSwapchain* swapchain, VulkanSemaphore* waitSemaphore,uint32_t imageIndex);
+	void WaitIdle();
 
-		void WaitIdle();
+	VkQueue GetHandle() const;
+	uint32_t GetFamilyIndex() const;
+};
 
-		VkQueue GetHandle() const;
-		uint32_t GetFamilyIndex() const;
-	};
-}
+LK_VULKAN_SPACE_END

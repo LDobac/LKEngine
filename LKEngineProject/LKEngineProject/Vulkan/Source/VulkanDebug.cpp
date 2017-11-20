@@ -1,9 +1,10 @@
 #include "../Header/VulkanDebug.h"
 
-#include "../../Utility/Header/Macro.h"
 #include "../Header/VulkanInstance.h"
 
-using namespace LKEngine::Vulkan;
+#include "../../Utility/Header/Macro.h"
+
+USING_LK_VULKAN_SPACE
 
 VulkanDebug::VulkanDebug(VulkanInstance* vkInstance)
 	:instance(vkInstance),
@@ -14,8 +15,6 @@ VulkanDebug::~VulkanDebug() { }
 
 void VulkanDebug::Init()
 {
-	Console_Log("Vaildation Layer 积己 矫累");
-
 	VkDebugReportCallbackCreateInfoEXT callbackInfo = {};
 	callbackInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
 	callbackInfo.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT;
@@ -24,8 +23,6 @@ void VulkanDebug::Init()
 
 	VkResult result = CreateDebugCallback(instance->GetHandle(), &callbackInfo, nullptr, &callbackInstance);
 	Check_Throw(result != VK_SUCCESS, "Vaildation Layer 积己 角菩!");
-
-	Console_Log("Vaildation Layer 积己 肯丰");
 }
 
 void VulkanDebug::Shutdown()

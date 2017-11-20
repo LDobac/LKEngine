@@ -26,8 +26,6 @@ void WindowsWindow::PollEvents()
 
 void WindowsWindow::Init(LKEngine::Vulkan::VulkanDevice* device)
 {
-	Console_Log("창 생성 시작");
-
 	glfwInit();
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -37,7 +35,6 @@ void WindowsWindow::Init(LKEngine::Vulkan::VulkanDevice* device)
 	glfwSetWindowSizeCallback(window, WindowsWindow::onWindowResized);
 
 	Check_Throw(window == nullptr, "창 생성 실패!");
-	Console_Log_If(window, "창 생성 성공");
 }
 
 void WindowsWindow::Shutdown()

@@ -1,10 +1,11 @@
 #include "../Header/VulkanShaderModule.h"
 
-#include "../../Utility/Header/Macro.h"
 #include <fstream>
 #include <filesystem>
 
-using namespace LKEngine::Vulkan;
+#include "../../Utility/Header/Macro.h"
+
+USING_LK_VULKAN_SPACE
 
 VulkanShaderModule::VulkanShaderModule(VulkanDevice * device)
 	: VulkanDeviceChild(device),

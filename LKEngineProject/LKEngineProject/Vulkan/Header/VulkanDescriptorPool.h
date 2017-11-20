@@ -1,24 +1,25 @@
 #pragma once
 
-#include "../Header/VulkanDeviceChild.h"
+#include "VulkanDeviceChild.h"
 
-namespace LKEngine::Vulkan
+LK_VULKAN_SPACE_BEGIN
+
+class VulkanDescriptorPool
+	: public VulkanDeviceChild
 {
-	class VulkanDescriptorPool
-		: public VulkanDeviceChild
-	{
-	private:
-		VkDescriptorPool descriptorPool;
+private:
+	VkDescriptorPool descriptorPool;
 
-		std::vector<VkDescriptorPoolSize> poolSizes;
-	public:
-		explicit VulkanDescriptorPool(VulkanDevice* device);
+	std::vector<VkDescriptorPoolSize> poolSizes;
+public:
+	explicit VulkanDescriptorPool(VulkanDevice* device);
 
-		void AddPoolSize(VkDescriptorType type,size_t descriptorCount);
-		void CreatePool(size_t maxSets = 1);
+	void AddPoolSize(VkDescriptorType type,size_t descriptorCount);
+	void CreatePool(size_t maxSets = 1);
 
-		void Shutdown();
+	void Shutdown();
 
-		const VkDescriptorPool& GetHandle() const;
-	};
-}
+	const VkDescriptorPool& GetHandle() const;
+};
+
+LK_VULKAN_SPACE_END

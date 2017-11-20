@@ -2,23 +2,22 @@
 
 #include "../Header/VulkanCommandPool.h"
 #include "../Header/VulkanBuffer.h"
+
 #include "../../Utility/Header/Macro.h"
 
-using namespace LKEngine::Vulkan;
+USING_LK_VULKAN_SPACE
 
 VulkanImage::VulkanImage(VulkanDevice * device)
 	: VulkanDeviceChild(device),
 	image(VK_NULL_HANDLE),
 	imageView(VK_NULL_HANDLE)
-{
-}
+{ }
 
 VulkanImage::VulkanImage(VkImage & image, VulkanDevice * device)
 	: VulkanDeviceChild(device),
 	image(image),
 	imageView(VK_NULL_HANDLE)
-{
-}
+{ }
 
  VulkanImage::~VulkanImage()
 { }

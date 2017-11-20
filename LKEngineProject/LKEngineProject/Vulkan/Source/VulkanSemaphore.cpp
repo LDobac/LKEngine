@@ -2,7 +2,7 @@
 
 #include "../../Utility/Header/Macro.h"
 
-using namespace LKEngine::Vulkan;
+USING_LK_VULKAN_SPACE
 
 VulkanSemaphore::VulkanSemaphore(VulkanDevice * device)
 	:VulkanDeviceChild(device)

@@ -4,11 +4,11 @@
 #include "../Header/VulkanSwapchain.h"
 #include "../Header/VulkanDescriptorSetLayout.h"
 #include "../Header/VulkanRenderPass.h"
-#include "../../Utility/Header/Macro.h"
-
 #include "../Header/VertexInformation.h"
 
-using namespace LKEngine::Vulkan;
+#include "../../Utility/Header/Macro.h"
+
+USING_LK_VULKAN_SPACE
 
 VulkanPipeline::VulkanPipeline(VulkanDevice * device)
 	:VulkanDeviceChild(device),
@@ -42,8 +42,6 @@ VulkanGraphicsPipeline::VulkanGraphicsPipeline(VulkanDevice * device)
 
 void VulkanGraphicsPipeline::Init(VulkanRenderPass* renderPass, VulkanSwapchain* swapchain, VulkanDescriptorSetLayout* descriptorSetLayout)
 {
-	Console_Log("그래픽 파이프 라인 생성 시작");
-
 	VulkanShaderModule vertShaderModule(device);
 	vertShaderModule.Init(VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
 	VulkanShaderModule fragShaderModule(device);
@@ -164,6 +162,4 @@ void VulkanGraphicsPipeline::Init(VulkanRenderPass* renderPass, VulkanSwapchain*
 
 	vertShaderModule.Shutdown();
 	fragShaderModule.Shutdown();
-
-	Console_Log("그래픽 파이프 라인 생성 종료");
 }

@@ -10,57 +10,58 @@ namespace LKEngine::Window
 	class WindowsWindow;
 }
 
-namespace LKEngine::Vulkan
+LK_VULKAN_SPACE_BEGIN
+
+class VulkanDevice;
+class VulkanImage;
+class VulkanRenderPass;
+
+struct SwapchainSupportDetail
 {
-	class VulkanDevice;
-	class VulkanImage;
-	class VulkanRenderPass;
+	VkSurfaceCapabilitiesKHR capabilities;
+	std::vector<VkSurfaceFormatKHR> formats;
+	std::vector<VkPresentModeKHR> presentModes;
 
-	struct SwapchainSupportDetail
-	{
-		VkSurfaceCapabilitiesKHR capabilities;
-		std::vector<VkSurfaceFormatKHR> formats;
-		std::vector<VkPresentModeKHR> presentModes;
+public:
+	explicit SwapchainSupportDetail(VkPhysicalDevice gpu,VkSurfaceKHR surface);
+	bool CheckSwapchainAdequate();
+};
 
-	public:
-		explicit SwapchainSupportDetail(VkPhysicalDevice gpu,VkSurfaceKHR surface);
-		bool CheckSwapchainAdequate();
-	};
+class VulkanSwapchain
+	: public VulkanDeviceChild
+{
+private:
+	VkSwapchainKHR swapchain;
 
-	class VulkanSwapchain
-		: public VulkanDeviceChild
-	{
-	private:
-		VkSwapchainKHR swapchain;
+	VkFormat swapchainFormat;
+	VkExtent2D swapchainExtent;
 
-		VkFormat swapchainFormat;
-		VkExtent2D swapchainExtent;
+	std::vector<VulkanImage*> swapchainImages;
+	std::vector<VkFramebuffer> frameBuffers;
 
-		std::vector<VulkanImage*> swapchainImages;
-		std::vector<VkFramebuffer> frameBuffers;
+	VulkanImage* depthImage;
 
-		VulkanImage* depthImage;
+	Window::WindowsWindow* window;
+public:
+	explicit VulkanSwapchain(VulkanDevice* device, Window::WindowsWindow* window);
+	virtual ~VulkanSwapchain();
 
-		Window::WindowsWindow* window;
-	public:
-		explicit VulkanSwapchain(VulkanDevice* device, Window::WindowsWindow* window);
-		virtual ~VulkanSwapchain();
+	void Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices,VulkanSwapchain* oldSwapchain = nullptr);
+	virtual void Shutdown();
 
-		void Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices,VulkanSwapchain* oldSwapchain = nullptr);
-		virtual void Shutdown();
+	void InitDepthBuffer(VulkanSingleCommandPool* commandPool);
 
-		void InitDepthBuffer(VulkanSingleCommandPool* commandPool);
+	void CreateFrameBuffers(VulkanRenderPass* renderPass);
 
-		void CreateFrameBuffers(VulkanRenderPass* renderPass);
+	const VkSwapchainKHR& GetHandle() const;
+	VkFormat GetFormat() const;
+	VkExtent2D GetExtent() const;
+	const std::vector<VulkanImage*>& GetImages() const;
+	const std::vector<VkFramebuffer> GetFrameBuffers() const;
+private:
+	VkSurfaceFormatKHR ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const;
+	VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR> availablePresentModes) const;
+	VkExtent2D ChooseSwapchainExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
+};
 
-		const VkSwapchainKHR& GetHandle() const;
-		VkFormat GetFormat() const;
-		VkExtent2D GetExtent() const;
-		const std::vector<VulkanImage*>& GetImages() const;
-		const std::vector<VkFramebuffer> GetFrameBuffers() const;
-	private:
-		VkSurfaceFormatKHR ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) const;
-		VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR> availablePresentModes) const;
-		VkExtent2D ChooseSwapchainExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
-	};
-}
+LK_VULKAN_SPACE_END

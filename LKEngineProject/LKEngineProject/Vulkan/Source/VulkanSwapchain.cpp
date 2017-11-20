@@ -2,13 +2,13 @@
 
 #include <GLFW/glfw3.h>
 
-#include "../../Utility/Header/Macro.h"
-#include "../../Window/Header/WindowsWindow.h"
 #include "../Header/VulkanDevice.h"
 #include "../Header/VulkanImage.h"
 #include "../Header/VulkanRenderPass.h"
 
-using namespace LKEngine::Vulkan;
+#include "../../Window/Header/WindowsWindow.h"
+
+USING_LK_VULKAN_SPACE
 
 SwapchainSupportDetail::SwapchainSupportDetail(VkPhysicalDevice gpu, VkSurfaceKHR surface)
 {
@@ -58,8 +58,6 @@ VulkanSwapchain::~VulkanSwapchain()
 
 void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surface, QueueFamilyIndices& queueIndices , VulkanSwapchain* oldSwapchain)
 {
-	Console_Log("스왑 체인 생성 시작");
-
 	SwapchainSupportDetail swapchainSupport(gpu, surface);
 
 	auto surfaceFormat = ChooseSurfaceFormat(swapchainSupport.formats);
@@ -125,8 +123,6 @@ void VulkanSwapchain::Init(const VkPhysicalDevice& gpu, const VkSurfaceKHR& surf
 
 	swapchainFormat = surfaceFormat.format;
 	swapchainExtent = extent;
-
-	Console_Log("스왑 체인 생성 성공");
 }
 
 void VulkanSwapchain::Shutdown()
@@ -143,7 +139,6 @@ void VulkanSwapchain::Shutdown()
 
 void VulkanSwapchain::InitDepthBuffer(VulkanSingleCommandPool * commandPool)
 {
-	Console_Log("깊이 버퍼 생성 시작");
 	VkFormat depthFormat = device->FindSupportedFormat({
 		VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT
 	},
@@ -156,12 +151,10 @@ void VulkanSwapchain::InitDepthBuffer(VulkanSingleCommandPool * commandPool)
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
 		VK_IMAGE_ASPECT_DEPTH_BIT);
 	depthImage->TransitionLayout(commandPool, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-	Console_Log("깊이 버퍼 생성 성공");
 }
 
 void VulkanSwapchain::CreateFrameBuffers(VulkanRenderPass * renderPass)
 {
-	Console_Log("프레임버퍼 생성 시작");
 	frameBuffers.resize(swapchainImages.size());
 	for (size_t i = 0; i < frameBuffers.size(); i++)
 	{
@@ -180,7 +173,6 @@ void VulkanSwapchain::CreateFrameBuffers(VulkanRenderPass * renderPass)
 
 		Check_Throw(vkCreateFramebuffer(device->GetHandle(), &framebufferInfo, nullptr, &frameBuffers[i]), "프레임 버퍼 생성 실패");
 	}
-	Console_Log("프레임버퍼 생성 성공");
 }
 
 const VkSwapchainKHR & VulkanSwapchain::GetHandle() const

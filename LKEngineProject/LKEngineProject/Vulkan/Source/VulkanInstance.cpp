@@ -4,10 +4,11 @@
 #include <GLFW/glfw3.h>
 
 #include "../Header/VulkanExtension.h"
-#include "../../Utility/Header/Macro.h"
 #include "../Header/VulkanDebug.h"
 
-using namespace LKEngine::Vulkan;
+#include "../../Utility/Header/Macro.h"
+
+USING_LK_VULKAN_SPACE
 
 VulkanInstance::VulkanInstance()
 	:vkInstance(VK_NULL_HANDLE),
@@ -21,9 +22,6 @@ VulkanInstance::~VulkanInstance()
 
 void VulkanInstance::Init(bool vaildationLayerOn)
 {
-	Console_Log("VulkanInstance 생성 시작");
-	Console_Log_If(vaildationLayerOn, "디버그 모드 활성화");
-
 	VulkanExtension extension;
 
 	VkApplicationInfo appInfo = {};
@@ -59,8 +57,6 @@ void VulkanInstance::Init(bool vaildationLayerOn)
 		debug = new VulkanDebug(this);
 		debug->Init();
 	}
-
-	Console_Log("Vulkan Instance 생성 완료");
 }
 
 void VulkanInstance::Shutdown()

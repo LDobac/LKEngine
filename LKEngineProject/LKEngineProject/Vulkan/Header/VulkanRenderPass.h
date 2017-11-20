@@ -4,25 +4,26 @@
 
 #include "VulkanDeviceChild.h"
 
-namespace LKEngine::Vulkan
+LK_VULKAN_SPACE_BEGIN
+
+class VulkanSwapchain;
+
+class VulkanRenderPass
+	: public VulkanDeviceChild
 {
-	class VulkanSwapchain;
+private:
+	VkRenderPass renderPass;
+public:
+	explicit VulkanRenderPass(VulkanDevice* device);
+	virtual ~VulkanRenderPass();
 
-	class VulkanRenderPass
-		: public VulkanDeviceChild
-	{
-	private:
-		VkRenderPass renderPass;
-	public:
-		explicit VulkanRenderPass(VulkanDevice* device);
-		virtual ~VulkanRenderPass();
+	void Init(VulkanSwapchain* swapchain);
+	virtual void Shutdown();
 
-		void Init(VulkanSwapchain* swapchain);
-		virtual void Shutdown();
+	void Begin(std::vector<VkClearValue> clearColors, const VkFramebuffer& frameBuffer, VkExtent2D extent, const VkCommandBuffer& cmdBuffer);
+	void End(const VkCommandBuffer& cmdBuffer);
 
-		void Begin(std::vector<VkClearValue> clearColors, const VkFramebuffer& frameBuffer, VkExtent2D extent, const VkCommandBuffer& cmdBuffer);
-		void End(const VkCommandBuffer& cmdBuffer);
+	VkRenderPass GetHandle() const;
+};
 
-		VkRenderPass GetHandle() const;
-	};
-}
+LK_VULKAN_SPACE_END

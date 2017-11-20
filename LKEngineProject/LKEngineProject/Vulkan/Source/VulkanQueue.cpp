@@ -1,11 +1,12 @@
 #include "../Header/VulkanQueue.h"
 
-#include "../../Utility/Header/Macro.h"
 #include "../Header/VulkanDevice.h"
 #include "../Header/VulkanSemaphore.h"
 #include "../Header/VulkanSwapchain.h"
 
-using namespace LKEngine::Vulkan;
+#include "../../Utility/Header/Macro.h"
+
+USING_LK_VULKAN_SPACE
 
 VulkanQueue::VulkanQueue(VulkanDevice * device, uint32_t familyIndex, uint32_t queueIndex)
 	:VulkanDeviceChild(device)

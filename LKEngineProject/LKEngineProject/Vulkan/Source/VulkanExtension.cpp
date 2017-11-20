@@ -5,7 +5,7 @@
 
 #include "../../Utility/Header/Macro.h"
 
-using namespace LKEngine::Vulkan;
+USING_LK_VULKAN_SPACE
 
 std::vector<const char*> VulkanExtension::GetInstanceExtensions(bool isDebug) const
 {

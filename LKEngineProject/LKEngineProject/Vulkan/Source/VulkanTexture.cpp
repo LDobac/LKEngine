@@ -3,17 +3,15 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include "../../Utility/Header/Macro.h"
-
+#include "../Header/VulkanDevice.h"
 #include "../Header/VulkanImage.h"
 #include "../Header/VulkanBuffer.h"
 
-using namespace LKEngine::Vulkan;
+USING_LK_VULKAN_SPACE
 
 VulkanTexture::VulkanTexture(VulkanDevice * device)
 	:VulkanImage(device)
-{
-}
+{ }
 
 void VulkanTexture::Init(std::string path, VulkanSingleCommandPool* commandPool)
 {

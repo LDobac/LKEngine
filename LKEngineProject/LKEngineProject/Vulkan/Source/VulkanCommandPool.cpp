@@ -1,10 +1,11 @@
 #include "../Header/VulkanCommandPool.h"
 
-#include "../../Utility/Header/Macro.h"
 #include "../Header/VulkanQueue.h"
 #include "../Header/VulkanCommandBuffers.h"
 
-using namespace LKEngine::Vulkan;
+#include "../../Utility/Header/Macro.h"
+
+USING_LK_VULKAN_SPACE
 
 VulkanCommandPool::VulkanCommandPool(VulkanDevice * device)
 	: VulkanDeviceChild(device)

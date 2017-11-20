@@ -2,12 +2,17 @@
 
 #include <iostream>
 
+#define LK_VULKAN_SPACE_BEGIN namespace LKEngine::Vulkan{
+#define LK_VULKAN_SPACE_END }
+
+#define USING_LK_VULKAN_SPACE using namespace LKEngine::Vulkan;
+
 #define LK_VERSION VK_MAKE_VERSION(1,0,0)
 #define APPLICATION_VERSION VK_MAKE_VERSION(0,0,0)
 
 #define ENGINE_NAME "LK Engine"
 
-#define WINDOW_TITLE "Vulkan Engine"
+#define WINDOW_TITLE "LK Engine"
 
 #define DEFAULT_WIDTH 800
 #define DEFAULT_HEIGHT 600

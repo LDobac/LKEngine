@@ -143,5 +143,8 @@
     <ClInclude Include="Vulkan\Header\VulkanDescriptorSet.h" />
     <ClInclude Include="Vulkan\Header\VulkanTexture.h" />
     <ClInclude Include="Vulkan\Header\VulkanMesh.h" />
+    <ClInclude Include="Vulkan\Header\VulkanMaterial.h" />
+    <ClInclude Include="Src\Entity.h" />
+    <ClInclude Include="Src\Scene.h" />
   </ItemGroup>
 </Project>

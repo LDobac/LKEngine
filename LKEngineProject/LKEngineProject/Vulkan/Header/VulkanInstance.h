@@ -2,24 +2,27 @@
 
 #include <vulkan/vulkan.h>
 
-namespace LKEngine::Vulkan
+#include "../../Utility/Header/Macro.h"
+
+LK_VULKAN_SPACE_BEGIN
+
+class VulkanExtension;
+class VulkanDebug;
+
+class VulkanInstance
 {
-	class VulkanExtension;
-	class VulkanDebug;
+private:
+	VkInstance vkInstance;
 
-	class VulkanInstance
-	{
-	private:
-		VkInstance vkInstance;
+	VulkanDebug* debug;
+public :
+	explicit VulkanInstance();
+	~VulkanInstance();
 
-		VulkanDebug* debug;
-	public :
-		explicit VulkanInstance();
-		~VulkanInstance();
+	void Init(bool vaildationLayerOn);
+	virtual void Shutdown();
 
-		void Init(bool vaildationLayerOn);
-		virtual void Shutdown();
+	VkInstance GetHandle() const;
+};
 
-		VkInstance GetHandle() const;
-	};
-}
+LK_VULKAN_SPACE_END
