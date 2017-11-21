@@ -13,8 +13,6 @@ VulkanMesh::VulkanMesh()
 	vertexBuffer = new VulkanBuffer(VulkanDevice::GetInstance());
 	indexBuffer = new VulkanBuffer(VulkanDevice::GetInstance());
 	uniformBuffer = new VulkanBuffer(VulkanDevice::GetInstance());
-
-	texture = new VulkanTexture();
 }
 
 VulkanMesh::~VulkanMesh()
@@ -22,7 +20,6 @@ VulkanMesh::~VulkanMesh()
 	SAFE_DELETE(vertexBuffer);
 	SAFE_DELETE(indexBuffer);
 	SAFE_DELETE(uniformBuffer);
-	SAFE_DELETE(texture);
 }
 
 void VulkanMesh::Init(std::string meshPath, std::string texPath)
@@ -39,7 +36,7 @@ void VulkanMesh::Shutdown()
 	vertexBuffer->Shutdown();
 	indexBuffer->Shutdown();
 	uniformBuffer->Shutdown();
-	texture->Shutdown();
+	SAFE_DELETE(texture);
 }
 
 const std::vector<Vertex>& VulkanMesh::GetVertices() const
@@ -114,7 +111,7 @@ void VulkanMesh::LoadModel(std::string meshPath)
 
 void VulkanMesh::LoadTexture(std::string texPath)
 {
-	texture->Init(texPath);
+	texture = new VulkanTexture(texPath);
 }
 
 void VulkanMesh::CreateVertexBuffer(VulkanSingleCommandPool* commandPool)

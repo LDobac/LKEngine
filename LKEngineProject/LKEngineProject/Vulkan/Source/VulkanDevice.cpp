@@ -19,6 +19,7 @@
 #include "../Header/VulkanSemaphore.h"
 #include "../Header/VulkanDescriptorPool.h"
 #include "../Header/VulkanDescriptorSet.h"
+#include "../Header/VulkanShaderModule.h"
 
 #include "../Header/VulkanMesh.h"
 
@@ -101,7 +102,7 @@ void VulkanDevice::Init()
 	imageAvailableSemaphore = new VulkanSemaphore(this);
 	renderFinishedSemaphore = new VulkanSemaphore(this);
 
-	graphicsPipeline = new VulkanGraphicsPipeline(this);
+	graphicsPipeline = new VulkanGraphicsPipeline();
 	descriptorSetLayout = new VulkanDescriptorSetLayout(this);
 	descriptorPool = new VulkanDescriptorPool(this);
 	descriptorSet = new VulkanDescriptorSet(this);
@@ -138,7 +139,14 @@ void VulkanDevice::Init()
 		descriptorSet->UpdateSets();
 	}
 	{
-		graphicsPipeline->Init(renderPass, swapchain, descriptorSetLayout);
+		auto vertShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
+		auto fragShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::FRAGMENT, "Shader/SimpleShader.frag");
+		graphicsPipeline->Init(
+			vertShader,
+			fragShader
+			, descriptorSetLayout);
+		SAFE_DELETE(vertShader);
+		SAFE_DELETE(fragShader);
 	}
 	{
 		std::vector<VkClearValue> clearValues(2);
@@ -276,8 +284,14 @@ void VulkanDevice::ResizeWindow()
 		//그래픽 파이프라인 재 생성
 		graphicsPipeline->Shutdown();
 		SAFE_DELETE(graphicsPipeline);
-		graphicsPipeline = new VulkanGraphicsPipeline(this);
-		graphicsPipeline->Init(renderPass, swapchain, descriptorSetLayout);
+		auto vertShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
+		auto fragShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::FRAGMENT, "Shader/SimpleShader.frag");
+		graphicsPipeline->Init(
+			vertShader,
+			fragShader
+			, descriptorSetLayout);
+		SAFE_DELETE(vertShader);
+		SAFE_DELETE(fragShader);
 
 		//커맨드 버퍼 다시 기록
 		std::vector<VkClearValue> clearValues(2);
@@ -377,6 +391,16 @@ VulkanSwapchain * VulkanDevice::GetSwapchain() const
 VulkanSingleCommandPool * VulkanDevice::GetSingleCommandPool() const
 {
 	return singleCommandPool;
+}
+
+VulkanDescriptorPool * VulkanDevice::GetDescriptorPool() const
+{
+	return descriptorPool;
+}
+
+VulkanRenderPass * VulkanDevice::GetRenderPass() const
+{
+	return renderPass;
 }
 
 void VulkanDevice::InitInstance()

@@ -82,6 +82,7 @@
     <ClCompile Include="Vulkan\Source\VulkanMesh.cpp" />
     <ClCompile Include="Src\Entity.cpp" />
     <ClCompile Include="Src\Camera.cpp" />
+    <ClCompile Include="Vulkan\Source\VulkanMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Header\Application.h">
@@ -149,5 +150,6 @@
     <ClInclude Include="Src\Entity.h" />
     <ClInclude Include="Src\Scene.h" />
     <ClInclude Include="Src\Camera.h" />
+    <ClInclude Include="Src\Mesh.h" />
   </ItemGroup>
 </Project>

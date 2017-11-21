@@ -9,17 +9,14 @@
 
 USING_LK_VULKAN_SPACE
 
-VulkanTexture::VulkanTexture()
+VulkanTexture::VulkanTexture(std::string path)
 	:VulkanImage(VulkanDevice::GetInstance())
-{ }
-
-void VulkanTexture::Init(std::string path)
 {
 	CreateTexture(path, VulkanDevice::GetInstance()->GetSingleCommandPool());
 	CreateSampler();
 }
 
-void VulkanTexture::Shutdown()
+VulkanTexture::~VulkanTexture()
 {
 	vkDestroySampler(device->GetHandle(), sampler, nullptr);
 	VulkanImage::Shutdown();
@@ -28,6 +25,11 @@ void VulkanTexture::Shutdown()
 const VkSampler & VulkanTexture::GetSampler() const
 {
 	return sampler;
+}
+
+const VkImageView & VulkanTexture::GetImageView() const
+{
+	return imageView;
 }
 
 void VulkanTexture::CreateTexture(std::string path, VulkanSingleCommandPool * commandPool)

@@ -91,6 +91,8 @@ public:
 
 	VulkanSwapchain* GetSwapchain() const;
 	VulkanSingleCommandPool* GetSingleCommandPool() const;
+	VulkanDescriptorPool* GetDescriptorPool() const;
+	VulkanRenderPass* GetRenderPass() const;
 private:
 	void Shutdown();
 

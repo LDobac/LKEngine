@@ -7,6 +7,7 @@ LK_VULKAN_SPACE_BEGIN
 class VulkanRenderPass;
 class VulkanSwapchain;
 class VulkanDescriptorSetLayout;
+class VulkanShaderModule;
 
 class VulkanPipeline
 	: public VulkanDeviceChild
@@ -27,9 +28,9 @@ class VulkanGraphicsPipeline
 	: public VulkanPipeline
 {
 public:
-	explicit VulkanGraphicsPipeline(VulkanDevice* device);
+	explicit VulkanGraphicsPipeline();
 
-	void Init(VulkanRenderPass* renderPass, VulkanSwapchain* swapchain, VulkanDescriptorSetLayout* descriptorSetLayout);
+	void Init(VulkanShaderModule* vertShader, VulkanShaderModule* fragShader, VulkanDescriptorSetLayout* descriptorSetLayout);
 };
 
 LK_VULKAN_SPACE_END

@@ -45,12 +45,12 @@ void VulkanDescriptorSet::AddBufferInfo(VkDescriptorType type, VulkanBuffer * bu
 	descriptorWrites.push_back(descriptorWrite);
 }
 
-void VulkanDescriptorSet::AddTextureInfo(VkDescriptorType type, VulkanTexture * image, uint32_t binding)
+void VulkanDescriptorSet::AddTextureInfo(VkDescriptorType type, VulkanTexture * texture, uint32_t binding)
 {
 	VkDescriptorImageInfo info = { };
 	info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-	info.imageView = image->GetImageView();
-	info.sampler = image->GetSampler();
+	info.imageView = texture->GetImageView();
+	info.sampler = texture->GetSampler();
 	imageInfos.push_back(info);
 
 	VkWriteDescriptorSet descriptorWrite = {};
@@ -68,9 +68,6 @@ void VulkanDescriptorSet::AddTextureInfo(VkDescriptorType type, VulkanTexture * 
 void VulkanDescriptorSet::UpdateSets()
 {
 	vkUpdateDescriptorSets(device->GetHandle(), descriptorWrites.size(), descriptorWrites.data(), 0, nullptr);
-
-	bufferInfos.clear();
-	descriptorWrites.clear();
 }
 
 const VkDescriptorSet & VulkanDescriptorSet::GetHandle() const

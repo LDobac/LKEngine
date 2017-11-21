@@ -35,28 +35,23 @@ const VkPipelineLayout & VulkanPipeline::GetLayout() const
 	return pipelineLayout;
 }
 
-VulkanGraphicsPipeline::VulkanGraphicsPipeline(VulkanDevice * device)
-	: VulkanPipeline(device)
+VulkanGraphicsPipeline::VulkanGraphicsPipeline()
+	: VulkanPipeline(VulkanDevice::GetInstance())
 {
 }
 
-void VulkanGraphicsPipeline::Init(VulkanRenderPass* renderPass, VulkanSwapchain* swapchain, VulkanDescriptorSetLayout* descriptorSetLayout)
+void VulkanGraphicsPipeline::Init(VulkanShaderModule* vertShader, VulkanShaderModule* fragShader, VulkanDescriptorSetLayout* descriptorSetLayout)
 {
-	VulkanShaderModule vertShaderModule(device);
-	vertShaderModule.Init(VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
-	VulkanShaderModule fragShaderModule(device);
-	fragShaderModule.Init(VulkanShaderModule::ShaderType::FRAGMENT, "Shader/SimpleShader.frag");
-
 	VkPipelineShaderStageCreateInfo vertShaderStageInfo = {};
 	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 	vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
-	vertShaderStageInfo.module = vertShaderModule.GetHandle();
+	vertShaderStageInfo.module = vertShader->GetHandle();
 	vertShaderStageInfo.pName = "main";
 
 	VkPipelineShaderStageCreateInfo fragShaderStageInfo = {};
 	fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 	fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-	fragShaderStageInfo.module = fragShaderModule.GetHandle();
+	fragShaderStageInfo.module = fragShader->GetHandle();
 	fragShaderStageInfo.pName = "main";
 
 	VkPipelineShaderStageCreateInfo shaderStages[] = { vertShaderStageInfo, fragShaderStageInfo };
@@ -77,6 +72,7 @@ void VulkanGraphicsPipeline::Init(VulkanRenderPass* renderPass, VulkanSwapchain*
 	inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 	inputAssembly.primitiveRestartEnable = VK_FALSE;
 
+	VulkanSwapchain* swapchain = VulkanDevice::GetInstance()->GetSwapchain();
 	VkViewport viewport = {};
 	viewport.x = 0.0f;
 	viewport.y = 0.0f;
@@ -154,12 +150,9 @@ void VulkanGraphicsPipeline::Init(VulkanRenderPass* renderPass, VulkanSwapchain*
 	pipelineInfo.pDepthStencilState = &depthStencil;
 	pipelineInfo.pColorBlendState = &colorBlending;
 	pipelineInfo.layout = pipelineLayout;
-	pipelineInfo.renderPass = renderPass->GetHandle();
+	pipelineInfo.renderPass = VulkanDevice::GetInstance()->GetRenderPass()->GetHandle();
 	pipelineInfo.subpass = 0;
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
 	Check_Throw(vkCreateGraphicsPipelines(device->GetHandle(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipeline) != VK_SUCCESS, "그래픽 파이프라인 생성 실패");
-
-	vertShaderModule.Shutdown();
-	fragShaderModule.Shutdown();
 }

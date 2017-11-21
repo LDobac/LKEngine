@@ -6,18 +6,24 @@ LK_VULKAN_SPACE_BEGIN
 
 class VulkanTexture;
 class VulkanDescriptorSet;
+class VulkanDescriptorSetLayout;
 class VulkanPipeline;
 
 class VulkanMaterial
 {
 private:
-	//TODO : Multiple Textuer
-	VulkanTexture* texture;
+	std::vector<VulkanTexture*> textures;
 	VulkanDescriptorSet* descriptorSet;
 	VulkanPipeline* pipeline;
 public:
+	explicit VulkanMaterial(VulkanDescriptorSetLayout* setLayout, VulkanPipeline* pipeline);
+	~VulkanMaterial();
 
-	VulkanTexture* GetTexture() const;
+	void AddTexture(VulkanTexture* texture);
+
+	void SetVulkanPipeline(VulkanPipeline * pipeline);
+
+	std::vector<VulkanTexture*> GetTexture() const;
 	VulkanDescriptorSet* GetDescriptorSet() const;
 	VulkanPipeline* GetPipeline() const;
 };

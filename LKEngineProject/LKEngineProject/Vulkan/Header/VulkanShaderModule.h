@@ -5,7 +5,6 @@
 LK_VULKAN_SPACE_BEGIN
 
 class VulkanShaderModule
-	: public VulkanDeviceChild
 {
 public:
 	enum class ShaderType
@@ -19,18 +18,16 @@ private:
 
 	VkShaderModule shaderModule;
 public:
-	VulkanShaderModule(VulkanDevice* device);
+	VulkanShaderModule(const ShaderType type, const std::string & shaderPath);
 	~VulkanShaderModule();
-
-	void Init(const ShaderType type, const std::string& shaderPath);
-	void Init(const ShaderType type, const std::vector<char>& compileCode);
-
-	virtual void Shutdown();
-
-	std::vector<char> ReadCompiledShader(const std::string& file);
 
 	VkShaderModule GetHandle() const;
 	ShaderType GetShaderType() const;
+
+private:
+	void Init(const ShaderType type, const std::vector<char>& compileCode);
+
+	std::vector<char> ReadCompiledShader(const std::string& file);
 };
 
 LK_VULKAN_SPACE_END

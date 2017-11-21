@@ -7,15 +7,7 @@
 
 USING_LK_VULKAN_SPACE
 
-VulkanShaderModule::VulkanShaderModule(VulkanDevice * device)
-	: VulkanDeviceChild(device),
-	shaderModule(VK_NULL_HANDLE)
-{ }
-
-VulkanShaderModule::~VulkanShaderModule()
-{ }
-
-void VulkanShaderModule::Init(const ShaderType type, const std::string & shaderPath)
+VulkanShaderModule::VulkanShaderModule(const ShaderType type, const std::string & shaderPath)
 {
 	std::string compilerPath = "ThirdParty\\glslangValidator.exe";
 	std::string command = compilerPath + " -V " + shaderPath;
@@ -27,16 +19,16 @@ void VulkanShaderModule::Init(const ShaderType type, const std::string & shaderP
 		return fullPath.substr(lastSlashIndex + 1);
 	};
 	auto ReplaceString = [](std::string subject, const std::string_view& search, const std::string_view& replace)
-	{ 
-		size_t pos = 0; 
-		while ((pos = subject.find(search, pos)) != std::string::npos) 
-		{ 
-			subject.replace(pos, search.length(), replace); 
-			pos += replace.length(); 
-		} 
-		return subject; 
+	{
+		size_t pos = 0;
+		while ((pos = subject.find(search, pos)) != std::string::npos)
+		{
+			subject.replace(pos, search.length(), replace);
+			pos += replace.length();
+		}
+		return subject;
 	};
-	auto RenameAndMoveShaderFile = [=](const std::string& format,const std::string& newFilename) {
+	auto RenameAndMoveShaderFile = [=](const std::string& format, const std::string& newFilename) {
 		namespace fs = std::experimental::filesystem;
 
 		if (!fs::exists("CompileShader/"))
@@ -60,11 +52,11 @@ void VulkanShaderModule::Init(const ShaderType type, const std::string & shaderP
 	};
 
 	std::string shaderFilename = std::string(ExtractFileName(shaderPath));
-	std::string shaderDirectory = ReplaceString(shaderPath, shaderFilename , "");
+	std::string shaderDirectory = ReplaceString(shaderPath, shaderFilename, "");
 	switch (type)
 	{
 	case ShaderType::VERTEX:
-		shaderFilename = RenameAndMoveShaderFile("vert.spv",shaderFilename);
+		shaderFilename = RenameAndMoveShaderFile("vert.spv", shaderFilename);
 		break;
 	case ShaderType::FRAGMENT:
 		shaderFilename = RenameAndMoveShaderFile("frag.spv", shaderFilename);
@@ -72,6 +64,11 @@ void VulkanShaderModule::Init(const ShaderType type, const std::string & shaderP
 	}
 
 	Init(type, ReadCompiledShader(shaderFilename));
+}
+
+VulkanShaderModule::~VulkanShaderModule()
+{
+	vkDestroyShaderModule(VulkanDevice::GetInstance()->GetHandle(), shaderModule, nullptr);
 }
 
 void VulkanShaderModule::Init(const ShaderType type, const std::vector<char>& compileCode)
@@ -87,13 +84,8 @@ void VulkanShaderModule::Init(const ShaderType type, const std::vector<char>& co
 
 	createInfo.pCode = codeAligned.data();
 	
-	VkResult result = vkCreateShaderModule(device->GetHandle(), &createInfo, nullptr, &shaderModule);
+	VkResult result = vkCreateShaderModule(VulkanDevice::GetInstance()->GetHandle(), &createInfo, nullptr, &shaderModule);
 	Check_Throw(result != VK_SUCCESS, "Can't Create ShaderModule!");
-}
-
-void VulkanShaderModule::Shutdown()
-{
-	vkDestroyShaderModule(device->GetHandle(), shaderModule, nullptr);
 }
 
 VkShaderModule VulkanShaderModule::GetHandle() const
