@@ -6,10 +6,13 @@
 
 LK_SPACE_BEGIN
 
-class VulkanBuffer;
+class EntityPool;
 
 class Entity
 {
+	friend class EntityPool;
+private:
+	bool isRemoved;
 protected:
 	glm::vec3 position;
 	glm::vec3 rotation;
@@ -19,6 +22,7 @@ public:
 	virtual ~Entity();
 
 	virtual void Update();
+	virtual void Render();
 
 	virtual glm::vec3 GetPosition() const;
 	virtual glm::vec3 GetRotation() const;

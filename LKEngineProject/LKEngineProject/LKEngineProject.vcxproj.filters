@@ -83,6 +83,11 @@
     <ClCompile Include="Src\Entity.cpp" />
     <ClCompile Include="Src\Camera.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanMaterial.cpp" />
+    <ClCompile Include="Src\SceneManager.cpp" />
+    <ClCompile Include="Src\PipelineManager.cpp" />
+    <ClCompile Include="Src\Scene.cpp" />
+    <ClCompile Include="Src\EntityPool.cpp" />
+    <ClCompile Include="Src\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Header\Application.h">
@@ -151,5 +156,12 @@
     <ClInclude Include="Src\Scene.h" />
     <ClInclude Include="Src\Camera.h" />
     <ClInclude Include="Src\Mesh.h" />
+    <ClInclude Include="Src\SceneManager.h" />
+    <ClInclude Include="Src\EntityPool.h" />
+    <ClInclude Include="Utility\Header\TSingleton.h" />
+    <ClInclude Include="Src\TextureManager.h" />
+    <ClInclude Include="Src\PipelineManager.h" />
+    <ClInclude Include="Src\AssetManager.h" />
+    <ClInclude Include="Src\Time.h" />
   </ItemGroup>
 </Project>

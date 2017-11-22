@@ -3,7 +3,6 @@
 #include <vector>
 #include <set>
 #include <numeric>
-#include <chrono>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -14,15 +13,17 @@
 #include "../Header/VulkanSwapchain.h"
 #include "../Header/VulkanRenderPass.h"
 #include "../Header/VulkanCommandPool.h"
-#include "../Header/VulkanPipeline.h"
-#include "../Header/VulkanDescriptorSetLayout.h"
 #include "../Header/VulkanSemaphore.h"
+
+#include "../../Src/PipelineManager.h"
+#include "../Header/VulkanDescriptorSetLayout.h"
+#include "../Header/VulkanShaderModule.h"
 #include "../Header/VulkanDescriptorPool.h"
 #include "../Header/VulkanDescriptorSet.h"
-#include "../Header/VulkanShaderModule.h"
-
 #include "../Header/VulkanMesh.h"
+#include "../Header/VulkanPipeline.h"
 
+#include "../../Src/Time.h"
 #include "../../Utility/Header/Macro.h"
 #include "../../Window/Header/WindowsWindow.h"
 
@@ -56,13 +57,6 @@ VulkanDevice::~VulkanDevice()
 	SAFE_DELETE(singleCommandPool);
 	SAFE_DELETE(imageAvailableSemaphore);
 	SAFE_DELETE(renderFinishedSemaphore);
-
-	SAFE_DELETE(graphicsPipeline);
-	SAFE_DELETE(descriptorSetLayout);
-	SAFE_DELETE(descriptorPool);
-	SAFE_DELETE(descriptorSet);
-
-	SAFE_DELETE(mesh);
 }
 
 VulkanDevice* VulkanDevice::instance = nullptr;
@@ -102,7 +96,6 @@ void VulkanDevice::Init()
 	imageAvailableSemaphore = new VulkanSemaphore(this);
 	renderFinishedSemaphore = new VulkanSemaphore(this);
 
-	graphicsPipeline = new VulkanGraphicsPipeline();
 	descriptorSetLayout = new VulkanDescriptorSetLayout(this);
 	descriptorPool = new VulkanDescriptorPool(this);
 	descriptorSet = new VulkanDescriptorSet(this);
@@ -121,8 +114,7 @@ void VulkanDevice::Init()
 	CreateSemaphore();
 
 	{
-		mesh = new VulkanMesh();
-		mesh->Init("Models/chalet.obj", "Textures/chalet.jpg");
+		mesh = new VulkanMesh("Models/chalet.obj", "Textures/chalet.jpg");
 	}
 	{
 		descriptorSetLayout->AddDescriptor(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0);
@@ -141,10 +133,7 @@ void VulkanDevice::Init()
 	{
 		auto vertShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
 		auto fragShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::FRAGMENT, "Shader/SimpleShader.frag");
-		graphicsPipeline->Init(
-			vertShader,
-			fragShader
-			, descriptorSetLayout);
+		graphicsPipeline = PipelineManager::GetInstance()->CreateGfxPipeline("Default", descriptorSetLayout, vertShader, fragShader);
 		SAFE_DELETE(vertShader);
 		SAFE_DELETE(fragShader);
 	}
@@ -192,11 +181,14 @@ void VulkanDevice::Shutdown()
 	WaitIdle();
 
 	{
-		mesh->Shutdown();
+		SAFE_DELETE(mesh);
+
 		descriptorPool->Shutdown();
 		descriptorSetLayout->Shutdown();
 
-		graphicsPipeline->Shutdown();
+		SAFE_DELETE(descriptorSetLayout);
+		SAFE_DELETE(descriptorPool);
+		SAFE_DELETE(descriptorSet);
 	}
 
 	imageAvailableSemaphore->Shutdown();
@@ -216,13 +208,8 @@ void VulkanDevice::Shutdown()
 
 void VulkanDevice::Update()
 {
-	static auto startTime = std::chrono::high_resolution_clock::now();
-
-	auto currentTime = std::chrono::high_resolution_clock::now();
-	float time = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime).count() / 1000.0f;
-
 	UniformBufferObject ubo = {};
-	ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.model = glm::rotate(glm::mat4(1.0f), LKEngine::Time::GetTime() * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	ubo.proj = glm::perspective(glm::radians(45.0f), swapchain->GetExtent().width / (float)swapchain->GetExtent().height, 0.1f, 10.0f);
 	ubo.proj[1][1] *= -1;
@@ -282,14 +269,10 @@ void VulkanDevice::ResizeWindow()
 
 	{
 		//그래픽 파이프라인 재 생성
-		graphicsPipeline->Shutdown();
-		SAFE_DELETE(graphicsPipeline);
+		PipelineManager::GetInstance()->ReleasePipeline("Default");
 		auto vertShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
 		auto fragShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::FRAGMENT, "Shader/SimpleShader.frag");
-		graphicsPipeline->Init(
-			vertShader,
-			fragShader
-			, descriptorSetLayout);
+		graphicsPipeline = PipelineManager::GetInstance()->CreateGfxPipeline("Default", descriptorSetLayout, vertShader, fragShader);
 		SAFE_DELETE(vertShader);
 		SAFE_DELETE(fragShader);
 

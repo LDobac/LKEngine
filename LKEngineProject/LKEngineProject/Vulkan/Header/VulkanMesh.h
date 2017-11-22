@@ -20,11 +20,8 @@ private:
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
 public:
-	VulkanMesh();
+	VulkanMesh(std::string meshPath, std::string texPath);
 	~VulkanMesh();
-
-	void Init(std::string meshPath, std::string texPath);
-	void Shutdown();
 
 	const std::vector<Vertex>& GetVertices() const;
 	const std::vector<uint32_t>& GetIndices() const;

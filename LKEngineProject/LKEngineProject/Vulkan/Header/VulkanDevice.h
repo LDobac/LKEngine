@@ -19,13 +19,15 @@ class VulkanSwapchain;
 class VulkanRenderPass;
 class VulkanCommandPool;
 class VulkanSingleCommandPool;
-class VulkanGraphicsPipeline;
-class VulkanDescriptorSetLayout;
 class VulkanSemaphore;
+
+class VulkanMesh;
+class VulkanPipeline;
+class VulkanShaderModule;
+class VulkanDescriptorSetLayout;
 class VulkanDescriptorPool;
 class VulkanDescriptorSet;
-class VulkanMesh;
-	
+
 class VulkanDevice 
 {
 private:
@@ -68,7 +70,7 @@ private:
 	VulkanDescriptorSetLayout* descriptorSetLayout;
 	VulkanDescriptorPool* descriptorPool;
 	VulkanDescriptorSet* descriptorSet;
-	VulkanGraphicsPipeline* graphicsPipeline;
+	VulkanPipeline* graphicsPipeline;
 	VulkanMesh* mesh;
 public:
 	void SetDebugMode(bool debug);

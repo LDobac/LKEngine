@@ -42,12 +42,12 @@ void VulkanTexture::CreateTexture(std::string path, VulkanSingleCommandPool * co
 	}
 
 	VkDeviceSize imageSize = texWidth * texHeight * 4;
-	VulkanBuffer* stagingBuffer = new VulkanBuffer(device);
-	stagingBuffer->Init(
+	VulkanBuffer* stagingBuffer = new VulkanBuffer(
 		imageSize,
 		VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		VK_SHARING_MODE_EXCLUSIVE);
+		VK_SHARING_MODE_EXCLUSIVE
+	);
 	stagingBuffer->Map(pixels);
 
 	stbi_image_free(pixels);
@@ -63,7 +63,6 @@ void VulkanTexture::CreateTexture(std::string path, VulkanSingleCommandPool * co
 	CopyBufferToImage(stagingBuffer, this, commandPool);
 	TransitionLayout(commandPool, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
-	stagingBuffer->Shutdown();
 	SAFE_DELETE(stagingBuffer);
 }
 

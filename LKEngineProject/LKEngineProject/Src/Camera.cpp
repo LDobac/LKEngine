@@ -6,6 +6,8 @@
 #include "../Vulkan/Header/VulkanDevice.h"
 #include "../Vulkan/Header/VulkanSwapchain.h"
 
+#include "../Vulkan/Header/VulkanBuffer.h"
+
 USING_LK_SPACE
 
 Camera::Camera()
@@ -17,6 +19,10 @@ Camera::Camera()
 
 Camera::~Camera()
 { }
+
+void Camera::Update()
+{
+}
 
 glm::mat4 Camera::GetViewMatrix()
 {

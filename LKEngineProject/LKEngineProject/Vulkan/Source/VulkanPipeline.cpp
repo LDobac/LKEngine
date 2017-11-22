@@ -10,13 +10,13 @@
 
 USING_LK_VULKAN_SPACE
 
-VulkanPipeline::VulkanPipeline(VulkanDevice * device)
-	:VulkanDeviceChild(device),
+VulkanPipeline::VulkanPipeline()
+	:VulkanDeviceChild(VulkanDevice::GetInstance()),
 	pipeline(VK_NULL_HANDLE)
 {
 }
 
-void VulkanPipeline::Shutdown()
+VulkanPipeline::~VulkanPipeline()
 {
 	if (pipeline != VK_NULL_HANDLE)
 	{
@@ -35,12 +35,7 @@ const VkPipelineLayout & VulkanPipeline::GetLayout() const
 	return pipelineLayout;
 }
 
-VulkanGraphicsPipeline::VulkanGraphicsPipeline()
-	: VulkanPipeline(VulkanDevice::GetInstance())
-{
-}
-
-void VulkanGraphicsPipeline::Init(VulkanShaderModule* vertShader, VulkanShaderModule* fragShader, VulkanDescriptorSetLayout* descriptorSetLayout)
+VulkanGraphicsPipeline::VulkanGraphicsPipeline(VulkanShaderModule * vertShader, VulkanShaderModule * fragShader, VulkanDescriptorSetLayout * descriptorSetLayout)
 {
 	VkPipelineShaderStageCreateInfo vertShaderStageInfo = {};
 	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -107,7 +102,7 @@ void VulkanGraphicsPipeline::Init(VulkanShaderModule* vertShader, VulkanShaderMo
 	multisampling.sampleShadingEnable = VK_FALSE;
 	multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 
-	
+
 	VkPipelineDepthStencilStateCreateInfo depthStencil = {};
 	depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 	depthStencil.depthTestEnable = VK_TRUE;
@@ -115,7 +110,7 @@ void VulkanGraphicsPipeline::Init(VulkanShaderModule* vertShader, VulkanShaderMo
 	depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
 	depthStencil.depthBoundsTestEnable = VK_FALSE;
 	depthStencil.stencilTestEnable = VK_FALSE;
-	
+
 	VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
 	colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 	colorBlendAttachment.blendEnable = VK_FALSE;
@@ -155,4 +150,8 @@ void VulkanGraphicsPipeline::Init(VulkanShaderModule* vertShader, VulkanShaderMo
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
 	Check_Throw(vkCreateGraphicsPipelines(device->GetHandle(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipeline) != VK_SUCCESS, "그래픽 파이프라인 생성 실패");
+}
+
+VulkanGraphicsPipeline::~VulkanGraphicsPipeline()
+{
 }

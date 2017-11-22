@@ -12,6 +12,10 @@ void Entity::Update()
 {
 }
 
+void Entity::Render()
+{
+}
+
 glm::vec3 Entity::GetPosition() const
 {
 	return position;

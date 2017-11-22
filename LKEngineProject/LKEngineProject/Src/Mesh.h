@@ -8,6 +8,7 @@ namespace Vulkan
 {
 	class VulkanBuffer;
 	class VulkanMaterial;
+	class VulkanDescriptorSet;
 }
 
 class Mesh
@@ -17,6 +18,7 @@ private:
 	Vulkan::VulkanBuffer* vertexBuffer;
 	Vulkan::VulkanBuffer* indexBuffer;
 	Vulkan::VulkanBuffer* uniformBuffer;
+	Vulkan::VulkanDescriptorSet* descriptorSet;
 	Vulkan::VulkanMaterial* material;
 };
 

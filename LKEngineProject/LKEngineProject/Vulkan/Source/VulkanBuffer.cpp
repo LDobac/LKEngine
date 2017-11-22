@@ -5,13 +5,10 @@
 
 USING_LK_VULKAN_SPACE
 
-VulkanBuffer::VulkanBuffer(VulkanDevice * device)
-	:VulkanDeviceChild(device)
-{ }
-
-void VulkanBuffer::Init(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkSharingMode sharingMode)
+VulkanBuffer::VulkanBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkSharingMode sharingMode)
+	:VulkanDeviceChild(VulkanDevice::GetInstance())
 {
-	VkBufferCreateInfo info = { };
+	VkBufferCreateInfo info = {};
 	info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 	info.size = size;
 	info.usage = usage;
@@ -22,8 +19,8 @@ void VulkanBuffer::Init(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPro
 
 	VkMemoryRequirements memRequirements;
 	vkGetBufferMemoryRequirements(device->GetHandle(), buffer, &memRequirements);
-	
-	VkMemoryAllocateInfo allocInfo = { };
+
+	VkMemoryAllocateInfo allocInfo = {};
 	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	allocInfo.allocationSize = memRequirements.size;
 	allocInfo.memoryTypeIndex = device->FindMemoryType(memRequirements.memoryTypeBits, properties);
@@ -32,7 +29,7 @@ void VulkanBuffer::Init(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPro
 	vkBindBufferMemory(device->GetHandle(), buffer, bufferMemory, 0);
 }
 
-void VulkanBuffer::Shutdown()
+VulkanBuffer::~VulkanBuffer()
 {
 	vkDestroyBuffer(device->GetHandle(), buffer, nullptr);
 	vkFreeMemory(device->GetHandle(), bufferMemory, nullptr);

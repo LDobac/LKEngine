@@ -16,9 +16,8 @@ protected:
 	VkPipeline pipeline;
 	VkPipelineLayout pipelineLayout;
 public:
-	explicit VulkanPipeline(VulkanDevice* device);
-
-	virtual void Shutdown();
+	explicit VulkanPipeline();
+	virtual ~VulkanPipeline();
 
 	const VkPipeline& GetHandle() const;
 	const VkPipelineLayout& GetLayout() const;
@@ -28,9 +27,8 @@ class VulkanGraphicsPipeline
 	: public VulkanPipeline
 {
 public:
-	explicit VulkanGraphicsPipeline();
-
-	void Init(VulkanShaderModule* vertShader, VulkanShaderModule* fragShader, VulkanDescriptorSetLayout* descriptorSetLayout);
+	explicit VulkanGraphicsPipeline(VulkanShaderModule* vertShader, VulkanShaderModule* fragShader, VulkanDescriptorSetLayout* descriptorSetLayout);
+	virtual ~VulkanGraphicsPipeline();
 };
 
 LK_VULKAN_SPACE_END

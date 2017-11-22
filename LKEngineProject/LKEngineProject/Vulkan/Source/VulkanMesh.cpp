@@ -8,21 +8,7 @@
 
 USING_LK_VULKAN_SPACE
 
-VulkanMesh::VulkanMesh()
-{
-	vertexBuffer = new VulkanBuffer(VulkanDevice::GetInstance());
-	indexBuffer = new VulkanBuffer(VulkanDevice::GetInstance());
-	uniformBuffer = new VulkanBuffer(VulkanDevice::GetInstance());
-}
-
-VulkanMesh::~VulkanMesh()
-{
-	SAFE_DELETE(vertexBuffer);
-	SAFE_DELETE(indexBuffer);
-	SAFE_DELETE(uniformBuffer);
-}
-
-void VulkanMesh::Init(std::string meshPath, std::string texPath)
+VulkanMesh::VulkanMesh(std::string meshPath, std::string texPath)
 {
 	LoadModel(meshPath);
 	LoadTexture(texPath);
@@ -31,12 +17,12 @@ void VulkanMesh::Init(std::string meshPath, std::string texPath)
 	CreateUniformBuffer();
 }
 
-void VulkanMesh::Shutdown()
+VulkanMesh::~VulkanMesh()
 {
-	vertexBuffer->Shutdown();
-	indexBuffer->Shutdown();
-	uniformBuffer->Shutdown();
 	SAFE_DELETE(texture);
+	SAFE_DELETE(vertexBuffer);
+	SAFE_DELETE(indexBuffer);
+	SAFE_DELETE(uniformBuffer);
 }
 
 const std::vector<Vertex>& VulkanMesh::GetVertices() const
@@ -116,27 +102,29 @@ void VulkanMesh::LoadTexture(std::string texPath)
 
 void VulkanMesh::CreateVertexBuffer(VulkanSingleCommandPool* commandPool)
 {
-	vertexBuffer->Init(
+	vertexBuffer = new VulkanBuffer(
 		sizeof(Vertex) * vertices.size(),
 		VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		VK_SHARING_MODE_EXCLUSIVE);
+		VK_SHARING_MODE_EXCLUSIVE
+	);
 	vertexBuffer->CopyLocalMemory(vertices.data(), commandPool);
 }
 
 void VulkanMesh::CreateIndexBuffer(VulkanSingleCommandPool* commandPool)
 {
-	indexBuffer->Init(
+	indexBuffer = new VulkanBuffer(
 		sizeof(indices[0])  * indices.size(),
 		VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		VK_SHARING_MODE_EXCLUSIVE);
+		VK_SHARING_MODE_EXCLUSIVE
+	);
 	indexBuffer->CopyLocalMemory(indices.data(), commandPool);
 }
 
 void VulkanMesh::CreateUniformBuffer()
 {
-	uniformBuffer->Init(
+	uniformBuffer = new VulkanBuffer(
 		sizeof(UniformBufferObject),
 		VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
