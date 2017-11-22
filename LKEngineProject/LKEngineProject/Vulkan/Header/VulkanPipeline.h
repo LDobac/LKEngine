@@ -39,6 +39,18 @@ public:
 	virtual ~VulkanGraphicsPipeline();
 
 	virtual void Recreate() override;
+
+private:
+	void CreatePipelineLayout();
+
+	VkPipelineShaderStageCreateInfo ShaderStageInfo(VkShaderStageFlagBits stage, const VulkanShaderModule* module);
+	VkPipelineVertexInputStateCreateInfo VertexInputInfo(const VkVertexInputBindingDescription& bindingDescription, const std::vector<VkVertexInputAttributeDescription>& attributeDescription);
+	VkPipelineInputAssemblyStateCreateInfo InputAssemblyInfo(const VkPrimitiveTopology& topology);
+	VkPipelineViewportStateCreateInfo ViewportStateInfo(const VkViewport& viewport, const VkRect2D& scissor);
+	VkPipelineRasterizationStateCreateInfo RasterizerInfo(const VkCullModeFlags& cullmode, const VkFrontFace& frontface);
+	VkPipelineMultisampleStateCreateInfo MultisamplingInfo();
+	VkPipelineDepthStencilStateCreateInfo DepthStencilInfo();
+	VkPipelineColorBlendStateCreateInfo ColorBlendingInfo(const VkPipelineColorBlendAttachmentState& attachment);
 };
 
 LK_VULKAN_SPACE_END
