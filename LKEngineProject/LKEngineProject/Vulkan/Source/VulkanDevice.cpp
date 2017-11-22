@@ -231,7 +231,7 @@ void VulkanDevice::Draw()
 	}
 	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
 	{
-		throw std::runtime_error("���� ü�� �̹��� ��û ����");
+		throw std::runtime_error("스왑체인 이미지 가져오기 실패");
 	}
 
 	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
@@ -243,7 +243,6 @@ void VulkanDevice::ResizeWindow()
 {
 	WaitIdle();
 
-	//���� ü�� �� ����
 	VulkanSwapchain* newSwapchain = new VulkanSwapchain(this, window);
 	newSwapchain->Init(gpu, surface, queueIndices, swapchain);
 	newSwapchain->InitDepthBuffer(singleCommandPool);
@@ -251,25 +250,20 @@ void VulkanDevice::ResizeWindow()
 	SAFE_DELETE(swapchain);
 	swapchain = newSwapchain;
 
-	//���� �н� �� ����
 	renderPass->Shutdown();
 	SAFE_DELETE(renderPass);
 	renderPass = new VulkanRenderPass(this);
 	renderPass->Init(swapchain);
 
-	//������ ���� �� ����
 	swapchain->InitDepthBuffer(singleCommandPool);
 	swapchain->CreateFrameBuffers(renderPass);
 
-	//��� ���� �� �Ҵ�
 	commandPool->FreeBuffers();
 	commandPool->AllocBuffers(swapchain->GetFrameBuffers().size());
 
 	{
-		//�׷��� ���������� �� ����
 		PipelineManager::GetInstance()->RecreatePipelines();
 
-		//Ŀ�ǵ� ���� �ٽ� ���
 		std::vector<VkClearValue> clearValues(2);
 		clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
 		clearValues[1].depthStencil = { 1.0f, 0 };
@@ -330,7 +324,7 @@ VkFormat VulkanDevice::FindSupportedFormat(const std::vector<VkFormat>& candidat
 		}
 	}
 
-	Check_Throw(true, "�����Ǵ� ������ ã�� �� �����ϴ�!");
+	Check_Throw(true, "포맷 찾기 실패");
 }
 
 uint32_t VulkanDevice::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
@@ -387,7 +381,7 @@ void VulkanDevice::InitInstance()
 void VulkanDevice::InitSurface()
 {
 	VkResult result = glfwCreateWindowSurface(vulkanInstance->GetHandle(), window->GetWindowHandle(), nullptr, &surface);
-	Check_Throw(result != VK_SUCCESS, "Surface�� �������� �ʾҽ��ϴ�!");
+	Check_Throw(result != VK_SUCCESS, "Surface 생성 실패");
 }
 
 void VulkanDevice::RequireGPU()
@@ -398,7 +392,7 @@ void VulkanDevice::RequireGPU()
 	std::vector<VkPhysicalDevice> devices(deviceCount);
 	vkEnumeratePhysicalDevices(vulkanInstance->GetHandle(), &deviceCount, devices.data());
 
-	//TODO : ���Ŀ� ��� ������ GPU�� �ټ� �ϰ�� ���߿��� ���� ������ GPU�� �����ϵ��� ����
+	//TODO : GPU가 여러개 일경우 그중 가장 좋은 GPU 고르기
 	for (auto device : devices)
 	{
 		if (CheckDeviceFeatures(device))
@@ -408,7 +402,7 @@ void VulkanDevice::RequireGPU()
 		}
 	}
 
-	Check_Throw(gpu == VK_NULL_HANDLE, "��� ������ �׷��� ī�尡 �����ϴ�");
+	Check_Throw(gpu == VK_NULL_HANDLE, "GPU 탐색 실패");
 
 	vkGetPhysicalDeviceProperties(gpu, &gpuProp);
 	auto GetDeviceTypeString = [&]()-> std::string {
@@ -437,7 +431,7 @@ void VulkanDevice::RequireGPU()
 		return str;
 	};
 
-	Console_Log("�׷��� ī�� ���� : ");
+	Console_Log("GPU 정보 : ");
 	Console_Log_Format("API : 0x%x , Driver : 0x%x , VecdorID : 0x%x", gpuProp.apiVersion, gpuProp.driverVersion, gpuProp.vendorID);
 	Console_Log_Format("Name \"%s\" , DeviceID : 0x%x , Type \"%s\"", gpuProp.deviceName, gpuProp.deviceID, GetDeviceTypeString().c_str());
 	Console_Log_Format("Max Descriptor Sets Bound : %d , Timestamps : %d", gpuProp.limits.maxBoundDescriptorSets, gpuProp.limits.timestampComputeAndGraphics);
@@ -450,7 +444,7 @@ void VulkanDevice::InitDevice()
 	std::set<int> uniqueQueueFamilies = { queueIndices.graphicsFamily,queueIndices.presentFamily };
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 
-	//TODO : ���߿� ť�� ������ ������� ó�� �� ť�� �켱 ���� ����
+	//TODO : Queue가 여러개시 우선순위로 큐 지정
 	float queuePriority = 1.0f;
 	for (size_t i = 0; i < uniqueQueueFamilies.size(); i++)
 	{
@@ -463,7 +457,7 @@ void VulkanDevice::InitDevice()
 		queueCreateInfos.push_back(queueCreateInfo);
 	}
 
-	//TODO : ����� GPU�� ����� �����Ѵ�.
+	//TODO : GPU 기능 더 확인하기
 	VkPhysicalDeviceFeatures deviceFeatures = {};
 	deviceFeatures.samplerAnisotropy = VK_TRUE;
 
@@ -488,7 +482,7 @@ void VulkanDevice::InitDevice()
 		deviceCreateInfo.enabledLayerCount = 0;
 	}
 
-	Check_Throw(vkCreateDevice(gpu, &deviceCreateInfo, nullptr, &vkDevice) != VK_SUCCESS, "����̽� ���� ����!");
+	Check_Throw(vkCreateDevice(gpu, &deviceCreateInfo, nullptr, &vkDevice) != VK_SUCCESS, "Vulkan Device 생성 실패");
 }
 
 void VulkanDevice::CreateQueue()
