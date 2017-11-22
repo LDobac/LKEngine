@@ -28,7 +28,7 @@ class VulkanDescriptorSetLayout;
 class VulkanDescriptorPool;
 class VulkanDescriptorSet;
 
-class VulkanDevice 
+class VulkanDevice
 {
 private:
 	static VulkanDevice* instance;
@@ -70,7 +70,6 @@ private:
 	VulkanDescriptorSetLayout* descriptorSetLayout;
 	VulkanDescriptorPool* descriptorPool;
 	VulkanDescriptorSet* descriptorSet;
-	VulkanPipeline* graphicsPipeline;
 	VulkanMesh* mesh;
 public:
 	void SetDebugMode(bool debug);

@@ -1,4 +1,4 @@
-#include "../Header/VulkanDevice.h"
+ï»¿#include "../Header/VulkanDevice.h"
 
 #include <vector>
 #include <set>
@@ -133,9 +133,7 @@ void VulkanDevice::Init()
 	{
 		auto vertShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
 		auto fragShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::FRAGMENT, "Shader/SimpleShader.frag");
-		graphicsPipeline = PipelineManager::GetInstance()->CreateGfxPipeline("Default", descriptorSetLayout, vertShader, fragShader);
-		SAFE_DELETE(vertShader);
-		SAFE_DELETE(fragShader);
+		PipelineManager::GetInstance()->CreateGfxPipeline("Default", descriptorSetLayout, vertShader, fragShader);
 	}
 	{
 		std::vector<VkClearValue> clearValues(2);
@@ -152,7 +150,7 @@ void VulkanDevice::Init()
 			commandPool->RecordBegin(i, VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT);
 			renderPass->Begin(clearValues, framebuffers[i], extent, commandBuffer);
 
-			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetHandle());
+			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetInstance()->GetPipeline("Default")->GetHandle());
 
 			VkBuffer vertexBuffers[] = {
 				mesh->GetVertexBuffer()->GetBuffer()
@@ -163,7 +161,7 @@ void VulkanDevice::Init()
 
 			vkCmdBindDescriptorSets(commandBuffer,
 				VK_PIPELINE_BIND_POINT_GRAPHICS,
-				graphicsPipeline->GetLayout(),
+				PipelineManager::GetInstance()->GetPipeline("Default")->GetLayout(),
 				0, 1,
 				&descriptorSet->GetHandle(),
 				0, nullptr);
@@ -221,9 +219,9 @@ void VulkanDevice::Draw()
 	presentQueue->WaitIdle();
 
 	uint32_t imageIndex = 0;
-	VkResult result = vkAcquireNextImageKHR(vkDevice, swapchain->GetHandle(), 
+	VkResult result = vkAcquireNextImageKHR(vkDevice, swapchain->GetHandle(),
 		std::numeric_limits<uint64_t>::max(),
-		imageAvailableSemaphore->GetHandle(), 
+		imageAvailableSemaphore->GetHandle(),
 		VK_NULL_HANDLE,
 		&imageIndex);
 	if (result == VK_ERROR_OUT_OF_DATE_KHR)
@@ -233,7 +231,7 @@ void VulkanDevice::Draw()
 	}
 	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
 	{
-		throw std::runtime_error("½º¿Ò Ã¼ÀÎ ÀÌ¹ÌÁö ¿äÃ» ½ÇÆÐ");
+		throw std::runtime_error("ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½Ã» ï¿½ï¿½ï¿½ï¿½");
 	}
 
 	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
@@ -245,7 +243,7 @@ void VulkanDevice::ResizeWindow()
 {
 	WaitIdle();
 
-	//½º¿Ò Ã¼ÀÎ Àç »ý¼º
+	//ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	VulkanSwapchain* newSwapchain = new VulkanSwapchain(this, window);
 	newSwapchain->Init(gpu, surface, queueIndices, swapchain);
 	newSwapchain->InitDepthBuffer(singleCommandPool);
@@ -253,30 +251,25 @@ void VulkanDevice::ResizeWindow()
 	SAFE_DELETE(swapchain);
 	swapchain = newSwapchain;
 
-	//·»´õ ÆÐ½º Àç »ý¼º
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½Ð½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	renderPass->Shutdown();
 	SAFE_DELETE(renderPass);
 	renderPass = new VulkanRenderPass(this);
 	renderPass->Init(swapchain);
 
-	//ÇÁ·¹ÀÓ ¹öÆÛ Àç »ý¼º
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	swapchain->InitDepthBuffer(singleCommandPool);
 	swapchain->CreateFrameBuffers(renderPass);
 
-	//¸í·É ¹öÆÛ Àç ÇÒ´ç
+	//ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ò´ï¿½
 	commandPool->FreeBuffers();
 	commandPool->AllocBuffers(swapchain->GetFrameBuffers().size());
 
 	{
-		//±×·¡ÇÈ ÆÄÀÌÇÁ¶óÀÎ Àç »ý¼º
-		PipelineManager::GetInstance()->ReleasePipeline("Default");
-		auto vertShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
-		auto fragShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::FRAGMENT, "Shader/SimpleShader.frag");
-		graphicsPipeline = PipelineManager::GetInstance()->CreateGfxPipeline("Default", descriptorSetLayout, vertShader, fragShader);
-		SAFE_DELETE(vertShader);
-		SAFE_DELETE(fragShader);
+		//ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		PipelineManager::GetInstance()->RecreatePipelines();
 
-		//Ä¿¸Çµå ¹öÆÛ ´Ù½Ã ±â·Ï
+		//Ä¿ï¿½Çµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½
 		std::vector<VkClearValue> clearValues(2);
 		clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
 		clearValues[1].depthStencil = { 1.0f, 0 };
@@ -291,7 +284,7 @@ void VulkanDevice::ResizeWindow()
 			commandPool->RecordBegin(i, VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT);
 			renderPass->Begin(clearValues, framebuffers[i], extent, commandBuffer);
 
-			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->GetHandle());
+			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetInstance()->GetPipeline("Default")->GetHandle());
 
 			VkBuffer vertexBuffers[] = {
 				mesh->GetVertexBuffer()->GetBuffer()
@@ -302,7 +295,7 @@ void VulkanDevice::ResizeWindow()
 
 			vkCmdBindDescriptorSets(commandBuffer,
 				VK_PIPELINE_BIND_POINT_GRAPHICS,
-				graphicsPipeline->GetLayout(),
+				PipelineManager::GetInstance()->GetPipeline("Default")->GetLayout(),
 				0, 1,
 				&descriptorSet->GetHandle(),
 				0, nullptr);
@@ -322,22 +315,22 @@ void VulkanDevice::WaitIdle()
 
 VkFormat VulkanDevice::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
 {
-	for (VkFormat format : candidates) 
+	for (VkFormat format : candidates)
 	{
 		VkFormatProperties props;
 		vkGetPhysicalDeviceFormatProperties(gpu, format, &props);
 
-		if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features) 
+		if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features)
 		{
 			return format;
 		}
-		else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features) 
+		else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features)
 		{
 			return format;
 		}
 	}
 
-	Check_Throw(true, "Áö¿øµÇ´Â Æ÷¸ËÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù!");
+	Check_Throw(true, "ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
 }
 
 uint32_t VulkanDevice::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
@@ -345,9 +338,9 @@ uint32_t VulkanDevice::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags
 	VkPhysicalDeviceMemoryProperties memProperties;
 	vkGetPhysicalDeviceMemoryProperties(gpu, &memProperties);
 
-	for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) 
+	for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++)
 	{
-		if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties) 
+		if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
 		{
 			return i;
 		}
@@ -394,7 +387,7 @@ void VulkanDevice::InitInstance()
 void VulkanDevice::InitSurface()
 {
 	VkResult result = glfwCreateWindowSurface(vulkanInstance->GetHandle(), window->GetWindowHandle(), nullptr, &surface);
-	Check_Throw(result != VK_SUCCESS, "Surface°¡ »ý¼ºµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+	Check_Throw(result != VK_SUCCESS, "Surfaceï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½!");
 }
 
 void VulkanDevice::RequireGPU()
@@ -405,7 +398,7 @@ void VulkanDevice::RequireGPU()
 	std::vector<VkPhysicalDevice> devices(deviceCount);
 	vkEnumeratePhysicalDevices(vulkanInstance->GetHandle(), &deviceCount, devices.data());
 
-	//TODO : Â÷ÈÄ¿¡ »ç¿ë °¡´ÉÇÑ GPU°¡ ´Ù¼ö ÀÏ°æ¿ì ±×Áß¿¡¼­ °¡Àå ÀûÇÕÇÑ GPU¸¦ ¼±ÅÃÇÏµµ·Ï º¯°æ
+	//TODO : ï¿½ï¿½ï¿½Ä¿ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GPUï¿½ï¿½ ï¿½Ù¼ï¿½ ï¿½Ï°ï¿½ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GPUï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	for (auto device : devices)
 	{
 		if (CheckDeviceFeatures(device))
@@ -415,7 +408,7 @@ void VulkanDevice::RequireGPU()
 		}
 	}
 
-	Check_Throw(gpu == VK_NULL_HANDLE, "»ç¿ë °¡´ÉÇÑ ±×·¡ÇÈ Ä«µå°¡ ¾ø½À´Ï´Ù");
+	Check_Throw(gpu == VK_NULL_HANDLE, "ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ Ä«ï¿½å°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½");
 
 	vkGetPhysicalDeviceProperties(gpu, &gpuProp);
 	auto GetDeviceTypeString = [&]()-> std::string {
@@ -444,7 +437,7 @@ void VulkanDevice::RequireGPU()
 		return str;
 	};
 
-	Console_Log("±×·¡ÇÈ Ä«µå Á¤º¸ : ");
+	Console_Log("ï¿½×·ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ : ");
 	Console_Log_Format("API : 0x%x , Driver : 0x%x , VecdorID : 0x%x", gpuProp.apiVersion, gpuProp.driverVersion, gpuProp.vendorID);
 	Console_Log_Format("Name \"%s\" , DeviceID : 0x%x , Type \"%s\"", gpuProp.deviceName, gpuProp.deviceID, GetDeviceTypeString().c_str());
 	Console_Log_Format("Max Descriptor Sets Bound : %d , Timestamps : %d", gpuProp.limits.maxBoundDescriptorSets, gpuProp.limits.timestampComputeAndGraphics);
@@ -457,7 +450,7 @@ void VulkanDevice::InitDevice()
 	std::set<int> uniqueQueueFamilies = { queueIndices.graphicsFamily,queueIndices.presentFamily };
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 
-	//TODO : ³ªÁß¿¡ Å¥°¡ ¿©·¯°³ ÀÖÀ»°æ¿ì Ã³¸® ¹× Å¥ÀÇ ¿ì¼± ¼øÀÇ ¼³Á¤
+	//TODO : ï¿½ï¿½ï¿½ß¿ï¿½ Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ Å¥ï¿½ï¿½ ï¿½ì¼± ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	float queuePriority = 1.0f;
 	for (size_t i = 0; i < uniqueQueueFamilies.size(); i++)
 	{
@@ -470,7 +463,7 @@ void VulkanDevice::InitDevice()
 		queueCreateInfos.push_back(queueCreateInfo);
 	}
 
-	//TODO : »ç¿ëÇÒ GPUÀÇ ±â´ÉÀ» ÁöÁ¤ÇÑ´Ù.
+	//TODO : ï¿½ï¿½ï¿½ï¿½ï¿½ GPUï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 	VkPhysicalDeviceFeatures deviceFeatures = {};
 	deviceFeatures.samplerAnisotropy = VK_TRUE;
 
@@ -495,7 +488,7 @@ void VulkanDevice::InitDevice()
 		deviceCreateInfo.enabledLayerCount = 0;
 	}
 
-	Check_Throw(vkCreateDevice(gpu, &deviceCreateInfo, nullptr, &vkDevice) != VK_SUCCESS, "µð¹ÙÀÌ½º »ý¼º ½ÇÆÐ!");
+	Check_Throw(vkCreateDevice(gpu, &deviceCreateInfo, nullptr, &vkDevice) != VK_SUCCESS, "ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
 }
 
 void VulkanDevice::CreateQueue()
@@ -552,7 +545,7 @@ bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
 		bool deviceExtensionSupport = extension.CheckDeviceExtensionSupport(device);
 		bool swapSupport = supportDetail.CheckSwapchainAdequate();
 
-		//MEMO : Â÷ÈÄ¿¡ GPU°¡ ¾î¶² ±â´ÉÀ» »ç¿ëÇØ¾ß ÇÏ´ÂÁö¿¡ ´ëÇØ È®ÀÎ ÇÒ ¼ö ÀÖÀ½
+		//MEMO : ï¿½ï¿½ï¿½Ä¿ï¿½ GPUï¿½ï¿½ ï¿½î¶² ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		VkPhysicalDeviceFeatures supportedFeatures;
 		vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
 		bool deviceFeatureSupport = supportedFeatures.samplerAnisotropy;

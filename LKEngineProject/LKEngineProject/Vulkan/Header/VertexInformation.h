@@ -34,9 +34,9 @@ struct VertexInformation
 		return bindingDescription;
 	}
 
-	static std::array<VkVertexInputAttributeDescription, 3> AttributeDescription()
+	static std::vector<VkVertexInputAttributeDescription> AttributeDescription()
 	{
-		std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions = {};
+		std::vector<VkVertexInputAttributeDescription> attributeDescriptions(3);
 
 		attributeDescriptions[0].binding = 0;
 		attributeDescriptions[0].location = 0;

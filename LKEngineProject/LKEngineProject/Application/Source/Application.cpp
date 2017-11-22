@@ -14,6 +14,7 @@ using namespace LKEngine::Application;
 
 Application::Application(const int windowWidth, const int windowHeight)
 {
+	Console_Log("초기화 시작");
 	window = new Window::WindowsWindow(windowWidth,windowHeight);
 	device = Vulkan::VulkanDevice::GetInstance();
 
@@ -24,6 +25,8 @@ Application::Application(const int windowWidth, const int windowHeight)
 	device->Init();
 
 	LKEngine::Time::Start();
+	Console_Log("초기화 성공");
+
 }
 
 Application::~Application()

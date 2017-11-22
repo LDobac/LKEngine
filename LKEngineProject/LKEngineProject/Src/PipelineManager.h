@@ -24,7 +24,9 @@ public:
 
 	void AddPipeline(const std::string& key, Vulkan::VulkanPipeline* pipeline);
 
-	Vulkan::VulkanPipeline* CreateGfxPipeline(const std::string& key, Vulkan::VulkanDescriptorSetLayout* setLayout,Vulkan::VulkanShaderModule* vertShader, Vulkan::VulkanShaderModule* fragShader);
+	Vulkan::VulkanPipeline* CreateGfxPipeline(const std::string& key, Vulkan::VulkanDescriptorSetLayout* setLayout, Vulkan::VulkanShaderModule* vertShader, Vulkan::VulkanShaderModule* fragShader);
+
+	void RecreatePipelines();
 
 	void ReleasePipeline(const std::string& key);
 	void ReleaseAll();

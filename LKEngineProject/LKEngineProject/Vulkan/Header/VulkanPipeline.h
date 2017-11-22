@@ -19,6 +19,10 @@ public:
 	explicit VulkanPipeline();
 	virtual ~VulkanPipeline();
 
+	virtual void Recreate();
+
+	void ReleasePipeline();
+
 	const VkPipeline& GetHandle() const;
 	const VkPipelineLayout& GetLayout() const;
 };
@@ -26,9 +30,15 @@ public:
 class VulkanGraphicsPipeline
 	: public VulkanPipeline
 {
+private:
+	VulkanShaderModule* vertShader;
+	VulkanShaderModule* fragShader;
+	VulkanDescriptorSetLayout* descriptorSetLayout;
 public:
 	explicit VulkanGraphicsPipeline(VulkanShaderModule* vertShader, VulkanShaderModule* fragShader, VulkanDescriptorSetLayout* descriptorSetLayout);
 	virtual ~VulkanGraphicsPipeline();
+
+	virtual void Recreate() override;
 };
 
 LK_VULKAN_SPACE_END

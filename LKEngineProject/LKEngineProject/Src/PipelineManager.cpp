@@ -28,6 +28,14 @@ Vulkan::VulkanPipeline * PipelineManager::CreateGfxPipeline(const std::string& k
 	return gfxPipeline;
 }
 
+void PipelineManager::RecreatePipelines()
+{
+	for (auto pipeline : pipelines)
+	{
+		pipeline.second->Recreate();
+	}
+}
+
 void PipelineManager::ReleasePipeline(const std::string & key)
 {
 	SAFE_DELETE(pipelines.at(key));
