@@ -12,12 +12,11 @@ private:
 
 	std::vector<VkDescriptorPoolSize> poolSizes;
 public:
-	explicit VulkanDescriptorPool(VulkanDevice* device);
+	explicit VulkanDescriptorPool();
+	~VulkanDescriptorPool();
 
 	void AddPoolSize(VkDescriptorType type,size_t descriptorCount);
 	void CreatePool(size_t maxSets = 1);
-
-	void Shutdown();
 
 	const VkDescriptorPool& GetHandle() const;
 };

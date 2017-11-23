@@ -6,10 +6,12 @@
 
 LK_SPACE_BEGIN
 
+class Camera;
+
 class Scene
 {
 protected:
-
+	Camera* mainCamera;
 public:
 	explicit Scene();
 	virtual ~Scene();
@@ -17,6 +19,8 @@ public:
 	virtual void Start();
 	virtual void Update();
 	virtual void End();
+
+	Camera* GetMainCamera() const;
 };
 
 LK_SPACE_END

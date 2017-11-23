@@ -18,9 +18,7 @@ private:
 
 	std::vector<VkWriteDescriptorSet> descriptorWrites;
 public:
-	explicit VulkanDescriptorSet(VulkanDevice* device);
-
-	void Init(VulkanDescriptorSetLayout* setLayout, VulkanDescriptorPool* pool);
+	explicit VulkanDescriptorSet(VulkanDescriptorSetLayout* setLayout, VulkanDescriptorPool* pool);
 
 	void AddBufferInfo(VkDescriptorType type, VulkanBuffer* buffer, size_t offset, uint32_t binding);
 	void AddTextureInfo(VkDescriptorType type, VulkanTexture* texture, uint32_t binding);

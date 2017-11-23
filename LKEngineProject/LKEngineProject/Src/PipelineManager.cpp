@@ -3,11 +3,17 @@
 #include "../Vulkan/Header/VulkanPipeline.h"
 #include "../Vulkan/Header/VulkanShaderModule.h"
 #include "../Vulkan/Header/VulkanDescriptorSetLayout.h"
+#include "../Vulkan/Header/VulkanShaderModule.h"
+
+#include "EntityPool.h"
 
 USING_LK_SPACE
 
 PipelineManager::PipelineManager()
 {
+	auto vertShader = new Vulkan::VulkanShaderModule(Vulkan::VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
+	auto fragShader = new Vulkan::VulkanShaderModule(Vulkan::VulkanShaderModule::ShaderType::FRAGMENT, "Shader/SimpleShader.frag");
+	CreateGfxPipeline("Default", EntityPool::GetInstance()->GetDescriptorSetLayout(), vertShader, fragShader);
 }
 
 PipelineManager::~PipelineManager()

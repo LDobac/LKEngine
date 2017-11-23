@@ -12,6 +12,8 @@
 
 using namespace LKEngine::Application;
 
+#include "../../Source/TestScene.h"
+
 Application::Application(const int windowWidth, const int windowHeight)
 {
 	Console_Log("초기화 시작");
@@ -25,6 +27,9 @@ Application::Application(const int windowWidth, const int windowHeight)
 	device->Init();
 
 	LKEngine::Time::Start();
+
+	SceneManager::GetInstance()->Start(new TestScene());
+
 	Console_Log("초기화 성공");
 
 }
@@ -33,8 +38,10 @@ Application::~Application()
 {
 	device->WaitIdle();
 
-	PipelineManager::Release();
 	SceneManager::Release();
+	EntityPool::Release();
+	PipelineManager::Release();
+	
 
 	Vulkan::VulkanDevice::Release();
 	window->Shutdown();
@@ -48,10 +55,13 @@ void LKEngine::Application::Application::Loop()
 	{
 		LKEngine::Time::Update();
 
+		//삭제 
 		device->Update();
 
-		//SceneManager::GetInstance()->Update();
-		//EntityPool::GetInstance()->Update();
+		SceneManager::GetInstance()->Update();
+		EntityPool::GetInstance()->Update();
+
+		device->Render();
 
 		device->Draw();
 

@@ -67,8 +67,6 @@ private:
 
 	QueueFamilyIndices queueIndices;
 
-	VulkanDescriptorSetLayout* descriptorSetLayout;
-	VulkanDescriptorPool* descriptorPool;
 	VulkanDescriptorSet* descriptorSet;
 	VulkanMesh* mesh;
 public:
@@ -78,6 +76,7 @@ public:
 	void Init();
 
 	void Update();
+	void Render();
 	void Draw();
 
 	void ResizeWindow();
@@ -92,7 +91,6 @@ public:
 
 	VulkanSwapchain* GetSwapchain() const;
 	VulkanSingleCommandPool* GetSingleCommandPool() const;
-	VulkanDescriptorPool* GetDescriptorPool() const;
 	VulkanRenderPass* GetRenderPass() const;
 private:
 	void Shutdown();

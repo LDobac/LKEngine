@@ -4,12 +4,12 @@
 
 USING_LK_VULKAN_SPACE
 
-VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(VulkanDevice * device)
-	: VulkanDeviceChild(device)
+VulkanDescriptorSetLayout::VulkanDescriptorSetLayout()
+	: VulkanDeviceChild(VulkanDevice::GetInstance())
 {
 }
 
-void VulkanDescriptorSetLayout::Shutdown()
+VulkanDescriptorSetLayout::~VulkanDescriptorSetLayout()
 {
 	vkDestroyDescriptorSetLayout(device->GetHandle(), setLayout, nullptr);
 }

@@ -23,6 +23,7 @@
 #include "../Header/VulkanMesh.h"
 #include "../Header/VulkanPipeline.h"
 
+#include "../../Src/EntityPool.h"
 #include "../../Src/Time.h"
 #include "../../Utility/Header/Macro.h"
 #include "../../Window/Header/WindowsWindow.h"
@@ -96,10 +97,6 @@ void VulkanDevice::Init()
 	imageAvailableSemaphore = new VulkanSemaphore(this);
 	renderFinishedSemaphore = new VulkanSemaphore(this);
 
-	descriptorSetLayout = new VulkanDescriptorSetLayout(this);
-	descriptorPool = new VulkanDescriptorPool(this);
-	descriptorSet = new VulkanDescriptorSet(this);
-
 	InitInstance();
 	InitSurface();
 	RequireGPU();
@@ -117,23 +114,11 @@ void VulkanDevice::Init()
 		mesh = new VulkanMesh("Models/chalet.obj", "Textures/chalet.jpg");
 	}
 	{
-		descriptorSetLayout->AddDescriptor(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0);
-		descriptorSetLayout->AddDescriptor(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
-		descriptorSetLayout->CreateDescriptorSetLayout();
+		descriptorSet = new VulkanDescriptorSet(EntityPool::GetInstance()->GetDescriptorSetLayout(), EntityPool::GetInstance()->GetDescriptorPool());
 
-		descriptorPool->AddPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
-		descriptorPool->AddPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
-		descriptorPool->CreatePool();
-
-		descriptorSet->Init(descriptorSetLayout, descriptorPool);
 		descriptorSet->AddBufferInfo(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, mesh->GetUniformBuffer(), 0, 0);
 		descriptorSet->AddTextureInfo(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, mesh->GetTexture(), 1);
 		descriptorSet->UpdateSets();
-	}
-	{
-		auto vertShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
-		auto fragShader = new VulkanShaderModule(VulkanShaderModule::ShaderType::FRAGMENT, "Shader/SimpleShader.frag");
-		PipelineManager::GetInstance()->CreateGfxPipeline("Default", descriptorSetLayout, vertShader, fragShader);
 	}
 	{
 		std::vector<VkClearValue> clearValues(2);
@@ -180,12 +165,6 @@ void VulkanDevice::Shutdown()
 
 	{
 		SAFE_DELETE(mesh);
-
-		descriptorPool->Shutdown();
-		descriptorSetLayout->Shutdown();
-
-		SAFE_DELETE(descriptorSetLayout);
-		SAFE_DELETE(descriptorPool);
 		SAFE_DELETE(descriptorSet);
 	}
 
@@ -212,6 +191,32 @@ void VulkanDevice::Update()
 	ubo.proj = glm::perspective(glm::radians(45.0f), swapchain->GetExtent().width / (float)swapchain->GetExtent().height, 0.1f, 10.0f);
 	ubo.proj[1][1] *= -1;
 	mesh->GetUniformBuffer()->Map(&ubo);
+}
+
+void VulkanDevice::Render()
+{
+	if (EntityPool::GetInstance()->NeedRender())
+	{
+		std::vector<VkClearValue> clearValues(2);
+		clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
+		clearValues[1].depthStencil = { 1.0f, 0 };
+
+		std::vector<VkFramebuffer> framebuffers = swapchain->GetFrameBuffers();
+		VkExtent2D extent = swapchain->GetExtent();
+
+		for (size_t i = 0; i < commandPool->GetBufferSize(); i++)
+		{
+			auto commandBuffer = commandPool->GetBuffer(i);
+
+			commandPool->RecordBegin(i, VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT);
+			renderPass->Begin(clearValues, framebuffers[i], extent, commandBuffer);
+
+			EntityPool::GetInstance()->Render(commandBuffer);
+
+			renderPass->End(commandBuffer);
+			commandPool->RecordEnd(i);
+		}
+	}
 }
 
 void VulkanDevice::Draw()
@@ -361,11 +366,6 @@ VulkanSwapchain * VulkanDevice::GetSwapchain() const
 VulkanSingleCommandPool * VulkanDevice::GetSingleCommandPool() const
 {
 	return singleCommandPool;
-}
-
-VulkanDescriptorPool * VulkanDevice::GetDescriptorPool() const
-{
-	return descriptorPool;
 }
 
 VulkanRenderPass * VulkanDevice::GetRenderPass() const

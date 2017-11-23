@@ -9,14 +9,11 @@
 
 USING_LK_VULKAN_SPACE
 
-VulkanDescriptorSet::VulkanDescriptorSet(VulkanDevice * device)
-	:VulkanDeviceChild(device)
-{ }
-
-void VulkanDescriptorSet::Init(VulkanDescriptorSetLayout* setLayout, VulkanDescriptorPool* pool)
+VulkanDescriptorSet::VulkanDescriptorSet(VulkanDescriptorSetLayout* setLayout, VulkanDescriptorPool* pool)
+	:VulkanDeviceChild(VulkanDevice::GetInstance())
 {
 	VkDescriptorSetLayout layouts[] = { setLayout->GetHandle() };
-	VkDescriptorSetAllocateInfo allocInfo = { };
+	VkDescriptorSetAllocateInfo allocInfo = {};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	allocInfo.descriptorPool = pool->GetHandle();
 	allocInfo.descriptorSetCount = 1;

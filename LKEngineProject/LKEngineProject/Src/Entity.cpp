@@ -12,7 +12,7 @@ void Entity::Update()
 {
 }
 
-void Entity::Render()
+void Entity::Render(const VkCommandBuffer& cmdBuffer)
 {
 }
 

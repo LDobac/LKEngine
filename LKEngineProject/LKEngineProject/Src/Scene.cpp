@@ -21,3 +21,8 @@ void Scene::Update()
 void Scene::End()
 {
 }
+
+Camera * Scene::GetMainCamera() const
+{
+	return mainCamera;
+}

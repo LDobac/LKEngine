@@ -26,6 +26,8 @@ public:
 	std::vector<VulkanTexture*> GetTexture() const;
 	VulkanDescriptorSet* GetDescriptorSet() const;
 	VulkanPipeline* GetPipeline() const;
+private:
+	void CreateDescriptorSet(VulkanDescriptorSetLayout* setLayout);
 };
 
 LK_VULKAN_SPACE_END

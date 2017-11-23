@@ -2,18 +2,19 @@
 
 #include "../Header/VulkanDescriptorSet.h"
 #include "../Header/VulkanTexture.h"
+#include "../../Src/EntityPool.h"
 
 USING_LK_VULKAN_SPACE
 
 VulkanMaterial::VulkanMaterial(VulkanDescriptorSetLayout* setLayout, VulkanPipeline* pipeline)
 	:pipeline(pipeline)
 {
-	descriptorSet = new VulkanDescriptorSet(VulkanDevice::GetInstance());
-	descriptorSet->Init(setLayout, VulkanDevice::GetInstance()->GetDescriptorPool());
+	CreateDescriptorSet(setLayout);
 }
 
 VulkanMaterial::~VulkanMaterial()
 {
+	SAFE_DELETE(descriptorSet);
 	for (size_t i = 0; i < textures.size(); i++)
 	{
 		SAFE_DELETE(textures[i]);
@@ -47,4 +48,11 @@ VulkanDescriptorSet * VulkanMaterial::GetDescriptorSet() const
 VulkanPipeline * VulkanMaterial::GetPipeline() const
 {
 	return pipeline;
+}
+
+void VulkanMaterial::CreateDescriptorSet(VulkanDescriptorSetLayout* setLayout)
+{
+	descriptorSet = new Vulkan::VulkanDescriptorSet(setLayout, EntityPool::GetInstance()->GetDescriptorPool());
+	descriptorSet->AddTextureInfo(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, textures[0], 0);
+	descriptorSet->UpdateSets();
 }

@@ -12,9 +12,8 @@ private:
 	VkDescriptorSetLayout setLayout;
 	std::vector<VkDescriptorSetLayoutBinding> layoutBindings;
 public:
-	explicit VulkanDescriptorSetLayout(VulkanDevice* device);
-
-	virtual void Shutdown();
+	explicit VulkanDescriptorSetLayout();
+	~VulkanDescriptorSetLayout();
 
 	void AddDescriptor(VkDescriptorType type, VkShaderStageFlagBits stageFlag, int index);
 	void CreateDescriptorSetLayout();

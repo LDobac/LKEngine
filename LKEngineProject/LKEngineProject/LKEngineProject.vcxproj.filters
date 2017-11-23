@@ -88,6 +88,7 @@
     <ClCompile Include="Src\Scene.cpp" />
     <ClCompile Include="Src\EntityPool.cpp" />
     <ClCompile Include="Src\Time.cpp" />
+    <ClCompile Include="Src\Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Header\Application.h">
@@ -163,5 +164,6 @@
     <ClInclude Include="Src\PipelineManager.h" />
     <ClInclude Include="Src\AssetManager.h" />
     <ClInclude Include="Src\Time.h" />
+    <ClInclude Include="Source\TestScene.h" />
   </ItemGroup>
 </Project>

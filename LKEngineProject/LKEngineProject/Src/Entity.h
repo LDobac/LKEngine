@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vulkan/vulkan.hpp>
 #include <glm/glm.hpp>
 
 #include "../Utility/Header/Macro.h"
@@ -22,7 +23,7 @@ public:
 	virtual ~Entity();
 
 	virtual void Update();
-	virtual void Render();
+	virtual void Render(const VkCommandBuffer& cmdBuffer);
 
 	virtual glm::vec3 GetPosition() const;
 	virtual glm::vec3 GetRotation() const;

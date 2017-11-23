@@ -4,9 +4,14 @@
 
 USING_LK_VULKAN_SPACE
 
-VulkanDescriptorPool::VulkanDescriptorPool(VulkanDevice * device)
-	:VulkanDeviceChild(device)
+VulkanDescriptorPool::VulkanDescriptorPool()
+	:VulkanDeviceChild(VulkanDevice::GetInstance())
 {
+}
+
+VulkanDescriptorPool::~VulkanDescriptorPool()
+{
+	vkDestroyDescriptorPool(device->GetHandle(), descriptorPool, nullptr);
 }
 
 void LKEngine::Vulkan::VulkanDescriptorPool::AddPoolSize(VkDescriptorType type, size_t descriptorCount)
@@ -26,11 +31,6 @@ void VulkanDescriptorPool::CreatePool(size_t maxSets)
 	info.maxSets = maxSets;
 
 	Check_Throw(vkCreateDescriptorPool(device->GetHandle(), &info, nullptr, &descriptorPool) != VK_SUCCESS, "디스크립터 풀 생성 실패");
-}
-
-void VulkanDescriptorPool::Shutdown()
-{
-	vkDestroyDescriptorPool(device->GetHandle(), descriptorPool, nullptr);
 }
 
 const VkDescriptorPool & VulkanDescriptorPool::GetHandle() const

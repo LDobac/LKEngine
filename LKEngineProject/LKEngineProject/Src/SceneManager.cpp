@@ -6,8 +6,13 @@ USING_LK_SPACE
 
 SceneManager::~SceneManager()
 {
-	SAFE_DELETE(newScene);
-	SAFE_DELETE(currentScene);
+	if(newScene) SAFE_DELETE(newScene);
+
+	if (currentScene)
+	{
+		currentScene->End();
+		SAFE_DELETE(currentScene);
+	}
 }
 
 void SceneManager::Start(Scene * scene)
