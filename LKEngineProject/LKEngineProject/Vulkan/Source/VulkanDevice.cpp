@@ -16,12 +16,6 @@
 #include "../Header/VulkanSemaphore.h"
 
 #include "../../Src/PipelineManager.h"
-#include "../Header/VulkanDescriptorSetLayout.h"
-#include "../Header/VulkanShaderModule.h"
-#include "../Header/VulkanDescriptorPool.h"
-#include "../Header/VulkanDescriptorSet.h"
-#include "../Header/VulkanMesh.h"
-#include "../Header/VulkanPipeline.h"
 
 #include "../../Src/EntityPool.h"
 #include "../../Src/Time.h"
@@ -109,65 +103,12 @@ void VulkanDevice::Init()
 	InitRenderPass();
 	CreateFramebuffers();
 	CreateSemaphore();
-
-	{
-		mesh = new VulkanMesh("Models/chalet.obj", "Textures/chalet.jpg");
-	}
-	{
-		descriptorSet = new VulkanDescriptorSet(EntityPool::GetInstance()->GetDescriptorSetLayout(), EntityPool::GetInstance()->GetDescriptorPool());
-
-		descriptorSet->AddBufferInfo(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, mesh->GetUniformBuffer(), 0, 0);
-		descriptorSet->AddTextureInfo(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, mesh->GetTexture(), 1);
-		descriptorSet->UpdateSets();
-	}
-	{
-		std::vector<VkClearValue> clearValues(2);
-		clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
-		clearValues[1].depthStencil = { 1.0f, 0 };
-
-		std::vector<VkFramebuffer> framebuffers = swapchain->GetFrameBuffers();
-		VkExtent2D extent = swapchain->GetExtent();
-
-		for (size_t i = 0; i < commandPool->GetBufferSize(); i++)
-		{
-			auto commandBuffer = commandPool->GetBuffer(i);
-
-			commandPool->RecordBegin(i, VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT);
-			renderPass->Begin(clearValues, framebuffers[i], extent, commandBuffer);
-
-			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetInstance()->GetPipeline("Default")->GetHandle());
-
-			VkBuffer vertexBuffers[] = {
-				mesh->GetVertexBuffer()->GetBuffer()
-			};
-			VkDeviceSize offsets[] = { 0 };
-			vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-			vkCmdBindIndexBuffer(commandBuffer, mesh->GetIndexBuffer()->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
-
-			vkCmdBindDescriptorSets(commandBuffer,
-				VK_PIPELINE_BIND_POINT_GRAPHICS,
-				PipelineManager::GetInstance()->GetPipeline("Default")->GetLayout(),
-				0, 1,
-				&descriptorSet->GetHandle(),
-				0, nullptr);
-
-			vkCmdDrawIndexed(commandBuffer, mesh->GetIndices().size(), 1, 0, 0, 0);
-
-			renderPass->End(commandBuffer);
-			commandPool->RecordEnd(i);
-		}
-	}
 }
 
 void VulkanDevice::Shutdown()
 {
 	WaitIdle();
-
-	{
-		SAFE_DELETE(mesh);
-		SAFE_DELETE(descriptorSet);
-	}
-
+	
 	imageAvailableSemaphore->Shutdown();
 	renderFinishedSemaphore->Shutdown();
 
@@ -181,16 +122,6 @@ void VulkanDevice::Shutdown()
 	vkDestroySurfaceKHR(vulkanInstance->GetHandle(), surface, nullptr);
 
 	vulkanInstance->Shutdown();
-}
-
-void VulkanDevice::Update()
-{
-	UniformBufferObject ubo = {};
-	ubo.model = glm::rotate(glm::mat4(1.0f), LKEngine::Time::GetTime() * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	ubo.proj = glm::perspective(glm::radians(45.0f), swapchain->GetExtent().width / (float)swapchain->GetExtent().height, 0.1f, 10.0f);
-	ubo.proj[1][1] *= -1;
-	mesh->GetUniformBuffer()->Map(&ubo);
 }
 
 void VulkanDevice::Render()
@@ -266,45 +197,8 @@ void VulkanDevice::ResizeWindow()
 	commandPool->FreeBuffers();
 	commandPool->AllocBuffers(swapchain->GetFrameBuffers().size());
 
-	{
-		PipelineManager::GetInstance()->RecreatePipelines();
+	PipelineManager::GetInstance()->RecreatePipelines();
 
-		std::vector<VkClearValue> clearValues(2);
-		clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
-		clearValues[1].depthStencil = { 1.0f, 0 };
-
-		std::vector<VkFramebuffer> framebuffers = swapchain->GetFrameBuffers();
-		VkExtent2D extent = swapchain->GetExtent();
-
-		for (size_t i = 0; i < commandPool->GetBufferSize(); i++)
-		{
-			auto commandBuffer = commandPool->GetBuffer(i);
-
-			commandPool->RecordBegin(i, VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT);
-			renderPass->Begin(clearValues, framebuffers[i], extent, commandBuffer);
-
-			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetInstance()->GetPipeline("Default")->GetHandle());
-
-			VkBuffer vertexBuffers[] = {
-				mesh->GetVertexBuffer()->GetBuffer()
-			};
-			VkDeviceSize offsets[] = { 0 };
-			vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-			vkCmdBindIndexBuffer(commandBuffer, mesh->GetIndexBuffer()->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
-
-			vkCmdBindDescriptorSets(commandBuffer,
-				VK_PIPELINE_BIND_POINT_GRAPHICS,
-				PipelineManager::GetInstance()->GetPipeline("Default")->GetLayout(),
-				0, 1,
-				&descriptorSet->GetHandle(),
-				0, nullptr);
-
-			vkCmdDrawIndexed(commandBuffer, mesh->GetIndices().size(), 1, 0, 0, 0);
-
-			renderPass->End(commandBuffer);
-			commandPool->RecordEnd(i);
-		}
-	}
 }
 
 void VulkanDevice::WaitIdle()
@@ -539,7 +433,7 @@ bool VulkanDevice::CheckDeviceFeatures(VkPhysicalDevice device)
 		bool deviceExtensionSupport = extension.CheckDeviceExtensionSupport(device);
 		bool swapSupport = supportDetail.CheckSwapchainAdequate();
 
-		//MEMO : ���Ŀ� GPU�� � ����� ����ؾ� �ϴ����� ���� Ȯ�� �� �� ����
+		//TODO : GPU가 지원하는 기능 더 확인하기
 		VkPhysicalDeviceFeatures supportedFeatures;
 		vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
 		bool deviceFeatureSupport = supportedFeatures.samplerAnisotropy;

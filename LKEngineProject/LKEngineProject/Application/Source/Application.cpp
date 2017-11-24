@@ -55,9 +55,6 @@ void LKEngine::Application::Application::Loop()
 	{
 		LKEngine::Time::Update();
 
-		//»èÁ¦ 
-		device->Update();
-
 		SceneManager::GetInstance()->Update();
 		EntityPool::GetInstance()->Update();
 

@@ -16,12 +16,6 @@ struct Vertex
 		return pos == other.pos && color == other.color && texCoord == other.texCoord;
 	}
 };
-struct UniformBufferObject
-{
-	glm::mat4 model;
-	glm::mat4 view;
-	glm::mat4 proj;
-};
 struct VertexInformation
 {
 	static VkVertexInputBindingDescription BindingDescription()

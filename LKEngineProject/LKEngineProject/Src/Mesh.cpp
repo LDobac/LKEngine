@@ -1,13 +1,18 @@
 #include "Mesh.h"
 
+#define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
+
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "../Vulkan/Header/VulkanMaterial.h"
 #include "../Vulkan/Header/VulkanPipeline.h"
 #include "../Vulkan/Header/VulkanBuffer.h"
 #include "../Vulkan/Header/VulkanDescriptorSet.h"
 #include "../Vulkan/Header/VulkanDevice.h"
+
+#include "Time.h"
 #include "Camera.h"
 #include "Scene.h"
 #include "SceneManager.h"
@@ -33,6 +38,12 @@ Mesh::~Mesh()
 	SAFE_DELETE(uniformBuffer);
 }
 
+void Mesh::Update()
+{
+	glm::mat4 model = glm::rotate(glm::mat4(1.0f), LKEngine::Time::GetTime() * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	uniformBuffer->Map(&model);
+}
+
 void Mesh::Render(const VkCommandBuffer& cmdBuffer)
 {
 	VkDeviceSize offsets = { 0 };
@@ -47,7 +58,7 @@ void Mesh::Render(const VkCommandBuffer& cmdBuffer)
 	};
 
 	//TODO : 머터리얼 갯수만큼 루프
-	descriptorSets[3] = material->GetDescriptorSet()->GetHandle();
+	descriptorSets[2] = material->GetDescriptorSet()->GetHandle();
 
 	vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, material->GetPipeline()->GetHandle());
 	vkCmdBindDescriptorSets(
@@ -138,7 +149,9 @@ void Mesh::CreateUniformBuffer()
 
 void Mesh::CreateDescriptorSet()
 {
-	descriptorSet = new Vulkan::VulkanDescriptorSet(EntityPool::GetInstance()->GetDescriptorSetLayout(), EntityPool::GetInstance()->GetDescriptorPool());
+	descriptorSet = new Vulkan::VulkanDescriptorSet(
+		EntityPool::GetInstance()->GetDescriptorSetLayout("DefaultMesh"), 
+		EntityPool::GetInstance()->GetDescriptorPool());
 	descriptorSet->AddBufferInfo(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, uniformBuffer, 0, 0);
 	descriptorSet->UpdateSets();
 }

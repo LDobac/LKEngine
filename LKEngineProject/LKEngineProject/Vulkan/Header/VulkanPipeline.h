@@ -33,9 +33,9 @@ class VulkanGraphicsPipeline
 private:
 	VulkanShaderModule* vertShader;
 	VulkanShaderModule* fragShader;
-	VulkanDescriptorSetLayout* descriptorSetLayout;
+	std::vector<VulkanDescriptorSetLayout*> descriptorSetLayouts;
 public:
-	explicit VulkanGraphicsPipeline(VulkanShaderModule* vertShader, VulkanShaderModule* fragShader, VulkanDescriptorSetLayout* descriptorSetLayout);
+	explicit VulkanGraphicsPipeline(VulkanShaderModule* vertShader, VulkanShaderModule* fragShader, const std::vector<VulkanDescriptorSetLayout*>& descriptorSetLayouts);
 	virtual ~VulkanGraphicsPipeline();
 
 	virtual void Recreate() override;

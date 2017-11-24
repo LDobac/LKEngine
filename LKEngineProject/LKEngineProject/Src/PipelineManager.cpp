@@ -11,9 +11,18 @@ USING_LK_SPACE
 
 PipelineManager::PipelineManager()
 {
-	auto vertShader = new Vulkan::VulkanShaderModule(Vulkan::VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
-	auto fragShader = new Vulkan::VulkanShaderModule(Vulkan::VulkanShaderModule::ShaderType::FRAGMENT, "Shader/SimpleShader.frag");
-	CreateGfxPipeline("Default", EntityPool::GetInstance()->GetDescriptorSetLayout(), vertShader, fragShader);
+	{
+		auto vertShader = new Vulkan::VulkanShaderModule(Vulkan::VulkanShaderModule::ShaderType::VERTEX, "Shader/SimpleShader.vert");
+		auto fragShader = new Vulkan::VulkanShaderModule(Vulkan::VulkanShaderModule::ShaderType::FRAGMENT, "Shader/SimpleShader.frag");
+		CreateGfxPipeline("Default",
+		{
+			EntityPool::GetInstance()->GetDescriptorSetLayout("DefaultCamera"),
+			EntityPool::GetInstance()->GetDescriptorSetLayout("DefaultMesh"),
+			EntityPool::GetInstance()->GetDescriptorSetLayout("DefaultMaterial")
+		},
+			vertShader,
+			fragShader);
+	}
 }
 
 PipelineManager::~PipelineManager()
@@ -26,9 +35,9 @@ void PipelineManager::AddPipeline(const std::string & key, Vulkan::VulkanPipelin
 	pipelines.insert(std::make_pair(key, pipeline));
 }
 
-Vulkan::VulkanPipeline * PipelineManager::CreateGfxPipeline(const std::string& key, Vulkan::VulkanDescriptorSetLayout* setLayout, Vulkan::VulkanShaderModule* vertShader, Vulkan::VulkanShaderModule* fragShader)
+Vulkan::VulkanPipeline * PipelineManager::CreateGfxPipeline(const std::string& key, const std::vector<Vulkan::VulkanDescriptorSetLayout*>& setLayouts, Vulkan::VulkanShaderModule* vertShader, Vulkan::VulkanShaderModule* fragShader)
 {
-	Vulkan::VulkanPipeline* gfxPipeline = new Vulkan::VulkanGraphicsPipeline(vertShader, fragShader, setLayout);
+	Vulkan::VulkanPipeline* gfxPipeline = new Vulkan::VulkanGraphicsPipeline(vertShader, fragShader, setLayouts);
 	AddPipeline(key, gfxPipeline);
 
 	return gfxPipeline;

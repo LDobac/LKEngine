@@ -6,6 +6,8 @@ LK_VULKAN_SPACE_BEGIN
 
 class VulkanBuffer;
 class VulkanTexture;
+class VulkanDescriptorPool;
+class VulkanDescriptorSetLayout;
 
 class VulkanDescriptorSet
 	: public VulkanDeviceChild

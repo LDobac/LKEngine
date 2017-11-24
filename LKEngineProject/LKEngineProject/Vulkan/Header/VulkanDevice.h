@@ -21,13 +21,6 @@ class VulkanCommandPool;
 class VulkanSingleCommandPool;
 class VulkanSemaphore;
 
-class VulkanMesh;
-class VulkanPipeline;
-class VulkanShaderModule;
-class VulkanDescriptorSetLayout;
-class VulkanDescriptorPool;
-class VulkanDescriptorSet;
-
 class VulkanDevice
 {
 private:
@@ -66,16 +59,12 @@ private:
 	VulkanSemaphore* renderFinishedSemaphore;
 
 	QueueFamilyIndices queueIndices;
-
-	VulkanDescriptorSet* descriptorSet;
-	VulkanMesh* mesh;
 public:
 	void SetDebugMode(bool debug);
 	void SetWindow(LKEngine::Window::WindowsWindow* window);
 
 	void Init();
 
-	void Update();
 	void Render();
 	void Draw();
 

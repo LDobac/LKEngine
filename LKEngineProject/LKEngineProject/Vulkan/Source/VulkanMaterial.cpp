@@ -23,7 +23,7 @@ VulkanMaterial::~VulkanMaterial()
 
 void VulkanMaterial::AddTexture(VulkanTexture * texture)
 {
-	descriptorSet->AddTextureInfo(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, texture, textures.size());
+	descriptorSet->AddTextureInfo(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, texture, textures.size());
 
 	descriptorSet->UpdateSets();
 
@@ -53,6 +53,4 @@ VulkanPipeline * VulkanMaterial::GetPipeline() const
 void VulkanMaterial::CreateDescriptorSet(VulkanDescriptorSetLayout* setLayout)
 {
 	descriptorSet = new Vulkan::VulkanDescriptorSet(setLayout, EntityPool::GetInstance()->GetDescriptorPool());
-	descriptorSet->AddTextureInfo(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, textures[0], 0);
-	descriptorSet->UpdateSets();
 }

@@ -45,11 +45,11 @@ void VulkanPipeline::ReleasePipeline()
 	}
 }
 
-VulkanGraphicsPipeline::VulkanGraphicsPipeline(VulkanShaderModule * vertShader, VulkanShaderModule * fragShader, VulkanDescriptorSetLayout * descriptorSetLayout)
+VulkanGraphicsPipeline::VulkanGraphicsPipeline(VulkanShaderModule * vertShader, VulkanShaderModule * fragShader, const std::vector<VulkanDescriptorSetLayout*>& descriptorSetLayouts)
 {
 	this->vertShader = vertShader;
 	this->fragShader = fragShader;
-	this->descriptorSetLayout = descriptorSetLayout;
+	this->descriptorSetLayouts = descriptorSetLayouts;
 
 	VkPipelineShaderStageCreateInfo vertShaderStageInfo = ShaderStageInfo(VK_SHADER_STAGE_VERTEX_BIT, vertShader);
 	VkPipelineShaderStageCreateInfo fragShaderStageInfo = ShaderStageInfo(VK_SHADER_STAGE_FRAGMENT_BIT,fragShader);
@@ -179,12 +179,20 @@ void VulkanGraphicsPipeline::Recreate()
 
 void VulkanGraphicsPipeline::CreatePipelineLayout()
 {
+	VkDescriptorSetLayout* setLayouts = new VkDescriptorSetLayout[descriptorSetLayouts.size()];
+	for (size_t i = 0; i < descriptorSetLayouts.size(); i++)
+	{
+		setLayouts[i] = descriptorSetLayouts[i]->GetHandle();
+	}
+
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = 1;
-	pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout->GetHandle();
+	pipelineLayoutInfo.setLayoutCount = descriptorSetLayouts.size();
+	pipelineLayoutInfo.pSetLayouts = setLayouts;
 
 	Check_Throw(vkCreatePipelineLayout(device->GetHandle(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS, "PipelineLayout 생성 실패");
+
+	SAFE_ARR_DELETE(setLayouts);
 }
 
 VkPipelineShaderStageCreateInfo VulkanGraphicsPipeline::ShaderStageInfo(VkShaderStageFlagBits stage, const VulkanShaderModule * module)

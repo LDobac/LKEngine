@@ -31,6 +31,7 @@ public:
 	explicit Mesh(std::string meshpath, Vulkan::VulkanMaterial* material);
 	virtual ~Mesh();
 
+	virtual void Update() override;
 	virtual void Render(const VkCommandBuffer& cmdBuffer) override;
 
 private:

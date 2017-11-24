@@ -44,7 +44,9 @@ void Camera::Update()
 
 void Camera::CreateDescriptorSet()
 {
-	descriptorSet = new Vulkan::VulkanDescriptorSet(EntityPool::GetInstance()->GetDescriptorSetLayout(), EntityPool::GetInstance()->GetDescriptorPool());
+	descriptorSet = new Vulkan::VulkanDescriptorSet(
+		EntityPool::GetInstance()->GetDescriptorSetLayout("DefaultCamera"), 
+		EntityPool::GetInstance()->GetDescriptorPool());
 	descriptorSet->AddBufferInfo(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, uniformBuffer, 0, 0);
 	descriptorSet->UpdateSets();
 }

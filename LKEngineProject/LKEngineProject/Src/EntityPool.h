@@ -2,6 +2,7 @@
 
 #include <vulkan/vulkan.hpp>
 #include <vector>
+#include <map>
 
 #include "../Utility/Header/TSingleton.h"
 
@@ -23,7 +24,7 @@ private:
 
 	std::vector<Entity*> entities;
 
-	Vulkan::VulkanDescriptorSetLayout* descriptorSetLayout;
+	std::map<std::string, Vulkan::VulkanDescriptorSetLayout*> descriptorSetLayouts;
 	Vulkan::VulkanDescriptorPool* descriptorPool;
 public:
 	explicit EntityPool();
@@ -36,7 +37,9 @@ public:
 	void Update();
 	void Render(const VkCommandBuffer& cmdBuffer);
 
-	Vulkan::VulkanDescriptorSetLayout* GetDescriptorSetLayout() const;
+	void AddDescriptorSetLayout(const std::string& key, Vulkan::VulkanDescriptorSetLayout* setLayout);
+
+	Vulkan::VulkanDescriptorSetLayout* GetDescriptorSetLayout(const std::string& key) const;
 	Vulkan::VulkanDescriptorPool* GetDescriptorPool() const;
 
 	void ReleaseAll();

@@ -79,7 +79,6 @@
     <ClCompile Include="Vulkan\Source\VulkanDescriptorSetLayout.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanDescriptorSet.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanTexture.cpp" />
-    <ClCompile Include="Vulkan\Source\VulkanMesh.cpp" />
     <ClCompile Include="Src\Entity.cpp" />
     <ClCompile Include="Src\Camera.cpp" />
     <ClCompile Include="Vulkan\Source\VulkanMaterial.cpp" />
@@ -151,7 +150,6 @@
     </ClInclude>
     <ClInclude Include="Vulkan\Header\VulkanDescriptorSet.h" />
     <ClInclude Include="Vulkan\Header\VulkanTexture.h" />
-    <ClInclude Include="Vulkan\Header\VulkanMesh.h" />
     <ClInclude Include="Vulkan\Header\VulkanMaterial.h" />
     <ClInclude Include="Src\Entity.h" />
     <ClInclude Include="Src\Scene.h" />
