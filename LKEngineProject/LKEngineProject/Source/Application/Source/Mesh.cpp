@@ -41,9 +41,17 @@ Mesh::~Mesh()
 void Mesh::Update()
 {
 	struct ModelUniformBuffer { glm::mat4 model; };
-
 	ModelUniformBuffer model;
-	model.model = glm::rotate(glm::mat4(1.0f), LKEngine::Time::GetTime() * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	model.model = glm::translate(model.model, position);
+
+	//TODO : 쿼터니온으로 변경
+	model.model = glm::rotate(model.model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	model.model = glm::rotate(model.model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	model.model = glm::rotate(model.model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+
+	model.model = glm::scale(model.model, scale);
+
 	uniformBuffer->Map(&model);
 }
 

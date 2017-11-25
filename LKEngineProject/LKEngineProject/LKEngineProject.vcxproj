@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\Header\Application.h" />
+    <ClInclude Include="Source\LKEngine.h" />
     <ClInclude Include="Source\TestScene.h" />
     <ClInclude Include="Source\Application\Header\AssetManager.h" />
     <ClInclude Include="Source\Application\Header\Camera.h" />

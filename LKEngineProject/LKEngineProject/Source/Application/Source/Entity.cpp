@@ -3,7 +3,11 @@
 USING_LK_SPACE
 
 Entity::Entity()
-{ }
+	: position(0.0f, 0.0f, 0.0f),
+	rotation(0.0f, 0.0f, 0.0f),
+	scale(1.0f, 1.0f, 1.0f)
+{
+}
 
 Entity::~Entity()
 { }

@@ -73,5 +73,6 @@
     <ClInclude Include="Source\Utility\Header\Macro.h" />
     <ClInclude Include="Source\Application\Header\Application.h" />
     <ClInclude Include="TestScene.h" />
+    <ClInclude Include="Source\LKEngine.h" />
   </ItemGroup>
 </Project>

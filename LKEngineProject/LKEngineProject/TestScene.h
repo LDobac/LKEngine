@@ -1,11 +1,6 @@
 #pragma once
 
-#include "Source/Renderer/Header/VulkanMaterial.h"
-#include "Source/Renderer/Header/VulkanTexture.h"
-
-#include "Source/Application/Header/Scene.h"
-#include "Source/Application/Header/Mesh.h"
-#include "Source/Application/Header/Camera.h"
+#include "Source/LKEngine.h"
 
 class TestScene
 	: public LKEngine::Scene
