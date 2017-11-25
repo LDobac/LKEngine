@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Entity.h"
-
-#include "../../Renderer/Header/VertexInformation.h"
+#include "VertexInformation.h"
 
 LK_SPACE_BEGIN
 
@@ -17,8 +16,7 @@ class Mesh
 	: public Entity
 {
 private:
-	std::vector<Vulkan::Vertex> vertices;
-	std::vector<uint32_t> indices;
+	size_t indicesCount;
 
 	Vulkan::VulkanBuffer* vertexBuffer;
 	Vulkan::VulkanBuffer* indexBuffer;
@@ -26,18 +24,18 @@ private:
 	Vulkan::VulkanBuffer* uniformBuffer;
 	Vulkan::VulkanDescriptorSet* descriptorSet;
 
-	//TODO : 머터리얼 여러개
-	Material* material;
+	std::vector<Material*> materials;
 public:
-	explicit Mesh(std::string meshpath, Material* material);
+	explicit Mesh(const MeshData& meshdata);
 	virtual ~Mesh();
 
 	virtual void Update() override;
 	virtual void Render(const VkCommandBuffer& cmdBuffer) override;
+
+	void AddMaterial(Material* material);
 private:
-	void LoadModel(std::string meshpath);
-	void CreateVertexBuffer();
-	void CreateIndexBuffer();
+	void CreateVertexBuffer(const std::vector<Vertex>& vertices);
+	void CreateIndexBuffer(const std::vector<uint32_t>& indices);
 	void CreateUniformBuffer();
 	void CreateDescriptorSet();
 };

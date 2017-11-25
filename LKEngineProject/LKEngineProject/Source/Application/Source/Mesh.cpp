@@ -1,8 +1,5 @@
 #include "../Header/Mesh.h"
 
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tiny_obj_loader.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -19,19 +16,22 @@
 
 USING_LK_SPACE
 
-Mesh::Mesh(std::string meshpath, Material* material)
+Mesh::Mesh(const MeshData & meshdata)
 {
-	this->material = material;
-	LoadModel(meshpath);
-	CreateVertexBuffer();
-	CreateIndexBuffer();
+	CreateVertexBuffer(meshdata.vertices);
+	CreateIndexBuffer(meshdata.indices);
+	indicesCount = meshdata.indices.size();
 	CreateUniformBuffer();
 	CreateDescriptorSet();
+	//TODO : Material
 }
 
 Mesh::~Mesh()
 {
-	SAFE_DELETE(material);
+	for (size_t i = 0; i < materials.size(); i++)
+	{
+		SAFE_DELETE(materials[i]);
+	}
 	SAFE_DELETE(descriptorSet);
 	SAFE_DELETE(vertexBuffer);
 	SAFE_DELETE(indexBuffer);
@@ -68,76 +68,43 @@ void Mesh::Render(const VkCommandBuffer& cmdBuffer)
 		descriptorSet->GetHandle()
 	};
 
-	//TODO : 머터리얼 갯수만큼 루프
-	descriptorSets[2] = material->GetDescriptorSet()->GetHandle();
+	for (size_t i = 0; i < materials.size(); i++)
+	{
+		descriptorSets[2] = materials[i]->GetDescriptorSet()->GetHandle();
 
-	vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, material->GetPipeline()->GetHandle());
-	vkCmdBindDescriptorSets(
-		cmdBuffer,
-		VK_PIPELINE_BIND_POINT_GRAPHICS,
-		material->GetPipeline()->GetLayout(),
-		0,
-		3,
-		descriptorSets,
-		0,
-		nullptr
-	);
+		vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, materials[i]->GetPipeline()->GetHandle());
+		vkCmdBindDescriptorSets(
+			cmdBuffer,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			materials[i]->GetPipeline()->GetLayout(),
+			0,
+			3,
+			descriptorSets,
+			0,
+			nullptr
+		);
 
-	vkCmdDrawIndexed(cmdBuffer, indices.size(), 1, 0, 0, 0);
+		vkCmdDrawIndexed(cmdBuffer, indicesCount, 1, 0, 0, 0);
+	}
 }
 
-void Mesh::LoadModel(std::string meshpath)
+void Mesh::AddMaterial(Material * material)
 {
-	tinyobj::attrib_t attrib;
-	std::vector<tinyobj::shape_t> shapes;
-	std::vector<tinyobj::material_t> materials;
-	std::string err;
-
-	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, meshpath.c_str())) {
-		throw std::runtime_error(err);
-	}
-
-	std::unordered_map<Vulkan::Vertex, uint32_t> uniqueVertices = {};
-
-	for (const auto& shape : shapes) {
-		for (const auto& index : shape.mesh.indices) {
-			Vulkan::Vertex vertex = {};
-
-			vertex.pos = {
-				attrib.vertices[3 * index.vertex_index + 0],
-				attrib.vertices[3 * index.vertex_index + 1],
-				attrib.vertices[3 * index.vertex_index + 2]
-			};
-
-			vertex.texCoord = {
-				attrib.texcoords[2 * index.texcoord_index + 0],
-				1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-			};
-
-			vertex.color = { 1.0f, 1.0f, 1.0f };
-
-			if (uniqueVertices.count(vertex) == 0) {
-				uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-				vertices.push_back(vertex);
-			}
-
-			indices.push_back(uniqueVertices[vertex]);
-		}
-	}
+	materials.push_back(material);
 }
 
-void Mesh::CreateVertexBuffer()
+void Mesh::CreateVertexBuffer(const std::vector<Vertex>& vertices)
 {
 	vertexBuffer = new Vulkan::VulkanBuffer(
-		sizeof(Vulkan::Vertex) * vertices.size(),
+		sizeof(Vertex) * vertices.size(),
 		VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		VK_SHARING_MODE_EXCLUSIVE
 	);
-	vertexBuffer->CopyLocalMemory(vertices.data(), Vulkan::VulkanDevice::GetInstance()->GetSingleCommandPool());
+	vertexBuffer->CopyDataLocalMemory(vertices.data());
 }
 
-void Mesh::CreateIndexBuffer()
+void Mesh::CreateIndexBuffer(const std::vector<uint32_t>& indices)
 {
 	indexBuffer = new Vulkan::VulkanBuffer(
 		sizeof(indices[0])  * indices.size(),
@@ -145,7 +112,7 @@ void Mesh::CreateIndexBuffer()
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		VK_SHARING_MODE_EXCLUSIVE
 	);
-	indexBuffer->CopyLocalMemory(indices.data(), Vulkan::VulkanDevice::GetInstance()->GetSingleCommandPool());
+	indexBuffer->CopyDataLocalMemory(indices.data());
 }
 
 void Mesh::CreateUniformBuffer()

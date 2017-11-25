@@ -32,10 +32,10 @@
     <ClCompile Include="Source\Application\Source\Material.cpp" />
     <ClCompile Include="Source\Application\Source\Texture.cpp" />
     <ClCompile Include="Source\Application\Source\AssetManager.cpp" />
+    <ClCompile Include="Source\Application\Source\MeshLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\TestScene.h" />
-    <ClInclude Include="Source\Renderer\Header\VertexInformation.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanBuffer.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanCommandBuffers.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanCommandPool.h" />
@@ -76,5 +76,7 @@
     <ClInclude Include="Source\Application\Header\Material.h" />
     <ClInclude Include="Source\Application\Header\Texture.h" />
     <ClInclude Include="Source\Application\Header\Asset.h" />
+    <ClInclude Include="Source\Application\Header\MeshLoader.h" />
+    <ClInclude Include="Source\Application\Header\VertexInformation.h" />
   </ItemGroup>
 </Project>

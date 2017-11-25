@@ -4,7 +4,8 @@
 #include "../Header/VulkanSwapchain.h"
 #include "../Header/VulkanDescriptorSetLayout.h"
 #include "../Header/VulkanRenderPass.h"
-#include "../Header/VertexInformation.h"
+
+#include "../../Application/Header/VertexInformation.h"
 
 #include "../../Utility/Header/Macro.h"
 

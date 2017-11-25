@@ -2,42 +2,44 @@
 
 #include "Source/LKEngine.h"
 
+#include "Source/Application/Header/MeshLoader.h"
+
+USING_LK_SPACE;
+
 class TestScene
-	: public LKEngine::Scene
+	: public Scene
 {
 private:
-	LKEngine::Mesh* mesh1;
-	LKEngine::Mesh* mesh2;
+	Mesh* mesh1;
+	Mesh* mesh2;
 public:
 	virtual void Start() override
 	{
-		mainCamera = new LKEngine::Camera();
+		mainCamera = new Camera();
 		mainCamera->SetName("Main Camera");
 		mainCamera->SetPosition(glm::vec3(2.0f, 2.0f, 2.0f));
-		LKEngine::EntityPool::GetInstance()->AddEntity(mainCamera);
+		EntityPool::GetInstance()->AddEntity(mainCamera);
 
-		LKEngine::Texture* texture = LKEngine::AssetManager::GetInstance()->Load<LKEngine::Texture>("Textures/chalet.jpg");
-
-		LKEngine::Material* material1 = new LKEngine::Material(
-			LKEngine::EntityPool::GetInstance()->GetDescriptorSetLayout("DefaultMaterial"),
-			LKEngine::PipelineManager::GetInstance()->GetPipeline("Default"));
+		Texture* texture = AssetManager::GetInstance()->Load<Texture>("Textures/chalet.jpg");
+		Material* material1 = new Material(
+			EntityPool::GetInstance()->GetDescriptorSetLayout("DefaultMaterial"),
+			PipelineManager::GetInstance()->GetPipeline("Default"));
 		material1->AddTexture(texture);
-
-		mesh1 = new LKEngine::Mesh("Assets/Models/chalet.obj", material1);
-		mesh1->SetPosition(glm::vec3(-1.0f, 0.0f, 0.0f));
-		mesh1->SetScale(glm::vec3(0.3f, 0.7f, 1.2f));
-		mesh1->SetName("Mesh1");
-		LKEngine::EntityPool::GetInstance()->AddEntity(mesh1);
-
-		LKEngine::Material* material2 = new LKEngine::Material(
-			LKEngine::EntityPool::GetInstance()->GetDescriptorSetLayout("DefaultMaterial"),
-			LKEngine::PipelineManager::GetInstance()->GetPipeline("Default"));
+		Material* material2 = new LKEngine::Material(
+			EntityPool::GetInstance()->GetDescriptorSetLayout("DefaultMaterial"),
+			PipelineManager::GetInstance()->GetPipeline("Default"));
 		material2->AddTexture(texture);
 
-		mesh2 = new LKEngine::Mesh("Assets/Models/chalet.obj", material2);
+		mesh1 = AssetManager::GetInstance()->Load<Mesh>("Models/chalet.obj");
+		mesh1->AddMaterial(material1);
+		mesh1->SetPosition(glm::vec3(-1.0f, 0.0f, 0.0f));
+		mesh1->SetName("Mesh1");
+		EntityPool::GetInstance()->AddEntity(mesh1);
+
+		mesh2 = AssetManager::GetInstance()->Load<Mesh>("Models/chalet.obj");
+		mesh2->AddMaterial(material2);
 		mesh2->SetName("Mesh2");
-		mesh2->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
-		LKEngine::EntityPool::GetInstance()->AddEntity(mesh2);
+		EntityPool::GetInstance()->AddEntity(mesh2);
 
 		Console_Log("Test Scene Start");
 	}

@@ -4,7 +4,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/hash.hpp>
 
-LK_VULKAN_SPACE_BEGIN
+#include "Asset.h"
+
+LK_SPACE_BEGIN
+
+class Texture;
 
 struct Vertex
 {
@@ -51,14 +55,27 @@ struct VertexInformation
 	}
 };
 
-LK_VULKAN_SPACE_END
+struct MaterialData
+	: public Asset
+{
+	std::vector<Texture*> textures;
+};
+struct MeshData
+	: public Asset
+{
+	std::vector<Vertex> vertices;
+	std::vector<uint32_t> indices;
+	std::vector<MaterialData*> materials;
+};
+
+LK_SPACE_END
 
 namespace std 
 {
 	template<> 
-	struct std::hash<LKEngine::Vulkan::Vertex>
+	struct std::hash<LKEngine::Vertex>
 	{
-		size_t operator()(LKEngine::Vulkan::Vertex const& vertex) const
+		size_t operator()(LKEngine::Vertex const& vertex) const
 		{
 			return ((std::hash<glm::vec3>()(vertex.pos) ^ (std::hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (std::hash<glm::vec2>()(vertex.texCoord) << 1);
 		}

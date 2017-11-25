@@ -28,9 +28,9 @@ public:
 		vkUnmapMemory(device->GetHandle(), bufferMemory);
 	}
 
-	void CopyBuffer(VulkanBuffer* dstBuffer, VulkanSingleCommandPool* commandPool);
+	void CopyBuffer(VulkanBuffer* dstBuffer);
 	template<typename T>
-	inline void CopyLocalMemory(const T* data, VulkanSingleCommandPool* commandPool)
+	inline void CopyDataLocalMemory(const T* data)
 	{
 		VulkanBuffer* stagingBuffer = new VulkanBuffer(
 			bufferSize,
@@ -39,7 +39,7 @@ public:
 			VK_SHARING_MODE_EXCLUSIVE
 		);
 		stagingBuffer->Map(data);
-		stagingBuffer->CopyBuffer(this, commandPool);
+		stagingBuffer->CopyBuffer(this);
 		SAFE_DELETE(stagingBuffer);
 	}
 

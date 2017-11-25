@@ -27,6 +27,7 @@
     <ClCompile Include="Source\Application\Source\EntityPool.cpp" />
     <ClCompile Include="Source\Application\Source\Material.cpp" />
     <ClCompile Include="Source\Application\Source\Mesh.cpp" />
+    <ClCompile Include="Source\Application\Source\MeshLoader.cpp" />
     <ClCompile Include="Source\Application\Source\PipelineManager.cpp" />
     <ClCompile Include="Source\Application\Source\Scene.cpp" />
     <ClCompile Include="Source\Application\Source\SceneManager.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="Source\Application\Header\Application.h" />
     <ClInclude Include="Source\Application\Header\Asset.h" />
     <ClInclude Include="Source\Application\Header\Material.h" />
+    <ClInclude Include="Source\Application\Header\MeshLoader.h" />
     <ClInclude Include="Source\Application\Header\Texture.h" />
     <ClInclude Include="Source\LKEngine.h" />
     <ClInclude Include="Source\TestScene.h" />
@@ -71,7 +73,7 @@
     <ClInclude Include="Source\Utility\Header\Macro.h" />
     <ClInclude Include="Source\Utility\Header\ManagedObject.h" />
     <ClInclude Include="Source\Utility\Header\TSingleton.h" />
-    <ClInclude Include="Source\Renderer\Header\VertexInformation.h" />
+    <ClInclude Include="Source\Application\Header\VertexInformation.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanDescriptorSet.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanBuffer.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanCommandBuffers.h" />

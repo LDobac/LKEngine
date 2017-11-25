@@ -31,9 +31,9 @@ EntityPool::EntityPool()
 		AddDescriptorSetLayout("DefaultMaterial", materialLayout);
 	}
 
-	descriptorPool->AddPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 4096);
-	descriptorPool->AddPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 4096);
-	descriptorPool->CreatePool(8192);
+	descriptorPool->AddPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1024);
+	descriptorPool->AddPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1024);
+	descriptorPool->CreatePool(2048);
 }
 
 EntityPool::~EntityPool()

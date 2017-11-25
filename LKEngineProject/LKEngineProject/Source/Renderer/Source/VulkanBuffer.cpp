@@ -50,14 +50,14 @@ const VkDeviceSize VulkanBuffer::GetBufferSize() const
 	return bufferSize;
 }
 
-void VulkanBuffer::CopyBuffer(VulkanBuffer * dstBuffer, VulkanSingleCommandPool * commandPool)
+void VulkanBuffer::CopyBuffer(VulkanBuffer * dstBuffer)
 {
 	VkBufferCopy copyRegion = {};
 	copyRegion.size = bufferSize;
 
-	VkCommandBuffer cmdBuffer = commandPool->RecordBegin();
+	VkCommandBuffer cmdBuffer = device->GetSingleCommandPool()->RecordBegin();
 
 	vkCmdCopyBuffer(cmdBuffer, buffer, dstBuffer->GetBuffer(), 1, &copyRegion);
 
-	commandPool->RecordEnd();
+	device->GetSingleCommandPool()->RecordEnd();
 }

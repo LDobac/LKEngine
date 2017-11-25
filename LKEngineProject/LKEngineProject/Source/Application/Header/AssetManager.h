@@ -4,7 +4,8 @@
 
 #include "../../Utility/Header/TSingleton.h"
 
-#include "Asset.h"
+#include "MeshLoader.h"
+#include "Mesh.h"
 
 LK_SPACE_BEGIN
 
@@ -34,6 +35,23 @@ public:
 		assets.insert(std::make_pair(path, newAsset));
 
 		return dynamic_cast<T*>(newAsset);
+	}
+	
+	template <>
+	inline Mesh* Load(const std::string& path)
+	{
+		for (auto it : assets)
+		{
+			if (it.first == path)
+			{
+				return new Mesh(*(dynamic_cast<MeshData*>(it.second)));
+			}
+		}
+
+		MeshData* newModel = MeshLoader::LoadOBJ(prefix + path);
+		assets.insert(std::make_pair(path, newModel));
+
+		return new Mesh(*(newModel));
 	}
 };
 
