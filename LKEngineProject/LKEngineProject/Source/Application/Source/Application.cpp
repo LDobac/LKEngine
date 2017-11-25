@@ -10,29 +10,11 @@
 #include "../../Application/Header/EntityPool.h"
 #include "../../Application/Header/Time.h"
 
-using namespace LKEngine::Application;
+USING_LK_SPACE;
 
-#include "../../../TestScene.h"
-
-Application::Application(const int windowWidth, const int windowHeight)
-{
-	Console_Log("초기화 시작");
-	window = new Window::WindowsWindow(windowWidth,windowHeight);
-	device = Vulkan::VulkanDevice::GetInstance();
-
-	device->SetDebugMode(true);
-	device->SetWindow(window);
-
-	window->Init(device);
-	device->Init();
-
-	LKEngine::Time::Start();
-
-	SceneManager::GetInstance()->Start(new TestScene());
-
-	Console_Log("초기화 성공");
-
-}
+Application::Application()
+	:isExit(false)
+{ }
 
 Application::~Application()
 {
@@ -49,9 +31,30 @@ Application::~Application()
 	SAFE_DELETE(window);
 }
 
+void LKEngine::Application::Application::Start(int width, int height, LKEngine::Scene* startScene, bool debugMode)
+{
+	window = new Window::WindowsWindow(width, height);
+	device = Vulkan::VulkanDevice::GetInstance();
+
+	device->SetDebugMode(debugMode);
+	device->SetWindow(window);
+
+	window->Init(device);
+	device->Init();
+
+	LKEngine::Time::Start();
+
+	SceneManager::GetInstance()->Start(startScene);
+}
+
+void LKEngine::Application::Application::Exit()
+{
+	isExit = true;
+}
+
 void LKEngine::Application::Application::Loop()
 {
-	while (!window->WindowShouldClose())
+	while (!window->WindowShouldClose() && !isExit)
 	{
 		LKEngine::Time::Update();
 

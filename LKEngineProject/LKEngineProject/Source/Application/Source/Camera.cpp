@@ -14,7 +14,6 @@ USING_LK_SPACE
 
 Camera::Camera()
 {
-	position = glm::vec3(2.0f, 2.0f, 2.0f);
 	look = glm::vec3(0.0f, 0.0f, 0.0f);
 	up = glm::vec3(0.0f, 0.0f, 1.0f);
 

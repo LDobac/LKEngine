@@ -4,11 +4,13 @@
 #include <cstdlib>
 #include <crtdbg.h>
 
+#include "TestScene.h"
+
 int main()
 {
-	LKEngine::Application::Application app(800, 600);
+	LKEngine::Application::Application::GetInstance()->Start(800, 600, new TestScene(), true);
 
-	app.Loop();
+	LKEngine::Application::Application::GetInstance()->Loop();
 
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 

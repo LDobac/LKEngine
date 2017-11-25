@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../Utility/Header/TSingleton.h"
+
 namespace LKEngine
 {
 	namespace Vulkan
@@ -11,21 +13,30 @@ namespace LKEngine
 	{
 		class WindowsWindow;
 	}
+
+	class Scene;
 }
 
-namespace LKEngine::Application
+LK_SPACE_BEGIN
+
+class Application
+	: public TSingleton<Application>
 {
-	class Application
-	{
-	private:
-		Window::WindowsWindow* window;
-		Vulkan::VulkanDevice* device;
+private:
+	Window::WindowsWindow* window;
+	Vulkan::VulkanDevice* device;
 
-	public:
-		Application(const int windowWidth,const int windowHeight);
-		~Application();
+	bool isExit;
+public:
+	Application();
+	~Application();
+		
+	void Start(int width, int height, Scene* startScene, bool debugMode = false);
 
-		void Loop();
-	};
-}
+	void Exit();
+
+	void Loop();
+};
+
+LK_SPACE_END
 
