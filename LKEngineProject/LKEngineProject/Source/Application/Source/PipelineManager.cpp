@@ -1,11 +1,11 @@
-#include "PipelineManager.h"
+#include "../Header/PipelineManager.h"
 
-#include "../Vulkan/Header/VulkanPipeline.h"
-#include "../Vulkan/Header/VulkanShaderModule.h"
-#include "../Vulkan/Header/VulkanDescriptorSetLayout.h"
-#include "../Vulkan/Header/VulkanShaderModule.h"
+#include "../../Renderer/Header/VulkanPipeline.h"
+#include "../../Renderer/Header/VulkanShaderModule.h"
+#include "../../Renderer/Header/VulkanDescriptorSetLayout.h"
+#include "../../Renderer/Header/VulkanShaderModule.h"
 
-#include "EntityPool.h"
+#include "../Header/EntityPool.h"
 
 USING_LK_SPACE
 

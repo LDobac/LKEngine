@@ -1,6 +1,6 @@
-#include "SceneManager.h"
+#include "../Header/SceneManager.h"
 
-#include "Scene.h"
+#include "../Header/Scene.h"
 
 USING_LK_SPACE
 

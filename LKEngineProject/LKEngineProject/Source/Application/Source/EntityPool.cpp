@@ -1,9 +1,9 @@
-#include "EntityPool.h"
+#include "../Header/EntityPool.h"
 
-#include "Entity.h"
+#include "../Header/Entity.h"
 
-#include "../Vulkan/Header/VulkanDescriptorPool.h"
-#include "../Vulkan/Header/VulkanDescriptorSetLayout.h"
+#include "../../Renderer/Header/VulkanDescriptorPool.h"
+#include "../../Renderer/Header/VulkanDescriptorSetLayout.h"
 
 USING_LK_SPACE
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Entity.h"
-#include "../Vulkan/Header/VertexInformation.h"
+#include "../../Renderer/Header/VertexInformation.h"
 
 LK_SPACE_BEGIN
 

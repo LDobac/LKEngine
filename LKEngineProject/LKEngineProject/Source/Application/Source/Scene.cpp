@@ -1,4 +1,4 @@
-#include "Scene.h"
+#include "../Header/Scene.h"
 
 USING_LK_SPACE
 

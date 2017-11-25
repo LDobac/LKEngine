@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../Src/Scene.h"
-#include "../Src/Mesh.h"
-#include "../Src/Camera.h"
+#include "Source/Renderer/Header/VulkanMaterial.h"
+#include "Source/Renderer/Header/VulkanTexture.h"
 
-#include "../Vulkan/Header/VulkanMaterial.h"
-#include "../Vulkan/Header/VulkanTexture.h"
+#include "Source/Application/Header/Scene.h"
+#include "Source/Application/Header/Mesh.h"
+#include "Source/Application/Header/Camera.h"
 
 class TestScene
 	: public LKEngine::Scene
@@ -20,8 +20,8 @@ public:
 		LKEngine::Vulkan::VulkanMaterial* material = new LKEngine::Vulkan::VulkanMaterial(
 			LKEngine::EntityPool::GetInstance()->GetDescriptorSetLayout("DefaultMaterial"),
 			LKEngine::PipelineManager::GetInstance()->GetPipeline("Default"));
-		material->AddTexture(new LKEngine::Vulkan::VulkanTexture("Textures/chalet.jpg"));
-		LKEngine::Mesh* mesh = new LKEngine::Mesh("Models/chalet.obj", material);
+		material->AddTexture(new LKEngine::Vulkan::VulkanTexture("Assets/Textures/chalet.jpg"));
+		LKEngine::Mesh* mesh = new LKEngine::Mesh("Assets/Models/chalet.obj", material);
 		mesh->SetName("Mesh");
 		LKEngine::EntityPool::GetInstance()->AddEntity(mesh);
 

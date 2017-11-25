@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "../Header/Mesh.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
@@ -6,16 +6,16 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "../Vulkan/Header/VulkanMaterial.h"
-#include "../Vulkan/Header/VulkanPipeline.h"
-#include "../Vulkan/Header/VulkanBuffer.h"
-#include "../Vulkan/Header/VulkanDescriptorSet.h"
-#include "../Vulkan/Header/VulkanDevice.h"
+#include "../../Renderer/Header/VulkanMaterial.h"
+#include "../../Renderer/Header/VulkanPipeline.h"
+#include "../../Renderer/Header/VulkanBuffer.h"
+#include "../../Renderer/Header/VulkanDescriptorSet.h"
+#include "../../Renderer/Header/VulkanDevice.h"
 
-#include "Time.h"
-#include "Camera.h"
-#include "Scene.h"
-#include "SceneManager.h"
+#include "../Header/Time.h"
+#include "../Header/Camera.h"
+#include "../Header/Scene.h"
+#include "../Header/SceneManager.h"
 
 USING_LK_SPACE
 

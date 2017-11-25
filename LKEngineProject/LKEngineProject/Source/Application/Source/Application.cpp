@@ -3,16 +3,16 @@
 #include "../../Utility/Header/Macro.h"
 
 #include "../../Window/Header/WindowsWindow.h"
-#include "../../Vulkan/Header/VulkanDevice.h"
+#include "../../Renderer/Header/VulkanDevice.h"
 
-#include "../../Src/PipelineManager.h"
-#include "../../Src/SceneManager.h"
-#include "../../Src/EntityPool.h"
-#include "../../Src/Time.h"
+#include "../../Application/Header/PipelineManager.h"
+#include "../../Application/Header/SceneManager.h"
+#include "../../Application/Header/EntityPool.h"
+#include "../../Application/Header/Time.h"
 
 using namespace LKEngine::Application;
 
-#include "../../Source/TestScene.h"
+#include "../../../TestScene.h"
 
 Application::Application(const int windowWidth, const int windowHeight)
 {

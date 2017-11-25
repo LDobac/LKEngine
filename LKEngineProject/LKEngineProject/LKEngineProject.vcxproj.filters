@@ -1,167 +1,77 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Application">
-      <UniqueIdentifier>{8be061cb-1de9-4146-bac3-8c1009a15a1c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utility">
-      <UniqueIdentifier>{ff073da5-dc0f-4114-8095-7ba5fe10be41}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Vulkan">
-      <UniqueIdentifier>{213d9768-fc4a-4c4b-b7a6-c45e28530738}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Window">
-      <UniqueIdentifier>{7e47b8f6-770a-424e-bcc2-a9a322351951}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application\Header">
-      <UniqueIdentifier>{20ccd484-f07b-476a-9417-8980d90d9db7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application\Source">
-      <UniqueIdentifier>{f8cc9e06-955c-47d4-beb0-309df5ba3dbc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Window\Header">
-      <UniqueIdentifier>{22072a8c-fe9a-4533-b38c-a320ed8c58ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Window\Source">
-      <UniqueIdentifier>{bc6756dd-7088-461a-900d-e3c4743b0ff1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Vulkan\Header">
-      <UniqueIdentifier>{1e461b50-9604-446a-86d2-cf104cff8b1a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Vulkan\Source">
-      <UniqueIdentifier>{3d8ca4a6-9332-4613-bbde-32bf6e87a5dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utility\Header">
-      <UniqueIdentifier>{29d35e60-565e-446e-8fd4-6b4ff8513090}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Application\Source\Application.cpp">
-      <Filter>Application\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Vulkan\Source\VulkanDebug.cpp">
-      <Filter>Vulkan\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Vulkan\Source\VulkanDevice.cpp">
-      <Filter>Vulkan\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Vulkan\Source\VulkanExtension.cpp">
-      <Filter>Vulkan\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Vulkan\Source\VulkanImage.cpp">
-      <Filter>Vulkan\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Vulkan\Source\VulkanInstance.cpp">
-      <Filter>Vulkan\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Vulkan\Source\VulkanQueue.cpp">
-      <Filter>Vulkan\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Vulkan\Source\VulkanRenderPass.cpp">
-      <Filter>Vulkan\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Vulkan\Source\VulkanShaderModule.cpp">
-      <Filter>Vulkan\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Vulkan\Source\VulkanSwapchain.cpp">
-      <Filter>Vulkan\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Window\Source\WindowsWindow.cpp">
-      <Filter>Window\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Vulkan\Source\VulkanCommandPool.cpp" />
-    <ClCompile Include="Vulkan\Source\VulkanCommandBuffers.cpp" />
-    <ClCompile Include="Vulkan\Source\VulkanPipeline.cpp" />
-    <ClCompile Include="Vulkan\Source\VulkanSemaphore.cpp" />
-    <ClCompile Include="Vulkan\Source\VulkanBuffer.cpp" />
-    <ClCompile Include="Vulkan\Source\VulkanDescriptorPool.cpp" />
-    <ClCompile Include="Vulkan\Source\VulkanDescriptorSetLayout.cpp" />
-    <ClCompile Include="Vulkan\Source\VulkanDescriptorSet.cpp" />
-    <ClCompile Include="Vulkan\Source\VulkanTexture.cpp" />
-    <ClCompile Include="Src\Entity.cpp" />
-    <ClCompile Include="Src\Camera.cpp" />
-    <ClCompile Include="Vulkan\Source\VulkanMaterial.cpp" />
-    <ClCompile Include="Src\SceneManager.cpp" />
-    <ClCompile Include="Src\PipelineManager.cpp" />
-    <ClCompile Include="Src\Scene.cpp" />
-    <ClCompile Include="Src\EntityPool.cpp" />
-    <ClCompile Include="Src\Time.cpp" />
-    <ClCompile Include="Src\Mesh.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanBuffer.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanCommandBuffers.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanCommandPool.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanDescriptorPool.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanDescriptorSet.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanDescriptorSetLayout.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanMaterial.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanPipeline.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanSemaphore.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanTexture.cpp" />
+    <ClCompile Include="Source\Window\Source\WindowsWindow.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanSwapchain.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanDevice.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanExtension.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanImage.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanInstance.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanQueue.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanRenderPass.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanShaderModule.cpp" />
+    <ClCompile Include="Source\Renderer\Source\VulkanDebug.cpp" />
+    <ClCompile Include="Source\Application\Source\Application.cpp" />
+    <ClCompile Include="Source\Application\Source\Camera.cpp" />
+    <ClCompile Include="Source\Application\Source\Entity.cpp" />
+    <ClCompile Include="Source\Application\Source\EntityPool.cpp" />
+    <ClCompile Include="Source\Application\Source\Mesh.cpp" />
+    <ClCompile Include="Source\Application\Source\PipelineManager.cpp" />
+    <ClCompile Include="Source\Application\Source\Scene.cpp" />
+    <ClCompile Include="Source\Application\Source\SceneManager.cpp" />
+    <ClCompile Include="Source\Application\Source\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application\Header\Application.h">
-      <Filter>Application\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanDebug.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanDevice.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanDeviceChild.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanExtension.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanImage.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanInstance.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanQueue.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanQueueFamilyIndices.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanRenderPass.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanShaderModule.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanSwapchain.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\Header\Macro.h">
-      <Filter>Utility\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\Header\ManagedObject.h">
-      <Filter>Utility\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Window\Header\IWindow.h">
-      <Filter>Window\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Window\Header\WindowsWindow.h">
-      <Filter>Window\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanCommandPool.h" />
-    <ClInclude Include="Vulkan\Header\VulkanCommandBuffers.h" />
-    <ClInclude Include="Vulkan\Header\VulkanPipeline.h" />
-    <ClInclude Include="Vulkan\Header\VertexInformation.h" />
-    <ClInclude Include="Vulkan\Header\VulkanSemaphore.h" />
-    <ClInclude Include="Vulkan\Header\VulkanBuffer.h" />
-    <ClInclude Include="Vulkan\Header\VulkanDescriptorPool.h" />
-    <ClInclude Include="Vulkan\Header\VulkanDescriptorSetLayout.h">
-      <Filter>Vulkan\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\Header\VulkanDescriptorSet.h" />
-    <ClInclude Include="Vulkan\Header\VulkanTexture.h" />
-    <ClInclude Include="Vulkan\Header\VulkanMaterial.h" />
-    <ClInclude Include="Src\Entity.h" />
-    <ClInclude Include="Src\Scene.h" />
-    <ClInclude Include="Src\Camera.h" />
-    <ClInclude Include="Src\Mesh.h" />
-    <ClInclude Include="Src\SceneManager.h" />
-    <ClInclude Include="Src\EntityPool.h" />
-    <ClInclude Include="Utility\Header\TSingleton.h" />
-    <ClInclude Include="Src\TextureManager.h" />
-    <ClInclude Include="Src\PipelineManager.h" />
-    <ClInclude Include="Src\AssetManager.h" />
-    <ClInclude Include="Src\Time.h" />
     <ClInclude Include="Source\TestScene.h" />
+    <ClInclude Include="Source\Renderer\Header\VertexInformation.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanBuffer.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanCommandBuffers.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanCommandPool.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanDescriptorPool.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanDescriptorSet.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanMaterial.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanPipeline.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanSemaphore.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanTexture.h" />
+    <ClInclude Include="Source\Application\Header\AssetManager.h" />
+    <ClInclude Include="Source\Application\Header\Camera.h" />
+    <ClInclude Include="Source\Application\Header\Entity.h" />
+    <ClInclude Include="Source\Application\Header\EntityPool.h" />
+    <ClInclude Include="Source\Application\Header\Mesh.h" />
+    <ClInclude Include="Source\Application\Header\PipelineManager.h" />
+    <ClInclude Include="Source\Application\Header\Scene.h" />
+    <ClInclude Include="Source\Application\Header\SceneManager.h" />
+    <ClInclude Include="Source\Application\Header\TextureManager.h" />
+    <ClInclude Include="Source\Application\Header\Time.h" />
+    <ClInclude Include="Source\Utility\Header\TSingleton.h" />
+    <ClInclude Include="Source\Window\Header\IWindow.h" />
+    <ClInclude Include="Source\Window\Header\WindowsWindow.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanSwapchain.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanShaderModule.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanRenderPass.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanQueueFamilyIndices.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanQueue.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanInstance.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanImage.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanExtension.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanDeviceChild.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanDevice.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanDescriptorSetLayout.h" />
+    <ClInclude Include="Source\Renderer\Header\VulkanDebug.h" />
+    <ClInclude Include="Source\Utility\Header\ManagedObject.h" />
+    <ClInclude Include="Source\Utility\Header\Macro.h" />
+    <ClInclude Include="Source\Application\Header\Application.h" />
+    <ClInclude Include="TestScene.h" />
   </ItemGroup>
 </Project>

@@ -15,10 +15,10 @@
 #include "../Header/VulkanCommandPool.h"
 #include "../Header/VulkanSemaphore.h"
 
-#include "../../Src/PipelineManager.h"
+#include "../../Application/Header/PipelineManager.h"
 
-#include "../../Src/EntityPool.h"
-#include "../../Src/Time.h"
+#include "../../Application/Header/EntityPool.h"
+#include "../../Application/Header/Time.h"
 #include "../../Utility/Header/Macro.h"
 #include "../../Window/Header/WindowsWindow.h"
 

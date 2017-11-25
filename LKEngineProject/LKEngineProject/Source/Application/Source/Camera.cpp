@@ -1,14 +1,14 @@
-#include "Camera.h"
+#include "../Header/Camera.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "../Vulkan/Header/VulkanDevice.h"
-#include "../Vulkan/Header/VulkanSwapchain.h"
-#include "../Vulkan/Header/VulkanDescriptorSet.h"
-#include "../Vulkan/Header/VulkanBuffer.h"
+#include "../../Renderer/Header/VulkanDevice.h"
+#include "../../Renderer/Header/VulkanSwapchain.h"
+#include "../../Renderer/Header/VulkanDescriptorSet.h"
+#include "../../Renderer/Header/VulkanBuffer.h"
 
-#include "EntityPool.h"
+#include "../Header/EntityPool.h"
 
 USING_LK_SPACE
 
