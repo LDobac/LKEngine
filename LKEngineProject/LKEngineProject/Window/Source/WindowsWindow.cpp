@@ -50,6 +50,8 @@ GLFWwindow * WindowsWindow::GetWindowHandle() const
 
 void WindowsWindow::onWindowResized(GLFWwindow * window, int width, int height)
 {
+	Console_Log("∏ÆªÁ¿Ã¬°")
+
 	if (width == 0 || height == 0) return;
 
 	auto device = reinterpret_cast<LKEngine::Vulkan::VulkanDevice*>(glfwGetWindowUserPointer(window));

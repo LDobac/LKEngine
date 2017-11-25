@@ -126,53 +126,55 @@ void VulkanDevice::Shutdown()
 
 void VulkanDevice::Render()
 {
-	if (EntityPool::GetInstance()->NeedRender())
+	std::vector<VkClearValue> clearValues(2);
+	clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
+	clearValues[1].depthStencil = { 1.0f, 0 };
+
+	std::vector<VkFramebuffer> framebuffers = swapchain->GetFrameBuffers();
+	VkExtent2D extent = swapchain->GetExtent();
+
+	for (size_t i = 0; i < commandPool->GetBufferSize(); i++)
 	{
-		std::vector<VkClearValue> clearValues(2);
-		clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
-		clearValues[1].depthStencil = { 1.0f, 0 };
+		auto commandBuffer = commandPool->GetBuffer(i);
 
-		std::vector<VkFramebuffer> framebuffers = swapchain->GetFrameBuffers();
-		VkExtent2D extent = swapchain->GetExtent();
+		commandPool->RecordBegin(i, VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT);
+		renderPass->Begin(clearValues, framebuffers[i], extent, commandBuffer);
 
-		for (size_t i = 0; i < commandPool->GetBufferSize(); i++)
-		{
-			auto commandBuffer = commandPool->GetBuffer(i);
+		EntityPool::GetInstance()->Render(commandBuffer);
 
-			commandPool->RecordBegin(i, VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT);
-			renderPass->Begin(clearValues, framebuffers[i], extent, commandBuffer);
-
-			EntityPool::GetInstance()->Render(commandBuffer);
-
-			renderPass->End(commandBuffer);
-			commandPool->RecordEnd(i);
-		}
+		renderPass->End(commandBuffer);
+		commandPool->RecordEnd(i);
 	}
 }
 
 void VulkanDevice::Draw()
 {
-	presentQueue->WaitIdle();
-
-	uint32_t imageIndex = 0;
-	VkResult result = vkAcquireNextImageKHR(vkDevice, swapchain->GetHandle(),
-		std::numeric_limits<uint64_t>::max(),
-		imageAvailableSemaphore->GetHandle(),
-		VK_NULL_HANDLE,
-		&imageIndex);
-	if (result == VK_ERROR_OUT_OF_DATE_KHR)
+	if (!EntityPool::GetInstance()->NeedRender())
 	{
-		ResizeWindow();
-		return;
-	}
-	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
-	{
-		throw std::runtime_error("스왑체인 이미지 가져오기 실패");
-	}
+		presentQueue->WaitIdle();
 
-	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-	graphicsQueue->Submit(imageAvailableSemaphore, renderFinishedSemaphore, waitStages, commandPool->GetBuffer(imageIndex));
-	presentQueue->Present(swapchain, renderFinishedSemaphore, imageIndex);
+		uint32_t imageIndex = 0;
+		VkResult result = vkAcquireNextImageKHR(vkDevice, swapchain->GetHandle(),
+			std::numeric_limits<uint64_t>::max(),
+			imageAvailableSemaphore->GetHandle(),
+			VK_NULL_HANDLE,
+			&imageIndex);
+		if (result == VK_ERROR_OUT_OF_DATE_KHR)
+		{
+			Console_Log("스왑체인 데이터가 만료됨, 다시 렌더");
+			ResizeWindow();
+			return;
+		}
+		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+		{
+			Console_Log("스왑체인 이미지 가져오기 실패");
+			throw std::runtime_error("");
+		}
+
+		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+		graphicsQueue->Submit(imageAvailableSemaphore, renderFinishedSemaphore, waitStages, commandPool->GetBuffer(imageIndex));
+		presentQueue->Present(swapchain, renderFinishedSemaphore, imageIndex);
+	}
 }
 
 void VulkanDevice::ResizeWindow()
@@ -199,6 +201,7 @@ void VulkanDevice::ResizeWindow()
 
 	PipelineManager::GetInstance()->RecreatePipelines();
 
+	Render();
 }
 
 void VulkanDevice::WaitIdle()

@@ -40,7 +40,10 @@ Mesh::~Mesh()
 
 void Mesh::Update()
 {
-	glm::mat4 model = glm::rotate(glm::mat4(1.0f), LKEngine::Time::GetTime() * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	struct ModelUniformBuffer { glm::mat4 model; };
+
+	ModelUniformBuffer model;
+	model.model = glm::rotate(glm::mat4(1.0f), LKEngine::Time::GetTime() * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	uniformBuffer->Map(&model);
 }
 

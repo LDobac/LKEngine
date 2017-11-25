@@ -58,7 +58,7 @@ void LKEngine::Application::Application::Loop()
 		SceneManager::GetInstance()->Update();
 		EntityPool::GetInstance()->Update();
 
-		device->Render();
+		if (EntityPool::GetInstance()->NeedRender()) device->Render();
 
 		device->Draw();
 
