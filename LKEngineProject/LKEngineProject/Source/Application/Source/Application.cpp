@@ -8,6 +8,7 @@
 #include "../../Application/Header/PipelineManager.h"
 #include "../../Application/Header/SceneManager.h"
 #include "../../Application/Header/EntityPool.h"
+#include "../../Application/Header/AssetManager.h"
 #include "../../Application/Header/Time.h"
 
 USING_LK_SPACE;
@@ -23,7 +24,7 @@ Application::~Application()
 	SceneManager::Release();
 	EntityPool::Release();
 	PipelineManager::Release();
-	
+	AssetManager::Release();
 
 	Vulkan::VulkanDevice::Release();
 	window->Shutdown();

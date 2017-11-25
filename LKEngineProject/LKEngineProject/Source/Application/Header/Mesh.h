@@ -34,7 +34,6 @@ public:
 
 	virtual void Update() override;
 	virtual void Render(const VkCommandBuffer& cmdBuffer) override;
-
 private:
 	void LoadModel(std::string meshpath);
 	void CreateVertexBuffer();
