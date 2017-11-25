@@ -1,38 +1,15 @@
-#include "../Header/VulkanTexture.h"
+#include "../Header/Texture.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include "../Header/VulkanDevice.h"
-#include "../Header/VulkanImage.h"
-#include "../Header/VulkanBuffer.h"
+#include "../../Renderer/Header/VulkanDevice.h"
+#include "../../Renderer/Header/VulkanBuffer.h"
 
-USING_LK_VULKAN_SPACE
+USING_LK_SPACE
 
-VulkanTexture::VulkanTexture(std::string path)
-	:VulkanImage(VulkanDevice::GetInstance())
-{
-	CreateTexture(path, VulkanDevice::GetInstance()->GetSingleCommandPool());
-	CreateSampler();
-}
-
-VulkanTexture::~VulkanTexture()
-{
-	vkDestroySampler(device->GetHandle(), sampler, nullptr);
-	VulkanImage::Shutdown();
-}
-
-const VkSampler & VulkanTexture::GetSampler() const
-{
-	return sampler;
-}
-
-const VkImageView & VulkanTexture::GetImageView() const
-{
-	return imageView;
-}
-
-void VulkanTexture::CreateTexture(std::string path, VulkanSingleCommandPool * commandPool)
+Texture::Texture(const std::string & path)
+	: VulkanImage(Vulkan::VulkanDevice::GetInstance())
 {
 	int texWidth, texHeight, texChannels;
 	stbi_uc* pixels = stbi_load(path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
@@ -42,7 +19,7 @@ void VulkanTexture::CreateTexture(std::string path, VulkanSingleCommandPool * co
 	}
 
 	VkDeviceSize imageSize = texWidth * texHeight * 4;
-	VulkanBuffer* stagingBuffer = new VulkanBuffer(
+	Vulkan::VulkanBuffer* stagingBuffer = new Vulkan::VulkanBuffer(
 		imageSize,
 		VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
@@ -56,19 +33,38 @@ void VulkanTexture::CreateTexture(std::string path, VulkanSingleCommandPool * co
 		VK_FORMAT_R8G8B8A8_UNORM,
 		VK_IMAGE_TILING_OPTIMAL,
 		VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
-		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
+		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		VK_IMAGE_ASPECT_COLOR_BIT);
 
+	Vulkan::VulkanSingleCommandPool* commandPool = device->GetSingleCommandPool();
 	TransitionLayout(commandPool, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 	CopyBufferToImage(stagingBuffer, this, commandPool);
 	TransitionLayout(commandPool, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
 	SAFE_DELETE(stagingBuffer);
+
+	CreateSampler();
 }
 
-void VulkanTexture::CreateSampler()
+Texture::~Texture()
 {
-	VkSamplerCreateInfo info = { };
+	vkDestroySampler(device->GetHandle(), sampler, nullptr);
+	VulkanImage::Shutdown();
+}
+
+const VkSampler & Texture::GetSampler() const
+{
+	return sampler;
+}
+
+const VkImageView & Texture::GetImageView() const
+{
+	return imageView;
+}
+
+void Texture::CreateSampler()
+{
+	VkSamplerCreateInfo info = {};
 	info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 
 	info.magFilter = VK_FILTER_LINEAR;

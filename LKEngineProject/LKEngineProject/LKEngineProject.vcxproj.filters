@@ -8,10 +8,8 @@
     <ClCompile Include="Source\Renderer\Source\VulkanDescriptorPool.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanDescriptorSet.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanDescriptorSetLayout.cpp" />
-    <ClCompile Include="Source\Renderer\Source\VulkanMaterial.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanPipeline.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanSemaphore.cpp" />
-    <ClCompile Include="Source\Renderer\Source\VulkanTexture.cpp" />
     <ClCompile Include="Source\Window\Source\WindowsWindow.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanSwapchain.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanDevice.cpp" />
@@ -31,6 +29,9 @@
     <ClCompile Include="Source\Application\Source\Scene.cpp" />
     <ClCompile Include="Source\Application\Source\SceneManager.cpp" />
     <ClCompile Include="Source\Application\Source\Time.cpp" />
+    <ClCompile Include="Source\Application\Source\Material.cpp" />
+    <ClCompile Include="Source\Application\Source\Texture.cpp" />
+    <ClCompile Include="Source\Application\Source\AssetManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\TestScene.h" />
@@ -40,10 +41,8 @@
     <ClInclude Include="Source\Renderer\Header\VulkanCommandPool.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanDescriptorPool.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanDescriptorSet.h" />
-    <ClInclude Include="Source\Renderer\Header\VulkanMaterial.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanPipeline.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanSemaphore.h" />
-    <ClInclude Include="Source\Renderer\Header\VulkanTexture.h" />
     <ClInclude Include="Source\Application\Header\AssetManager.h" />
     <ClInclude Include="Source\Application\Header\Camera.h" />
     <ClInclude Include="Source\Application\Header\Entity.h" />
@@ -74,5 +73,8 @@
     <ClInclude Include="Source\Application\Header\Application.h" />
     <ClInclude Include="TestScene.h" />
     <ClInclude Include="Source\LKEngine.h" />
+    <ClInclude Include="Source\Application\Header\Material.h" />
+    <ClInclude Include="Source\Application\Header\Texture.h" />
+    <ClInclude Include="Source\Application\Header\Asset.h" />
   </ItemGroup>
 </Project>

@@ -21,13 +21,16 @@
   <ItemGroup>
     <ClCompile Include="Source\Application\Source\Application.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source\Application\Source\AssetManager.cpp" />
     <ClCompile Include="Source\Application\Source\Camera.cpp" />
     <ClCompile Include="Source\Application\Source\Entity.cpp" />
     <ClCompile Include="Source\Application\Source\EntityPool.cpp" />
+    <ClCompile Include="Source\Application\Source\Material.cpp" />
     <ClCompile Include="Source\Application\Source\Mesh.cpp" />
     <ClCompile Include="Source\Application\Source\PipelineManager.cpp" />
     <ClCompile Include="Source\Application\Source\Scene.cpp" />
     <ClCompile Include="Source\Application\Source\SceneManager.cpp" />
+    <ClCompile Include="Source\Application\Source\Texture.cpp" />
     <ClCompile Include="Source\Application\Source\Time.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanBuffer.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanCommandBuffers.cpp" />
@@ -38,7 +41,6 @@
     <ClCompile Include="Source\Renderer\Source\VulkanDescriptorSetLayout.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanDevice.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanExtension.cpp" />
-    <ClCompile Include="Source\Renderer\Source\VulkanMaterial.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanPipeline.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanImage.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanInstance.cpp" />
@@ -47,11 +49,13 @@
     <ClCompile Include="Source\Renderer\Source\VulkanSemaphore.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanShaderModule.cpp" />
     <ClCompile Include="Source\Renderer\Source\VulkanSwapchain.cpp" />
-    <ClCompile Include="Source\Renderer\Source\VulkanTexture.cpp" />
     <ClCompile Include="Source\Window\Source\WindowsWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\Header\Application.h" />
+    <ClInclude Include="Source\Application\Header\Asset.h" />
+    <ClInclude Include="Source\Application\Header\Material.h" />
+    <ClInclude Include="Source\Application\Header\Texture.h" />
     <ClInclude Include="Source\LKEngine.h" />
     <ClInclude Include="Source\TestScene.h" />
     <ClInclude Include="Source\Application\Header\AssetManager.h" />
@@ -78,7 +82,6 @@
     <ClInclude Include="Source\Renderer\Header\VulkanDevice.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanDeviceChild.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanExtension.h" />
-    <ClInclude Include="Source\Renderer\Header\VulkanMaterial.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanPipeline.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanImage.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanInstance.h" />
@@ -88,7 +91,6 @@
     <ClInclude Include="Source\Renderer\Header\VulkanSemaphore.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanShaderModule.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanSwapchain.h" />
-    <ClInclude Include="Source\Renderer\Header\VulkanTexture.h" />
     <ClInclude Include="Source\Window\Header\IWindow.h" />
     <ClInclude Include="Source\Window\Header\WindowsWindow.h" />
     <ClInclude Include="TestScene.h" />

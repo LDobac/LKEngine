@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity.h"
+
 #include "../../Renderer/Header/VertexInformation.h"
 
 LK_SPACE_BEGIN
@@ -8,9 +9,9 @@ LK_SPACE_BEGIN
 namespace Vulkan
 {
 	class VulkanBuffer;
-	class VulkanMaterial;
 	class VulkanDescriptorSet;
 }
+class Material;
 
 class Mesh
 	: public Entity
@@ -26,9 +27,9 @@ private:
 	Vulkan::VulkanDescriptorSet* descriptorSet;
 
 	//TODO : 머터리얼 여러개
-	Vulkan::VulkanMaterial* material;
+	Material* material;
 public:
-	explicit Mesh(std::string meshpath, Vulkan::VulkanMaterial* material);
+	explicit Mesh(std::string meshpath, Material* material);
 	virtual ~Mesh();
 
 	virtual void Update() override;

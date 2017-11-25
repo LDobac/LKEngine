@@ -3,7 +3,6 @@
 #include "../Header/VulkanDescriptorSetLayout.h"
 #include "../Header/VulkanDescriptorPool.h"
 #include "../Header/VulkanBuffer.h"
-#include "../Header/VulkanTexture.h"
 
 #include "../../Utility/Header/Macro.h"
 
@@ -42,12 +41,12 @@ void VulkanDescriptorSet::AddBufferInfo(VkDescriptorType type, VulkanBuffer * bu
 	descriptorWrites.push_back(descriptorWrite);
 }
 
-void VulkanDescriptorSet::AddTextureInfo(VkDescriptorType type, VulkanTexture * texture, uint32_t binding)
+void VulkanDescriptorSet::AddTextureInfo(VkDescriptorType type, const VkImageView& imageView, const VkSampler& sampler, uint32_t binding)
 {
 	VkDescriptorImageInfo info = { };
 	info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-	info.imageView = texture->GetImageView();
-	info.sampler = texture->GetSampler();
+	info.imageView = imageView;
+	info.sampler = sampler;
 	imageInfos.push_back(info);
 
 	VkWriteDescriptorSet descriptorWrite = {};

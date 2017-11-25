@@ -23,7 +23,7 @@ public:
 	explicit VulkanDescriptorSet(VulkanDescriptorSetLayout* setLayout, VulkanDescriptorPool* pool);
 
 	void AddBufferInfo(VkDescriptorType type, VulkanBuffer* buffer, size_t offset, uint32_t binding);
-	void AddTextureInfo(VkDescriptorType type, VulkanTexture* texture, uint32_t binding);
+	void AddTextureInfo(VkDescriptorType type, const VkImageView& imageView, const VkSampler& sampler , uint32_t binding);
 
 	void UpdateSets();
 

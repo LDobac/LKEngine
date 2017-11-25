@@ -6,12 +6,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "../../Renderer/Header/VulkanMaterial.h"
 #include "../../Renderer/Header/VulkanPipeline.h"
 #include "../../Renderer/Header/VulkanBuffer.h"
 #include "../../Renderer/Header/VulkanDescriptorSet.h"
 #include "../../Renderer/Header/VulkanDevice.h"
 
+#include "../Header/Material.h"
 #include "../Header/Time.h"
 #include "../Header/Camera.h"
 #include "../Header/Scene.h"
@@ -19,7 +19,7 @@
 
 USING_LK_SPACE
 
-Mesh::Mesh(std::string meshpath, Vulkan::VulkanMaterial * material)
+Mesh::Mesh(std::string meshpath, Material* material)
 {
 	this->material = material;
 	LoadModel(meshpath);
