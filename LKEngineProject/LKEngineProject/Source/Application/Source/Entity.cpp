@@ -1,5 +1,7 @@
 #include "../Header/Entity.h"
 
+#include "../Header/Component.h"
+
 USING_LK_SPACE
 
 Entity::Entity()
@@ -14,11 +16,13 @@ Entity::~Entity()
 
 void Entity::Update()
 {
+	for (Component* component : components)
+	{
+		component->Update();
+	}
 }
 
-void Entity::Render(const VkCommandBuffer& cmdBuffer)
-{
-}
+void Entity::Render(const VkCommandBuffer& cmdBuffer) { }
 
 std::string Entity::GetName() const
 {
@@ -38,6 +42,11 @@ glm::vec3 Entity::GetRotation() const
 glm::vec3 Entity::GetScale() const
 {
 	return scale;
+}
+
+void Entity::AddComponent(Component * newComponent)
+{
+	newComponent->Start();
 }
 
 void Entity::SetName(const std::string & name)

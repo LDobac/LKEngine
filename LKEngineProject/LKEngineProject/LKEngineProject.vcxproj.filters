@@ -78,5 +78,8 @@
     <ClInclude Include="Source\Application\Header\Asset.h" />
     <ClInclude Include="Source\Application\Header\MeshLoader.h" />
     <ClInclude Include="Source\Application\Header\VertexInformation.h" />
+    <ClInclude Include="Source\Application\Header\Component.h" />
+    <ClInclude Include="Source\Application\Header\MeshRendererComponent.h" />
+    <ClInclude Include="Source\Application\Header\RendererComponent.h" />
   </ItemGroup>
 </Project>

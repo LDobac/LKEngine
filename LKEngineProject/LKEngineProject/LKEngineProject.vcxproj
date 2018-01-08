@@ -55,8 +55,11 @@
   <ItemGroup>
     <ClInclude Include="Source\Application\Header\Application.h" />
     <ClInclude Include="Source\Application\Header\Asset.h" />
+    <ClInclude Include="Source\Application\Header\Component.h" />
     <ClInclude Include="Source\Application\Header\Material.h" />
     <ClInclude Include="Source\Application\Header\MeshLoader.h" />
+    <ClInclude Include="Source\Application\Header\MeshRendererComponent.h" />
+    <ClInclude Include="Source\Application\Header\RendererComponent.h" />
     <ClInclude Include="Source\Application\Header\Texture.h" />
     <ClInclude Include="Source\LKEngine.h" />
     <ClInclude Include="Source\TestScene.h" />
@@ -204,6 +207,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <RuntimeTypeInfo>
+      </RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

@@ -7,6 +7,7 @@
 
 LK_SPACE_BEGIN
 
+class Component;
 class EntityPool;
 
 class Entity
@@ -20,6 +21,8 @@ protected:
 	glm::vec3 position;
 	glm::vec3 rotation;
 	glm::vec3 scale;
+
+	std::vector<Component*> components;
 public:
 	explicit Entity();
 	virtual ~Entity();
@@ -36,6 +39,21 @@ public:
 	virtual glm::vec3 GetPosition() const;
 	virtual glm::vec3 GetRotation() const;
 	virtual glm::vec3 GetScale() const;
+
+	void AddComponent(Component* newComponent);
+	template <typename C>
+	inline C* GetComponent()
+	{
+		for (size_t i = 0; i < components.size(); i++)
+		{
+			if (typeid(C) == typeid(components[i]))
+			{
+				return dynamic_cast<C>(components[i]);
+			}
+		}
+
+		return nullptr;
+	}
 };
 
 LK_SPACE_END;
