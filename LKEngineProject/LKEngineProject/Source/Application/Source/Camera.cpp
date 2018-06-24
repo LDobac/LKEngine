@@ -59,7 +59,7 @@ glm::mat4 Camera::GetProjectionMatrix()
 {
 	auto swapchain = Vulkan::VulkanDevice::GetInstance()->GetSwapchain();
 	
-	return glm::perspective(glm::radians(45.0f), swapchain->GetExtent().width / (float)swapchain->GetExtent().height, 0.1f, 10.0f) *= 1;
+	return glm::perspective(glm::radians(45.0f), swapchain->GetExtent().width / (float)swapchain->GetExtent().height, 0.1f, 10.0f);
 }
 
 Vulkan::VulkanDescriptorSet * Camera::GetDescriptorSet()

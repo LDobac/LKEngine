@@ -18,7 +18,7 @@ void LKEngine::Vulkan::VulkanDescriptorPool::AddPoolSize(VkDescriptorType type, 
 {
 	VkDescriptorPoolSize poolSize = { };
 	poolSize.type = type;
-	poolSize.descriptorCount = descriptorCount;
+	poolSize.descriptorCount = static_cast<uint32_t>(descriptorCount);
 	poolSizes.push_back(poolSize);
 }
 
@@ -26,9 +26,9 @@ void VulkanDescriptorPool::CreatePool(size_t maxSets)
 {
 	VkDescriptorPoolCreateInfo info = { };
 	info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	info.poolSizeCount = poolSizes.size();
+	info.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
 	info.pPoolSizes = poolSizes.data();
-	info.maxSets = maxSets;
+	info.maxSets = static_cast<uint32_t>(maxSets);
 
 	Check_Throw(vkCreateDescriptorPool(device->GetHandle(), &info, nullptr, &descriptorPool) != VK_SUCCESS, "디스크립터 풀 생성 실패");
 }

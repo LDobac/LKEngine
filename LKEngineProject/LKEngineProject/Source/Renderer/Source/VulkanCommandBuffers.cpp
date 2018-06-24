@@ -21,14 +21,14 @@ void VulkanCommandBuffers::AllocBuffers(size_t size)
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	allocInfo.commandPool = commandPool;
 	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandBufferCount = commandBuffers.size();
+	allocInfo.commandBufferCount = static_cast<uint32_t>(commandBuffers.size());
 
 	Check_Throw(vkAllocateCommandBuffers(device->GetHandle(), &allocInfo, commandBuffers.data()) != VK_SUCCESS, "Command Buffer 생성 실패");
 }
 
 void VulkanCommandBuffers::FreeAll()
 {
-	vkFreeCommandBuffers(device->GetHandle(), commandPool, commandBuffers.size(), commandBuffers.data());
+	vkFreeCommandBuffers(device->GetHandle(), commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 }
 
 void VulkanCommandBuffers::RecordBegin(uint32_t index, VkCommandBufferUsageFlags flags)

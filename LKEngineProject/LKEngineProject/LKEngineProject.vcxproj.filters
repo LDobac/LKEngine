@@ -24,7 +24,6 @@
     <ClCompile Include="Source\Application\Source\Camera.cpp" />
     <ClCompile Include="Source\Application\Source\Entity.cpp" />
     <ClCompile Include="Source\Application\Source\EntityPool.cpp" />
-    <ClCompile Include="Source\Application\Source\Mesh.cpp" />
     <ClCompile Include="Source\Application\Source\PipelineManager.cpp" />
     <ClCompile Include="Source\Application\Source\Scene.cpp" />
     <ClCompile Include="Source\Application\Source\SceneManager.cpp" />
@@ -33,6 +32,7 @@
     <ClCompile Include="Source\Application\Source\Texture.cpp" />
     <ClCompile Include="Source\Application\Source\AssetManager.cpp" />
     <ClCompile Include="Source\Application\Source\MeshLoader.cpp" />
+    <ClCompile Include="Source\Application\Source\RendererComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\TestScene.h" />
@@ -47,7 +47,6 @@
     <ClInclude Include="Source\Application\Header\Camera.h" />
     <ClInclude Include="Source\Application\Header\Entity.h" />
     <ClInclude Include="Source\Application\Header\EntityPool.h" />
-    <ClInclude Include="Source\Application\Header\Mesh.h" />
     <ClInclude Include="Source\Application\Header\PipelineManager.h" />
     <ClInclude Include="Source\Application\Header\Scene.h" />
     <ClInclude Include="Source\Application\Header\SceneManager.h" />
@@ -64,7 +63,6 @@
     <ClInclude Include="Source\Renderer\Header\VulkanInstance.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanImage.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanExtension.h" />
-    <ClInclude Include="Source\Renderer\Header\VulkanDeviceChild.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanDevice.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanDescriptorSetLayout.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanDebug.h" />
@@ -81,5 +79,6 @@
     <ClInclude Include="Source\Application\Header\Component.h" />
     <ClInclude Include="Source\Application\Header\MeshRendererComponent.h" />
     <ClInclude Include="Source\Application\Header\RendererComponent.h" />
+    <ClInclude Include="Source\Application\Header\Object.h" />
   </ItemGroup>
 </Project>

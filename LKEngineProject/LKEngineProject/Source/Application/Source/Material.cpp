@@ -7,7 +7,7 @@
 
 USING_LK_SPACE
 
-Material::Material(Vulkan::VulkanDescriptorSetLayout * setLayout, Vulkan::VulkanPipeline * pipeline)
+Material::Material(Vulkan::VulkanPipeline * pipeline)
 	: pipeline(pipeline)
 {
 	descriptorSet = new Vulkan::VulkanDescriptorSet(setLayout, EntityPool::GetInstance()->GetDescriptorPool());
@@ -24,7 +24,7 @@ void Material::AddTexture(Texture * texture)
 		VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 
 		texture->GetImageView(),
 		texture->GetSampler() ,
-		textures.size());
+		static_cast<uint32_t>(textures.size()));
 
 	descriptorSet->UpdateSets();
 

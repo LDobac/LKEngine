@@ -3,6 +3,10 @@
 #include "Source/LKEngine.h"
 
 #include "Source/Application/Header/MeshLoader.h"
+#include "Source/Application/Header/EntityPool.h"
+
+#include "Source/Application/Header/Entity.h"
+#include "Source/Application/Header/RendererComponent.h"
 
 USING_LK_SPACE;
 
@@ -10,32 +14,36 @@ class TestScene
 	: public Scene
 {
 private:
-	Mesh* mesh;
+	Camera * camera;
+
+	Entity* mesh;
 public:
-	virtual void Start() override
+	virtual void Begin() override
 	{
-		mainCamera = new Camera();
-		mainCamera->SetName("Main Camera");
-		mainCamera->SetPosition(glm::vec3(0.0f, 0.0f, 2.0f));
-		EntityPool::GetInstance()->AddEntity(mainCamera);
+		camera = new Camera();
+		camera->SetName("Main Camera");
+		camera->SetPosition(glm::vec3(0.0f, 0.0f, 2.0f));
+		GetPool()->AddEntity(camera);
 
 		Texture* texture = AssetManager::GetInstance()->Load<Texture>("Textures/chalet.jpg");
-		Material* material = new Material(
-			EntityPool::GetInstance()->GetDescriptorSetLayout("DefaultMaterial"),
-			PipelineManager::GetInstance()->GetPipeline("Default"));
+		Material* material = new Material(PipelineManager::GetInstance()->GetPipeline("Default"));
 		material->AddTexture(texture);
 
-		mesh = AssetManager::GetInstance()->Load<Mesh>("Models/chalet.obj");
-		mesh->AddMaterial(material);
+		mesh = new Entity();
 		mesh->SetPosition(glm::vec3(0.0f, 0.0f, -2.0f));
 		mesh->SetName("Mesh");
-		EntityPool::GetInstance()->AddEntity(mesh);
+		GetPool()->AddEntity(mesh);
+
+		RendererComponent* renderer = new RendererComponent(mesh, AssetManager::GetInstance()->Load<Mesh>("Models/chalet.obj"));
+		renderer->AddMaterial(material);
 
 		Console_Log("Test Scene Start");
 	}
+
 	virtual void Update() override
 	{
 	}
+
 	virtual void End() override
 	{
 		Console_Log("Test Scene End");

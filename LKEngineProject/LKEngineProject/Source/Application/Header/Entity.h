@@ -3,44 +3,54 @@
 #include <vulkan/vulkan.hpp>
 #include <glm/glm.hpp>
 
-#include "../../Utility/Header/Macro.h"
+#include "Object.h"
 
 LK_SPACE_BEGIN
 
 class Component;
 class EntityPool;
 
-class Entity
+class Entity : public Object
 {
-	friend class EntityPool;
 private:
 	bool isRemoved;
-protected:
-	std::string name;
 
+private:
 	glm::vec3 position;
 	glm::vec3 rotation;
 	glm::vec3 scale;
 
+	Entity* parent;
+
 	std::vector<Component*> components;
+	std::vector<Entity*> children;
 public:
 	explicit Entity();
 	virtual ~Entity();
 
 	virtual void Update();
-	virtual void Render(const VkCommandBuffer& cmdBuffer);
 
-	virtual void SetName(const std::string& name);
+#pragma region Properties
+
 	virtual void SetPosition(const glm::vec3& newPos);
 	virtual void SetRotation(const glm::vec3& newRot);
 	virtual void SetScale(const glm::vec3& newScale);
 
-	virtual std::string GetName() const;
 	virtual glm::vec3 GetPosition() const;
 	virtual glm::vec3 GetRotation() const;
 	virtual glm::vec3 GetScale() const;
 
+#pragma endregion
+
+	void AddChild(Entity* newChild);
+
+	void SetParent(Entity* newParent);
+
+	Entity* GetParent() const;
+	std::vector<Entity*> GetChildren() const;
+
 	void AddComponent(Component* newComponent);
+
 	template <typename C>
 	inline C* GetComponent()
 	{

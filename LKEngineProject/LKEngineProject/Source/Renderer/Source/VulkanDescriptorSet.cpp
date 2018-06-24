@@ -63,7 +63,7 @@ void VulkanDescriptorSet::AddTextureInfo(VkDescriptorType type, const VkImageVie
 
 void VulkanDescriptorSet::UpdateSets()
 {
-	vkUpdateDescriptorSets(device->GetHandle(), descriptorWrites.size(), descriptorWrites.data(), 0, nullptr);
+	vkUpdateDescriptorSets(device->GetHandle(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 }
 
 const VkDescriptorSet & VulkanDescriptorSet::GetHandle() const

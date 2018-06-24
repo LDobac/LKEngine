@@ -8,7 +8,6 @@
 USING_LK_SPACE
 
 EntityPool::EntityPool()
-	:needRender(false)
 {
 	descriptorPool = new Vulkan::VulkanDescriptorPool();
 
@@ -44,16 +43,16 @@ EntityPool::~EntityPool()
 	}
 	SAFE_DELETE(descriptorPool);
 
-	ReleaseAll();
+	RemoveAll();
 }
 
-void EntityPool::AddEntity(Entity * newEntity)
+void EntityPool::AddEntity(Entity* newEntity)
 {
 	entities.push_back(newEntity);
 	needRender = true;
 }
 
-void EntityPool::RemoveEntity(Entity * removedEntity)
+void EntityPool::RemoveEntity(Entity* removedEntity)
 {
 	removedEntity->isRemoved = true;
 	needRender = true;
@@ -75,16 +74,6 @@ void EntityPool::Update()
 	}
 }
 
-void EntityPool::Render(const VkCommandBuffer& cmdBuffer)
-{
-	for (auto entity : entities)
-	{
-		entity->Render(cmdBuffer);
-	}
-
-	needRender = false;
-}
-
 void EntityPool::AddDescriptorSetLayout(const std::string& key, Vulkan::VulkanDescriptorSetLayout* setLayout)
 {
 	descriptorSetLayouts.insert(std::make_pair(key, setLayout));
@@ -100,16 +89,11 @@ Vulkan::VulkanDescriptorPool * EntityPool::GetDescriptorPool() const
 	return descriptorPool;
 }
 
-void EntityPool::ReleaseAll()
+void EntityPool::RemoveAll()
 {
 	for (Entity* entity : entities)
 	{
 		SAFE_DELETE(entity);
 	}
 	entities.clear();
-}
-
-bool EntityPool::NeedRender() const
-{
-	return needRender;
 }

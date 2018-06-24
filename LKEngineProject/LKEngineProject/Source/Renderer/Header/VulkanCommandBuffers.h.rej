@@ -1,0 +1,9 @@
+diff a/LKEngineProject/LKEngineProject/Source/Renderer/Header/VulkanCommandBuffers.h b/LKEngineProject/LKEngineProject/Source/Renderer/Header/VulkanCommandBuffers.h	(rejected hunks)
+@@ -1,7 +1,5 @@
+ #pragma once
+ 
+-#include "VulkanDeviceChild.h"
+-
+ LK_VULKAN_SPACE_BEGIN
+ 
+ class VulkanSwapchain;

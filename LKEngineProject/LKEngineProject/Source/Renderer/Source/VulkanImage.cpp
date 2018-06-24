@@ -226,10 +226,7 @@ void VulkanImage::CopyBufferToImage(VulkanBuffer * srcBuffer, VulkanImage * dstI
 	region.imageSubresource.layerCount = 1;
 
 	region.imageOffset = { 0, 0, 0 };
-	region.imageExtent = {
-		width,
-		height,
-		1 };
+	region.imageExtent = { static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1 };
 
 	vkCmdCopyBufferToImage(
 		commandBuffer,

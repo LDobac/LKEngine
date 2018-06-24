@@ -1,32 +1,29 @@
-#include "../Header/Mesh.h"
+#include "../Header/RendererComponent.h"
+
+#include "../../Renderer/Header/VulkanDescriptorSet.h"
+#include "../../Renderer/Header/VulkanBuffer.h"
+#include "../../Renderer/Header/VulkanDevice.h"
+#include "../Header/Material.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "../../Renderer/Header/VulkanPipeline.h"
-#include "../../Renderer/Header/VulkanBuffer.h"
-#include "../../Renderer/Header/VulkanDescriptorSet.h"
-#include "../../Renderer/Header/VulkanDevice.h"
-
-#include "../Header/Material.h"
-#include "../Header/Time.h"
-#include "../Header/Camera.h"
-#include "../Header/Scene.h"
-#include "../Header/SceneManager.h"
-
 USING_LK_SPACE
 
-Mesh::Mesh(const MeshData & meshdata)
+RendererComponent::RendererComponent(Entity* entity, MeshData& meshData)
+	: Component(entity)
 {
-	CreateVertexBuffer(meshdata.vertices);
-	CreateIndexBuffer(meshdata.indices);
-	indicesCount = meshdata.indices.size();
+	CreateVertexBuffer(meshData.vertices);
+	CreateIndexBuffer(meshData.indices);
 	CreateUniformBuffer();
 	CreateDescriptorSet();
-	//TODO : Material
+
+	indicesCount = meshData.indices.size();
+
+	//TODO : Materials
 }
 
-Mesh::~Mesh()
+RendererComponent::~RendererComponent()
 {
 	for (size_t i = 0; i < materials.size(); i++)
 	{
@@ -38,29 +35,39 @@ Mesh::~Mesh()
 	SAFE_DELETE(uniformBuffer);
 }
 
-void Mesh::Update()
+void RendererComponent::Begin()
+{
+	Vulkan::VulkanDevice::GetInstance()->RegisterRenderComponent(this);
+}
+
+void RendererComponent::Update()
 {
 	struct ModelUniformBuffer { glm::mat4 model; };
 	ModelUniformBuffer model;
 
-	model.model = glm::translate(model.model, position);
+	model.model = glm::translate(model.model, GetEntity()->GetPosition());
 
 	//TODO : 쿼터니온으로 변경
-	model.model = glm::rotate(model.model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	model.model = glm::rotate(model.model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	model.model = glm::rotate(model.model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	model.model = glm::rotate(model.model, GetEntity()->GetRotation().x, glm::vec3(1.0f, 0.0f, 0.0f));
+	model.model = glm::rotate(model.model, GetEntity()->GetRotation().y, glm::vec3(0.0f, 1.0f, 0.0f));
+	model.model = glm::rotate(model.model, GetEntity()->GetRotation().z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-	model.model = glm::scale(model.model, scale);
+	model.model = glm::scale(model.model, GetEntity()->GetScale());
 
 	uniformBuffer->Map(&model);
 }
 
-void Mesh::Render(const VkCommandBuffer& cmdBuffer)
+void RendererComponent::End()
+{
+	Vulkan::VulkanDevice::GetInstance()->UnRegisterRenderComponent(this);
+}
+
+void RendererComponent::Render(const VkCommandBuffer & cmdBuffer)
 {
 	VkDeviceSize offsets = { 0 };
 	vkCmdBindVertexBuffers(cmdBuffer, 0, 1, &vertexBuffer->GetBuffer(), &offsets);
 	vkCmdBindIndexBuffer(cmdBuffer, indexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
-	
+
 	Camera* camera = SceneManager::GetInstance()->GetCurrentScene()->GetMainCamera();
 	Vulkan::VulkanDescriptorSet* cameraDescriptorSet = camera->GetDescriptorSet();
 	VkDescriptorSet descriptorSets[3] = {
@@ -84,16 +91,16 @@ void Mesh::Render(const VkCommandBuffer& cmdBuffer)
 			nullptr
 		);
 
-		vkCmdDrawIndexed(cmdBuffer, indicesCount, 1, 0, 0, 0);
+		vkCmdDrawIndexed(cmdBuffer, static_cast<uint32_t>(indicesCount), 1, 0, 0, 0);
 	}
 }
 
-void Mesh::AddMaterial(Material * material)
+void RendererComponent::AddMaterial(Material * material)
 {
 	materials.push_back(material);
 }
 
-void Mesh::CreateVertexBuffer(const std::vector<Vertex>& vertices)
+void RendererComponent::CreateVertexBuffer(const std::vector<Vertex>& vertices)
 {
 	vertexBuffer = new Vulkan::VulkanBuffer(
 		sizeof(Vertex) * vertices.size(),
@@ -104,7 +111,7 @@ void Mesh::CreateVertexBuffer(const std::vector<Vertex>& vertices)
 	vertexBuffer->CopyDataLocalMemory(vertices.data());
 }
 
-void Mesh::CreateIndexBuffer(const std::vector<uint32_t>& indices)
+void RendererComponent::CreateIndexBuffer(const std::vector<uint32_t>& indices)
 {
 	indexBuffer = new Vulkan::VulkanBuffer(
 		sizeof(indices[0])  * indices.size(),
@@ -115,7 +122,7 @@ void Mesh::CreateIndexBuffer(const std::vector<uint32_t>& indices)
 	indexBuffer->CopyDataLocalMemory(indices.data());
 }
 
-void Mesh::CreateUniformBuffer()
+void RendererComponent::CreateUniformBuffer()
 {
 	uniformBuffer = new Vulkan::VulkanBuffer(
 		sizeof(glm::mat4),
@@ -125,11 +132,13 @@ void Mesh::CreateUniformBuffer()
 	);
 }
 
-void Mesh::CreateDescriptorSet()
+void RendererComponent::CreateDescriptorSet()
 {
 	descriptorSet = new Vulkan::VulkanDescriptorSet(
-		EntityPool::GetInstance()->GetDescriptorSetLayout("DefaultMesh"), 
+		EntityPool::GetInstance()->GetDescriptorSetLayout("DefaultMesh"),
 		EntityPool::GetInstance()->GetDescriptorPool());
+
 	descriptorSet->AddBufferInfo(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, uniformBuffer, 0, 0);
+
 	descriptorSet->UpdateSets();
 }

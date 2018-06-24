@@ -60,10 +60,8 @@ void LKEngine::Application::Application::Loop()
 		LKEngine::Time::Update();
 
 		SceneManager::GetInstance()->Update();
-		EntityPool::GetInstance()->Update();
 
-		if (EntityPool::GetInstance()->NeedRender()) device->Render();
-
+		device->Render();
 		device->Draw();
 
 		window->PollEvents();

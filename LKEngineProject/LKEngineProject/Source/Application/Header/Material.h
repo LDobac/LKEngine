@@ -12,6 +12,7 @@ namespace Vulkan
 	class VulkanDescriptorSet;
 	class VulkanPipeline;
 }
+
 class Texture;
 
 class Material
@@ -22,7 +23,7 @@ private:
 	Vulkan::VulkanDescriptorSet* descriptorSet;
 	Vulkan::VulkanPipeline* pipeline;
 public:
-	explicit Material(Vulkan::VulkanDescriptorSetLayout* setLayout, Vulkan::VulkanPipeline* pipeline);
+	explicit Material(Vulkan::VulkanPipeline* pipeline);
 	~Material();
 
 	void AddTexture(Texture* texture);

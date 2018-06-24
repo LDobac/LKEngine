@@ -14,6 +14,7 @@
 #include "../Header/VulkanRenderPass.h"
 #include "../Header/VulkanCommandPool.h"
 #include "../Header/VulkanSemaphore.h"
+#include "../Header/VulkanDescriptorPool.h"
 
 #include "../../Application/Header/PipelineManager.h"
 
@@ -46,6 +47,7 @@ VulkanDevice::~VulkanDevice()
 	SAFE_DELETE(vulkanInstance);
 	SAFE_DELETE(swapchain);
 	SAFE_DELETE(renderPass);
+	SAFE_DELETE(descriptorPool);
 	SAFE_DELETE(graphicsQueue);
 	SAFE_DELETE(presentQueue);
 	SAFE_DELETE(commandPool);
@@ -99,6 +101,7 @@ void VulkanDevice::Init()
 	InitSwapchain();
 	InitCommandPool();
 	AllocCommandBuffers();
+	CreateDescriptorPool();
 	InitDepthBuffer();
 	InitRenderPass();
 	CreateFramebuffers();
@@ -135,46 +138,46 @@ void VulkanDevice::Render()
 
 	for (size_t i = 0; i < commandPool->GetBufferSize(); i++)
 	{
-		auto commandBuffer = commandPool->GetBuffer(i);
+		auto commandBuffer = commandPool->GetBuffer(static_cast<uint32_t>(i));
 
-		commandPool->RecordBegin(i, VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT);
+		commandPool->RecordBegin(static_cast<uint32_t>(i), VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT);
 		renderPass->Begin(clearValues, framebuffers[i], extent, commandBuffer);
 
-		EntityPool::GetInstance()->Render(commandBuffer);
+		for (RendererComponent* component : rendererComponents)
+		{
+			component->Render(commandBuffer);
+		}
 
 		renderPass->End(commandBuffer);
-		commandPool->RecordEnd(i);
+		commandPool->RecordEnd(static_cast<uint32_t>(i));
 	}
 }
 
 void VulkanDevice::Draw()
 {
-	if (!EntityPool::GetInstance()->NeedRender())
+	presentQueue->WaitIdle();
+
+	uint32_t imageIndex = 0;
+	VkResult result = vkAcquireNextImageKHR(vkDevice, swapchain->GetHandle(),
+		std::numeric_limits<uint64_t>::max(),
+		imageAvailableSemaphore->GetHandle(),
+		VK_NULL_HANDLE,
+		&imageIndex);
+	if (result == VK_ERROR_OUT_OF_DATE_KHR)
 	{
-		presentQueue->WaitIdle();
-
-		uint32_t imageIndex = 0;
-		VkResult result = vkAcquireNextImageKHR(vkDevice, swapchain->GetHandle(),
-			std::numeric_limits<uint64_t>::max(),
-			imageAvailableSemaphore->GetHandle(),
-			VK_NULL_HANDLE,
-			&imageIndex);
-		if (result == VK_ERROR_OUT_OF_DATE_KHR)
-		{
-			Console_Log("스왑체인 데이터가 만료됨, 다시 렌더");
-			ResizeWindow();
-			return;
-		}
-		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
-		{
-			Console_Log("스왑체인 이미지 가져오기 실패");
-			throw std::runtime_error("");
-		}
-
-		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-		graphicsQueue->Submit(imageAvailableSemaphore, renderFinishedSemaphore, waitStages, commandPool->GetBuffer(imageIndex));
-		presentQueue->Present(swapchain, renderFinishedSemaphore, imageIndex);
+		Console_Log("스왑체인 데이터가 만료됨, 다시 렌더");
+		ResizeWindow();
+		return;
 	}
+	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+	{
+		Console_Log("스왑체인 이미지 가져오기 실패");
+		throw std::runtime_error("");
+	}
+
+	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+	graphicsQueue->Submit(imageAvailableSemaphore, renderFinishedSemaphore, waitStages, commandPool->GetBuffer(imageIndex));
+	presentQueue->Present(swapchain, renderFinishedSemaphore, imageIndex);
 }
 
 void VulkanDevice::ResizeWindow()
@@ -270,6 +273,17 @@ VulkanRenderPass * VulkanDevice::GetRenderPass() const
 	return renderPass;
 }
 
+void VulkanDevice::RegisterRenderComponent(RendererComponent * component)
+{
+	rendererComponents.push_back(component);
+}
+
+void VulkanDevice::UnRegisterRenderComponent(RendererComponent * componet)
+{
+	auto iter = std::find(rendererComponents.begin(), rendererComponents.end(), componet);
+	rendererComponents.erase(iter);
+}
+
 void VulkanDevice::InitInstance()
 {
 	vulkanInstance->Init(isDebug);
@@ -338,7 +352,7 @@ void VulkanDevice::InitDevice()
 {
 	queueIndices.FindQueueFamily(gpu, surface);
 
-	std::set<int> uniqueQueueFamilies = { queueIndices.graphicsFamily,queueIndices.presentFamily };
+	std::set<size_t> uniqueQueueFamilies = { static_cast<size_t>(queueIndices.graphicsFamily),static_cast<size_t>(queueIndices.presentFamily) };
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 
 	//TODO : Queue가 여러개시 우선순위로 큐 지정
@@ -347,7 +361,7 @@ void VulkanDevice::InitDevice()
 	{
 		VkDeviceQueueCreateInfo queueCreateInfo = {};
 		queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-		queueCreateInfo.queueFamilyIndex = i;
+		queueCreateInfo.queueFamilyIndex = static_cast<uint32_t>(i);
 		queueCreateInfo.queueCount = 1;
 		queueCreateInfo.pQueuePriorities = &queuePriority;
 
@@ -384,8 +398,8 @@ void VulkanDevice::InitDevice()
 
 void VulkanDevice::CreateQueue()
 {
-	graphicsQueue = new VulkanQueue(this, queueIndices.graphicsFamily, 0);
-	presentQueue = new VulkanQueue(this, queueIndices.presentFamily, 0);
+	graphicsQueue = new VulkanQueue(this, static_cast<uint32_t>(queueIndices.graphicsFamily), 0);
+	presentQueue = new VulkanQueue(this, static_cast<uint32_t>(queueIndices.presentFamily), 0);
 }
 
 void VulkanDevice::InitCommandPool()
@@ -397,6 +411,15 @@ void VulkanDevice::InitCommandPool()
 void VulkanDevice::AllocCommandBuffers()
 {
 	commandPool->AllocBuffers(swapchain->GetFrameBuffers().size());
+}
+
+void VulkanDevice::CreateDescriptorPool()
+{
+	descriptorPool = new Vulkan::VulkanDescriptorPool();
+
+	descriptorPool->AddPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1024);
+	descriptorPool->AddPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1024);
+	descriptorPool->CreatePool(2048);
 }
 
 void VulkanDevice::InitSwapchain()

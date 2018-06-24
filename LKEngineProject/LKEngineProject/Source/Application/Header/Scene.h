@@ -1,26 +1,26 @@
 #pragma once
 
-#include "EntityPool.h"
-
-#include "../../Utility/Header/Macro.h"
+#include "Object.h"
 
 LK_SPACE_BEGIN
 
-class Camera;
+class EntityPool;
 
-class Scene
+class Scene : public Object
 {
+private:
+	EntityPool * entityPool;
+
 protected:
-	Camera* mainCamera;
+	EntityPool * GetPool() const;
+
 public:
 	explicit Scene();
-	virtual ~Scene();
+	~Scene();
 
-	virtual void Start();
-	virtual void Update();
-	virtual void End();
-
-	Camera* GetMainCamera() const;
+	virtual void Begin() = 0;
+	virtual void Update() = 0;
+	virtual void End() = 0;
 };
 
 LK_SPACE_END

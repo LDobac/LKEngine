@@ -5,6 +5,7 @@
 #include "VulkanInstance.h"
 #include "VulkanQueueFamilyIndices.h"
 
+#include "../../Application/Header/RendererComponent.h"
 #include "../../Utility/Header/Macro.h"
 
 namespace LKEngine::Window
@@ -20,6 +21,7 @@ class VulkanRenderPass;
 class VulkanCommandPool;
 class VulkanSingleCommandPool;
 class VulkanSemaphore;
+class VulkanDescriptorPool;
 
 class VulkanDevice
 {
@@ -31,6 +33,7 @@ private:
 public:
 	static VulkanDevice* GetInstance();
 	static void Release();
+
 private:
 	bool isDebug;
 
@@ -50,6 +53,8 @@ private:
 	VulkanQueue* graphicsQueue;
 	VulkanQueue* presentQueue;
 
+	VulkanDescriptorPool* descriptorPool;
+
 	VulkanRenderPass* renderPass;
 
 	VulkanCommandPool* commandPool;
@@ -59,6 +64,8 @@ private:
 	VulkanSemaphore* renderFinishedSemaphore;
 
 	QueueFamilyIndices queueIndices;
+
+	std::vector<RendererComponent*> rendererComponents;
 public:
 	void SetDebugMode(bool debug);
 	void SetWindow(LKEngine::Window::WindowsWindow* window);
@@ -81,20 +88,32 @@ public:
 	VulkanSwapchain* GetSwapchain() const;
 	VulkanSingleCommandPool* GetSingleCommandPool() const;
 	VulkanRenderPass* GetRenderPass() const;
+
+	void RegisterRenderComponent(RendererComponent* component);
+	void UnRegisterRenderComponent(RendererComponent* componet);
 private:
 	void Shutdown();
 
 	void InitInstance();
+
 	void InitSurface();
+
 	void RequireGPU();
 	void InitDevice();
+
 	void CreateQueue();
+
 	void InitSwapchain();
+
 	void InitCommandPool();
 	void AllocCommandBuffers();
+
+	void CreateDescriptorPool();
+
 	void InitDepthBuffer();
 	void InitRenderPass();
 	void CreateFramebuffers();
+
 	void CreateSemaphore();
 
 	bool CheckDeviceFeatures(VkPhysicalDevice device);

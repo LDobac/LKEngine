@@ -135,7 +135,7 @@ void VulkanRenderPass::Begin(std::vector<VkClearValue> clearColors, const VkFram
 	info.framebuffer = frameBuffer;
 	info.renderArea.offset = { 0, 0 };
 	info.renderArea.extent = extent;
-	info.clearValueCount = clearColors.size();
+	info.clearValueCount = static_cast<uint32_t>(clearColors.size());
 	info.pClearValues = clearColors.data();
 
 	vkCmdBeginRenderPass(cmdBuffer, &info, VK_SUBPASS_CONTENTS_INLINE);

@@ -8,8 +8,7 @@ Entity::Entity()
 	: position(0.0f, 0.0f, 0.0f),
 	rotation(0.0f, 0.0f, 0.0f),
 	scale(1.0f, 1.0f, 1.0f)
-{
-}
+{ }
 
 Entity::~Entity()
 { }
@@ -22,12 +21,7 @@ void Entity::Update()
 	}
 }
 
-void Entity::Render(const VkCommandBuffer& cmdBuffer) { }
-
-std::string Entity::GetName() const
-{
-	return name;
-}
+#pragma region Properties
 
 glm::vec3 Entity::GetPosition() const
 {
@@ -44,14 +38,25 @@ glm::vec3 Entity::GetScale() const
 	return scale;
 }
 
-void Entity::AddComponent(Component * newComponent)
+void Entity::AddChild(Entity * newChild)
 {
-	newComponent->Start();
+	children.push_back(newChild);
+	newChild->SetParent(this);
 }
 
-void Entity::SetName(const std::string & name)
+void Entity::SetParent(Entity * newParent)
 {
-	this->name = name;
+	parent = newParent;
+}
+
+Entity * Entity::GetParent() const
+{
+	return parent;
+}
+
+std::vector<Entity*> Entity::GetChildren() const
+{
+	return children;
 }
 
 void Entity::SetPosition(const glm::vec3 & newPos)
@@ -67,4 +72,11 @@ void Entity::SetRotation(const glm::vec3 & newRot)
 void Entity::SetScale(const glm::vec3 & newScale)
 {
 	scale = newScale;
+}
+
+#pragma endregion
+
+void Entity::AddComponent(Component * newComponent)
+{
+	newComponent->Begin();
 }

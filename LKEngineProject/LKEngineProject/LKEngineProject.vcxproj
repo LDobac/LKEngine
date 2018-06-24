@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -26,9 +26,9 @@
     <ClCompile Include="Source\Application\Source\Entity.cpp" />
     <ClCompile Include="Source\Application\Source\EntityPool.cpp" />
     <ClCompile Include="Source\Application\Source\Material.cpp" />
-    <ClCompile Include="Source\Application\Source\Mesh.cpp" />
     <ClCompile Include="Source\Application\Source\MeshLoader.cpp" />
     <ClCompile Include="Source\Application\Source\PipelineManager.cpp" />
+    <ClCompile Include="Source\Application\Source\RendererComponent.cpp" />
     <ClCompile Include="Source\Application\Source\Scene.cpp" />
     <ClCompile Include="Source\Application\Source\SceneManager.cpp" />
     <ClCompile Include="Source\Application\Source\Texture.cpp" />
@@ -58,7 +58,7 @@
     <ClInclude Include="Source\Application\Header\Component.h" />
     <ClInclude Include="Source\Application\Header\Material.h" />
     <ClInclude Include="Source\Application\Header\MeshLoader.h" />
-    <ClInclude Include="Source\Application\Header\MeshRendererComponent.h" />
+    <ClInclude Include="Source\Application\Header\Object.h" />
     <ClInclude Include="Source\Application\Header\RendererComponent.h" />
     <ClInclude Include="Source\Application\Header\Texture.h" />
     <ClInclude Include="Source\LKEngine.h" />
@@ -67,7 +67,6 @@
     <ClInclude Include="Source\Application\Header\Camera.h" />
     <ClInclude Include="Source\Application\Header\Entity.h" />
     <ClInclude Include="Source\Application\Header\EntityPool.h" />
-    <ClInclude Include="Source\Application\Header\Mesh.h" />
     <ClInclude Include="Source\Application\Header\PipelineManager.h" />
     <ClInclude Include="Source\Application\Header\Scene.h" />
     <ClInclude Include="Source\Application\Header\SceneManager.h" />
@@ -85,7 +84,6 @@
     <ClInclude Include="Source\Renderer\Header\VulkanDescriptorSetLayout.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanDescriptorPool.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanDevice.h" />
-    <ClInclude Include="Source\Renderer\Header\VulkanDeviceChild.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanExtension.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanPipeline.h" />
     <ClInclude Include="Source\Renderer\Header\VulkanImage.h" />
@@ -154,18 +152,18 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Projects\LKEngine\Libs\tinyobjloader;D:\Projects\LKEngine\Libs\stb-master;D:\Projects\LKEngine\Libs\Vulkan\1.0.65.0\Include;D:\Projects\LKEngine\Libs\GLFW\include;D:\Projects\LKEngine\Libs\GLM;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Projects\LKEngine\Libs\Vulkan\1.0.65.0\Lib32;D:\Projects\LKEngine\Libs\GLFW\lib-vc2015x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Projects\LKEngine\Libs\tinyobjloader;D:\Projects\LKEngine\Libs\stb_image;D:\Projects\LKEngine\Libs\Vulkan\Include;D:\Projects\LKEngine\Libs\GLFW\include;D:\Projects\LKEngine\Libs\GLM;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Projects\LKEngine\Libs\Vulkan\Lib32;D:\Projects\LKEngine\Libs\GLFW\glfw-3.2.1.bin.WIN32\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Projects\LKEngine\Libs\GLM;D:\Projects\LKEngine\Libs\Vulkan\1.0.65.0\Include;D:\Projects\LKEngine\Libs\GLFW\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Projects\LKEngine\Libs\GLFW\lib-vc2015x64;D:\Projects\LKEngine\Libs\Vulkan\1.0.65.0\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Projects\LKEngine\Libs\tinyobjloader;D:\Projects\LKEngine\Libs\GLM;D:\Projects\LKEngine\Libs\stb_image;D:\Projects\LKEngine\Libs\Vulkan\Include;D:\Projects\LKEngine\Libs\GLFW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Projects\LKEngine\Libs\GLFW\glfw-3.2.1.bin.WIN64\lib-vc2015;D:\Projects\LKEngine\Libs\Vulkan\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\Projects\LKEngine\Libs\tinyobjloader;D:\Projects\LKEngine\Libs\stb-master;D:\Projects\LKEngine\Libs\GLFW\include;D:\Projects\LKEngine\Libs\GLM;D:\Projects\LKEngine\Libs\Vulkan\1.0.65.0\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Projects\LKEngine\Libs\GLFW\lib-vc2015x86;D:\Projects\LKEngine\Libs\Vulkan\1.0.65.0\Lib32;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Projects\LKEngine\Libs\tinyobjloader;D:\Projects\LKEngine\Libs\stb_image;D:\Projects\LKEngine\Libs\GLFW\include;D:\Projects\LKEngine\Libs\GLM;D:\Projects\LKEngine\Libs\Vulkan\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Projects\LKEngine\Libs\Vulkan\Lib32;D:\Projects\LKEngine\Libs\GLFW\glfw-3.2.1.bin.WIN32\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -177,6 +175,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableModules>false</EnableModules>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

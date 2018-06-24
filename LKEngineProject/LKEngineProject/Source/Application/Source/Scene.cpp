@@ -1,28 +1,20 @@
 #include "../Header/Scene.h"
 
+#include "../Header/EntityPool.h"
+
 USING_LK_SPACE
 
 Scene::Scene()
 {
+	entityPool = new EntityPool();
 }
 
 Scene::~Scene()
 {
+	SAFE_DELETE(entityPool);
 }
 
-void Scene::Start()
+EntityPool * Scene::GetPool() const
 {
-}
-
-void Scene::Update()
-{
-}
-
-void Scene::End()
-{
-}
-
-Camera * Scene::GetMainCamera() const
-{
-	return mainCamera;
+	return entityPool;
 }
